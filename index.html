@@ -174,12 +174,12 @@ input[type=file]{display:none;}
 .mbtn-danger{width:100%;padding:10px;border-radius:10px;border:none;background:#ff4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;}
 
 /* PAINEL LATERAL (perfil / dados contato) */
-#painel-lateral{position:absolute;right:0;top:0;width:300px;height:100%;background:#fff;z-index:7000;display:none;flex-direction:column;border-left:1px solid #f0f0f0;transform:translateX(100%);transition:transform .25s;}
+#painel-lateral{position:absolute;right:0;top:0;width:300px;height:100%;background:#fff;z-index:7000;display:none;flex-direction:column;border-left:1px solid #f0f0f0;transform:translateX(100%);transition:transform .25s;overflow:hidden;}
 #painel-lateral.on{display:flex;transform:translateX(0);}
 #pl-hdr{background:var(--gd);padding:14px 14px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 #pl-hdr button{background:none;border:none;cursor:pointer;color:#fff;padding:4px;}
 #pl-body{flex:1;overflow-y:auto;padding:0 0 20px;}
-#pl-av-grande{width:100px;height:100px;border-radius:50%;margin:-30px auto 12px;display:block;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;}
+#pl-av-grande{width:100px;height:100px;border-radius:50%;margin:-30px auto 12px;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;flex-shrink:0;}
 #pl-av-grande img{width:100%;height:100%;object-fit:cover;}
 #pl-nome{text-align:center;font-size:17px;font-weight:700;padding:0 16px;}
 #pl-bio{text-align:center;font-size:13px;color:var(--mu);padding:4px 16px 12px;}
@@ -202,7 +202,8 @@ input[type=file]{display:none;}
 #chamada-nome{color:#fff;font-size:22px;font-weight:700;}
 #chamada-status{color:rgba(255,255,255,.7);font-size:14px;}
 #videos-area{display:flex;gap:12px;margin-top:10px;}
-#video-local,#video-remoto{width:180px;height:135px;background:#000;border-radius:10px;object-fit:cover;}
+#video-local{width:140px;height:105px;background:#222;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,.3);}
+#video-remoto{width:300px;height:225px;background:#111;border-radius:12px;object-fit:cover;}
 #chamada-btns{display:flex;gap:16px;margin-top:10px;}
 .cbtn{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;}
 .cbtn:hover{transform:scale(1.08);}
@@ -230,6 +231,12 @@ input[type=file]{display:none;}
 .camera-btns{display:flex;gap:12px;}
 .cbtn2{padding:10px 22px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;}
 
+.fullscreen-btn{position:fixed;bottom:16px;right:16px;width:40px;height:40px;border-radius:50%;background:var(--gd);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:6000;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:all .2s;}
+.fullscreen-btn:hover{transform:scale(1.08);}
+/* Fix painel lateral - sair do overflow hidden */
+#painel-lateral{position:fixed !important;right:0;top:0;height:100vh;z-index:7000;}
+/* Sala com senha indicator */
+#sala-senha-badge{font-size:10px;background:rgba(255,255,255,.2);color:#fff;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle;}
 ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px;}
 </style>
 </head>
@@ -299,6 +306,7 @@ input[type=file]{display:none;}
         <button class="hbtn" onclick="toggleBuscarMsgs()" title="Pesquisar">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
+        <button class="hbtn" onclick="toggleFullscreen()" title="Tela cheia" id="btn-fullscreen"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <button class="hbtn" onclick="abrirMenuTresPontos(this)" title="Mais opções">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
         </button>
@@ -366,10 +374,12 @@ input[type=file]{display:none;}
   <button class="pm-item" onclick="pmAcao('localizacao')"><div class="pm-ico" style="background:#e8ffe8">📍</div>Localização</button>
   <button class="pm-item" onclick="pmAcao('contato')"><div class="pm-ico" style="background:#f0e8ff">👤</div>Contato</button>
   <button class="pm-item" onclick="pmAcao('enquete')"><div class="pm-ico" style="background:#fff8e8">📊</div>Enquete</button>
+  <button class="pm-item" onclick="pmAcao('midi')"><div class="pm-ico" style="background:#e8e0ff">🎹</div>MIDI</button>
 </div>
 <input type="file" id="file-foto" accept="image/*,video/*" onchange="enviarArquivo(this,'imagem')"/>
 <input type="file" id="file-doc" accept="*/*" onchange="enviarArquivo(this,'imagem')"/>
 <input type="file" id="file-audio" accept="audio/*" onchange="enviarArquivo(this,'audio')"/>
+<input type="file" id="file-midi" accept=".mid,.midi,audio/midi,audio/x-midi" onchange="enviarMidi(this)"/>
 
 <div id="ctx-menu">
   <button class="ctx-i" onclick="ctxAcao('responder')">↩ Responder</button>
@@ -439,6 +449,7 @@ input[type=file]{display:none;}
   </div>
 </div>
 
+<audio id="audio-remoto" autoplay playsinline style="display:none"></audio>
 <!-- CÂMERA -->
 <div id="camera-ov">
   <video id="camera-video" autoplay playsinline></video>
@@ -449,6 +460,27 @@ input[type=file]{display:none;}
   </div>
 </div>
 
+<button class="fullscreen-btn" onclick="toggleFullscreen()" title="Tela cheia" id="fs-btn">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+</button>
+<audio id="audio-remoto" autoplay playsinline style="display:none"></audio>
+
+<!-- CROP MODAL -->
+<div id="crop-ov" style="position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:12000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <div style="color:#fff;font-size:16px;font-weight:600">Ajuste sua foto de perfil</div>
+  <div id="crop-container" style="position:relative;width:300px;height:300px;border-radius:50%;overflow:hidden;border:3px solid var(--g);cursor:move;user-select:none;">
+    <img id="crop-img" src="" style="position:absolute;transform-origin:center;max-width:none;" draggable="false"/>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;color:#fff;font-size:13px">
+    <span>Zoom:</span>
+    <input type="range" id="crop-zoom" min="100" max="400" value="100" style="width:140px" oninput="atualizarCrop()"/>
+    <span id="crop-zoom-val">100%</span>
+  </div>
+  <div style="display:flex;gap:12px">
+    <button onclick="cancelarCrop()" style="padding:10px 24px;border-radius:10px;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:14px">Cancelar</button>
+    <button onclick="confirmarCrop()" style="padding:10px 24px;border-radius:10px;border:none;background:var(--g);color:#fff;cursor:pointer;font-size:14px;font-weight:600">✓ Usar foto</button>
+  </div>
+</div>
 <!-- LIGHTBOX -->
 <div id="lightbox" onclick="this.classList.remove('on')">
   <img id="lightbox-img" src="" alt=""/>
@@ -479,10 +511,10 @@ let digitandoMap={}, estouDigitando=false, digitandoTimer=null;
 let mediaRecorder=null, audioChunks=[], gravando=false;
 let msgStatus={}, unreadIds=[];
 let fotoPerfis={}, panelPerfil=null, panelEMeu=false;
-let localStream=null, remoteStream=null, peerConn=null;
+let localStream=null, remoteStream=null, peerConn=null, iceFila=[];
 let chamandoPara="", recebendoChamada=null, tipoCall="audio";
 let mutado=false, camOff=false;
-let cameraStream=null;
+let cameraStream=null, cropCb=null, cropDrag={active:false,x:0,y:0,imgX:0,imgY:0};
 let modalModo="", modalCallbackOk=null;
 let emojiCatAtual=0;
 
@@ -499,11 +531,13 @@ function fecharTudo(){["ctx-menu","plus-menu","react-picker","emoji-picker","tre
 let fotoLoginB64="";
 function previewFotoLogin(inp){
   const f=inp.files[0];if(!f)return;
-  comprimir(f,200,b64=>{
-    fotoLoginB64=b64;
-    const img=document.getElementById("foto-preview-img");
-    img.src=b64;img.style.display="block";
-    document.getElementById("foto-preview-login").style.fontSize="0";
+  comprimir(f,800,b64=>{
+    abrirCrop(b64,resultado=>{
+      fotoLoginB64=resultado;
+      const img=document.getElementById("foto-preview-img");
+      img.src=resultado;img.style.display="block";
+      document.getElementById("foto-preview-login").style.fontSize="0";
+    });
   });
 }
 
@@ -587,7 +621,7 @@ function conectar(){
     if(m.tipo==="historico") carregarHistorico(m.mensagens);
     else if(m.tipo==="perfis") Object.assign(fotoPerfis,m.perfis);
     else if(m.tipo==="perfil_update"){fotoPerfis[m.nome]={foto:m.foto,bio:m.bio};atualizarOnlineUI();}
-    else if(["mensagem","imagem","audio","localizacao","contato","enquete"].includes(m.tipo)) receberMsg(m);
+    else if(["mensagem","imagem","audio","localizacao","contato","enquete","midi"].includes(m.tipo)) receberMsg(m);
     else if(m.tipo==="sistema") addSistema(m.texto);
     else if(m.tipo==="usuarios_online") atualizarOnline(m.lista);
     else if(m.tipo==="apagar") removerMsg(m.id);
@@ -673,6 +707,11 @@ function criarBolha(m,eMinha){
     bolha.appendChild(img);
   } else if(m.tipo==="audio"&&m.media){
     const aud=document.createElement("audio");aud.className="maudio";aud.controls=true;aud.src=m.media;bolha.appendChild(aud);
+  } else if(m.tipo==="midi"&&m.media){
+    const d=document.createElement("div");
+    d.style.cssText="display:flex;align-items:center;gap:10px;padding:4px 0";
+    d.innerHTML='<span style="font-size:24px">🎹</span><div><div style="font-size:13px;font-weight:600">'+esc(m.texto||"MIDI")+'</div><a href="'+m.media+'" download="'+esc(m.texto||"arquivo.mid")+'" style="font-size:11px;color:var(--gm)">⬇️ Baixar</a></div>';
+    bolha.appendChild(d);
   } else if(m.tipo==="localizacao"&&m.lat){
     const d=document.createElement("div");d.className="loc-card";
     d.innerHTML=`<div class="loc-map" onclick="window.open('https://maps.google.com/?q=${m.lat},${m.lng}','_blank')">📍</div><div style="font-size:12px;color:var(--mu)">📍 ${m.lat.toFixed(4)}, ${m.lng.toFixed(4)}<br><a href="https://maps.google.com/?q=${m.lat},${m.lng}" target="_blank" style="color:#0d6efd;font-size:11px">Abrir no Maps</a></div>`;
@@ -931,6 +970,7 @@ function pmAcao(tipo){
   else if(tipo==="localizacao")enviarLocalizacao();
   else if(tipo==="contato")pedirContato();
   else if(tipo==="enquete")abrirEnquete();
+  else if(tipo==="midi")document.getElementById("file-midi").click();
 }
 
 function enviarLocalizacao(){
@@ -1273,13 +1313,17 @@ function editarFoto(){
   const inp=document.createElement("input");inp.type="file";inp.accept="image/*";
   inp.onchange=()=>{
     const f=inp.files[0];if(!f)return;
-    comprimir(f,200,b64=>{
-      meuFoto=b64;localStorage.setItem("cf",b64);
-      fotoPerfis[meuNome]={...fotoPerfis[meuNome]||{},foto:b64};
-      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"perfil",foto:b64}));
-      setAv("sb-av",meuNome,b64);
-      const avG=document.getElementById("pl-av-grande");
-      avG.innerHTML=`<img src="${b64}" style="width:100%;height:100%;object-fit:cover"/>`;
+    comprimir(f,800,b64=>{
+      abrirCrop(b64,resultado=>{
+        meuFoto=resultado;
+        try{localStorage.setItem("cf",resultado);}catch(e){}
+        fotoPerfis[meuNome]={...fotoPerfis[meuNome]||{},foto:resultado};
+        if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"perfil",foto:resultado}));
+        setAv("sb-av",meuNome,resultado);
+        atualizarOnlineUI();
+        const avG=document.getElementById("pl-av-grande");
+        if(avG){avG.innerHTML='';const im=document.createElement("img");im.src=resultado;im.style.cssText="width:100%;height:100%;object-fit:cover";avG.appendChild(im);}
+      });
     });
   };
   inp.click();
@@ -1329,15 +1373,17 @@ function abrirModal(modo){
   if(modo==="sala"){
     document.getElementById("modal-title").textContent="Trocar de sala";
     document.getElementById("modal-desc").textContent="Digite o nome da nova sala";
-    document.getElementById("modal-content").innerHTML=`<div class="mcampo"><label>NOVA SALA</label><input id="inp-nova-sala" type="text" placeholder="ex: amigos" maxlength="24"/></div>`;
+    document.getElementById("modal-content").innerHTML=`<div class="mcampo"><label>NOVA SALA</label><input id="inp-nova-sala" type="text" placeholder="ex: amigos" maxlength="24"/></div><div class="mcampo"><label>SENHA DA SALA (opcional)</label><input id="inp-sala-senha" type="password" placeholder="Deixe vazio para sala pública" maxlength="30"/></div>`;
     document.getElementById("modal-danger-btn").style.display="none";
     document.getElementById("modal-ok-btn").textContent="Entrar";
     modalCallbackOk=()=>{
       const s=document.getElementById("inp-nova-sala").value.trim();if(!s){alert("Digite a sala!");return;}
-      minhaSala=s;localStorage.setItem("cs",s);
+      const senha=document.getElementById("inp-sala-senha").value.trim();
+      const salaComSenha=senha?s+"::"+btoa(senha):s;
+      minhaSala=s;localStorage.setItem("cs",s);localStorage.setItem("csenha",senha);
       document.getElementById("chat-title").textContent="Sala: "+s;
       document.getElementById("msgs").innerHTML="";todasMensagens=[];
-      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:s}));
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:salaComSenha}));
       fecharModal();
     };
   } else {
@@ -1382,7 +1428,15 @@ function deslogar(){
 }
 
 // =================== WEBRTC CHAMADAS ===================
-const ICE_SERVERS={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
+const ICE_SERVERS={iceServers:[
+  {urls:"stun:stun.l.google.com:19302"},
+  {urls:"stun:stun1.l.google.com:19302"},
+  {urls:"stun:stun2.l.google.com:19302"},
+  {urls:"stun:stun.cloudflare.com:3478"},
+  {urls:"stun:openrelay.metered.ca:80"},
+  {urls:"turn:openrelay.metered.ca:80",username:"openrelayproject",credential:"openrelayproject"},
+  {urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"}
+]};
 
 async function iniciarChamada(tipo){
   const online=onlineAtual.filter(n=>n!==meuNome);
@@ -1397,19 +1451,42 @@ async function iniciarChamada(tipo){
 }
 
 async function fazerChamada(para,tipo){
-  tipoCall=tipo;chamandoPara=para;
+  tipoCall=tipo;chamandoPara=para;iceFila=[];
   mostrarUIchamada(para,"Chamando...",tipo);
   try{
-    localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:tipo==="video"});
-    if(tipo==="video"){const v=document.getElementById("video-local");v.srcObject=localStream;document.getElementById("videos-area").style.display="flex";}
+    const constraints={audio:{echoCancellation:true,noiseSuppression:true},video:tipo==="video"?{width:640,height:480}:false};
+    localStream=await navigator.mediaDevices.getUserMedia(constraints);
+    if(tipo==="video"){
+      const v=document.getElementById("video-local");
+      v.srcObject=localStream;
+      document.getElementById("videos-area").style.display="flex";
+    }
     peerConn=new RTCPeerConnection(ICE_SERVERS);
+    peerConn.onconnectionstatechange=()=>{
+      const s=peerConn.connectionState;
+      if(s==="connected")document.getElementById("chamada-status").textContent="Em chamada ✓";
+      if(s==="failed"||s==="disconnected")encerrarChamada(true);
+    };
     localStream.getTracks().forEach(t=>peerConn.addTrack(t,localStream));
-    peerConn.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({tipo:"ice_candidate",to:para,candidate:e.candidate}));};
-    peerConn.ontrack=e=>{remoteStream=e.streams[0];document.getElementById("video-remoto").srcObject=remoteStream;};
-    const offer=await peerConn.createOffer();
+    peerConn.onicecandidate=e=>{if(e.candidate&&ws)ws.send(JSON.stringify({tipo:"ice_candidate",to:para,candidate:e.candidate}));};
+    peerConn.ontrack=e=>{
+      remoteStream=e.streams[0]||new MediaStream([e.track]);
+      // Áudio remoto sempre reproduz
+      const audioEl=document.getElementById("audio-remoto");
+      audioEl.srcObject=remoteStream;
+      audioEl.volume=1;
+      audioEl.play().catch(err=>console.log("audio play:",err));
+      // Vídeo remoto se for videochamada
+      if(tipoCall==="video"){
+        const vr=document.getElementById("video-remoto");
+        vr.srcObject=remoteStream;
+        vr.play().catch(()=>{});
+      }
+    };
+    const offer=await peerConn.createOffer({offerToReceiveAudio:true,offerToReceiveVideo:tipo==="video"});
     await peerConn.setLocalDescription(offer);
     ws.send(JSON.stringify({tipo:"call_offer",to:para,offer,video:tipo==="video"}));
-  }catch(e){alert("Erro na chamada: "+e.message);encerrarChamada(true);}
+  }catch(e){alert("Erro ao acessar microfone/câmera: "+e.message);encerrarChamada(true);}
 }
 
 function receberChamada(m){
@@ -1421,36 +1498,70 @@ function receberChamada(m){
 }
 
 async function aceitarChamada(){
-  if(!recebendoChamada)return;
+  if(!recebendoChamada)return;iceFila=[];
   document.getElementById("chamada-status").textContent="Conectando...";
   document.getElementById("chamada-btns").innerHTML=`
     <button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff">🎤</button>
+    ${tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff">📹</button>':''}
     <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>`;
   try{
-    localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:tipoCall==="video"});
-    if(tipoCall==="video"){const v=document.getElementById("video-local");v.srcObject=localStream;document.getElementById("videos-area").style.display="flex";}
+    const constraints={audio:{echoCancellation:true,noiseSuppression:true},video:tipoCall==="video"?{width:640,height:480}:false};
+    localStream=await navigator.mediaDevices.getUserMedia(constraints);
+    if(tipoCall==="video"){
+      const v=document.getElementById("video-local");
+      v.srcObject=localStream;
+      document.getElementById("videos-area").style.display="flex";
+    }
     peerConn=new RTCPeerConnection(ICE_SERVERS);
+    peerConn.onconnectionstatechange=()=>{
+      const s=peerConn.connectionState;
+      if(s==="connected")document.getElementById("chamada-status").textContent="Em chamada ✓";
+      if(s==="failed"||s==="disconnected")encerrarChamada(true);
+    };
     localStream.getTracks().forEach(t=>peerConn.addTrack(t,localStream));
-    peerConn.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({tipo:"ice_candidate",to:recebendoChamada.from,candidate:e.candidate}));};
-    peerConn.ontrack=e=>{remoteStream=e.streams[0];document.getElementById("video-remoto").srcObject=remoteStream;};
-    await peerConn.setRemoteDescription(recebendoChamada.offer);
+    peerConn.onicecandidate=e=>{if(e.candidate&&ws)ws.send(JSON.stringify({tipo:"ice_candidate",to:recebendoChamada.from,candidate:e.candidate}));};
+    peerConn.ontrack=e=>{
+      remoteStream=e.streams[0]||new MediaStream([e.track]);
+      const audioEl=document.getElementById("audio-remoto");
+      audioEl.srcObject=remoteStream;audioEl.volume=1;
+      audioEl.play().catch(err=>console.log("audio:",err));
+      if(tipoCall==="video"){
+        const vr=document.getElementById("video-remoto");
+        vr.srcObject=remoteStream;vr.play().catch(()=>{});
+      }
+    };
+    await peerConn.setRemoteDescription(new RTCSessionDescription(recebendoChamada.offer));
+    await processarFilaIce();
     const answer=await peerConn.createAnswer();
     await peerConn.setLocalDescription(answer);
     ws.send(JSON.stringify({tipo:"call_answer",to:recebendoChamada.from,answer}));
-    document.getElementById("chamada-status").textContent="Em chamada";
   }catch(e){alert("Erro: "+e.message);encerrarChamada(true);}
 }
 
 async function aceitarResposta(m){
   if(!peerConn)return;
-  await peerConn.setRemoteDescription(m.answer);
-  document.getElementById("chamada-status").textContent="Em chamada";
+  await peerConn.setRemoteDescription(new RTCSessionDescription(m.answer));
+  await processarFilaIce();
   document.getElementById("chamada-btns").innerHTML=`
     <button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff">🎤</button>
+    ${tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff">📹</button>':''}
     <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>`;
 }
 
-async function adicionarIce(m){if(peerConn&&m.candidate)await peerConn.addIceCandidate(m.candidate);}
+async function adicionarIce(m){
+  if(!m.candidate)return;
+  if(peerConn && peerConn.remoteDescription && peerConn.remoteDescription.type){
+    try{await peerConn.addIceCandidate(new RTCIceCandidate(m.candidate));}catch(e){}
+  } else {
+    iceFila.push(m.candidate); // guarda na fila até remoteDescription estar pronto
+  }
+}
+async function processarFilaIce(){
+  while(iceFila.length && peerConn && peerConn.remoteDescription){
+    const c=iceFila.shift();
+    try{await peerConn.addIceCandidate(new RTCIceCandidate(c));}catch(e){}
+  }
+}
 function rejeitarChamada(){if(recebendoChamada)ws.send(JSON.stringify({tipo:"call_reject",to:recebendoChamada.from}));encerrarChamada(true);}
 function chamadaRejeitada(){document.getElementById("chamada-status").textContent="Chamada recusada";setTimeout(()=>encerrarChamada(true),1500);}
 
@@ -1473,11 +1584,12 @@ function mostrarUIchamada(nome,status,tipo){
   const p=fotoPerfis[nome]||{};
   const av=document.getElementById("chamada-av");
   av.style.background=cor(nome);
-  if(p.foto){av.innerHTML=`<img src="${p.foto}" style="width:100%;height:100%;object-fit:cover"/>`;}
+  if(p.foto){av.innerHTML=`<img src="${p.foto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`;} 
   else{av.innerHTML=ini(nome);}
   document.getElementById("chamada-nome").textContent=nome;
   document.getElementById("chamada-status").textContent=status;
-  if(tipo==="video")document.getElementById("btn-cam").style.display="flex";
+  const camBtn=document.getElementById("btn-cam");
+  if(camBtn)camBtn.style.display=tipo==="video"?"flex":"none";
   document.getElementById("chamada-ov").classList.add("on");
 }
 
@@ -1491,6 +1603,211 @@ function toggleCam(){
   if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=!camOff);
   document.getElementById("btn-cam").textContent=camOff?"📷":"📹";
 }
+
+
+
+// =================== CROP DE IMAGEM ===================
+function abrirCrop(b64, callback){
+  cropCb=callback;
+  const img=document.getElementById("crop-img");
+  img.src=b64;
+  img.style.left="0px";img.style.top="0px";
+  document.getElementById("crop-zoom").value=100;
+  document.getElementById("crop-zoom-val").textContent="100%";
+  img.onload=()=>{ atualizarCrop(); };
+  document.getElementById("crop-ov").style.display="flex";
+  // Drag para mover
+  const cont=document.getElementById("crop-container");
+  cont.onmousedown=e=>{
+    cropDrag.active=true;
+    cropDrag.x=e.clientX;cropDrag.y=e.clientY;
+    cropDrag.imgX=parseInt(img.style.left)||0;
+    cropDrag.imgY=parseInt(img.style.top)||0;
+    e.preventDefault();
+  };
+  document.onmousemove=e=>{
+    if(!cropDrag.active)return;
+    img.style.left=(cropDrag.imgX+(e.clientX-cropDrag.x))+"px";
+    img.style.top=(cropDrag.imgY+(e.clientY-cropDrag.y))+"px";
+  };
+  document.onmouseup=()=>{cropDrag.active=false;};
+}
+
+function atualizarCrop(){
+  const zoom=parseInt(document.getElementById("crop-zoom").value);
+  document.getElementById("crop-zoom-val").textContent=zoom+"%";
+  const img=document.getElementById("crop-img");
+  img.style.width=zoom+"%";img.style.height="auto";
+}
+
+function cancelarCrop(){
+  document.getElementById("crop-ov").style.display="none";
+  cropCb=null;
+}
+
+function confirmarCrop(){
+  const cont=document.getElementById("crop-container");
+  const img=document.getElementById("crop-img");
+  const canvas=document.createElement("canvas");
+  const size=200;canvas.width=size;canvas.height=size;
+  const ctx=canvas.getContext("2d");
+  // Corta imagem circular
+  ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();
+  const r=cont.getBoundingClientRect();
+  const ir=img.getBoundingClientRect();
+  const scaleX=img.naturalWidth/img.width;
+  const scaleY=img.naturalHeight/img.height;
+  const srcX=(r.left-ir.left)*scaleX;
+  const srcY=(r.top-ir.top)*scaleY;
+  const srcW=r.width*scaleX;
+  const srcH=r.height*scaleY;
+  ctx.drawImage(img,srcX,srcY,srcW,srcH,0,0,size,size);
+  const resultado=canvas.toDataURL("image/jpeg",0.88);
+  document.getElementById("crop-ov").style.display="none";
+  if(cropCb)cropCb(resultado);
+  cropCb=null;
+}
+
+// =================== MIDI ===================
+function enviarMidi(inp){
+  const file=inp.files[0];if(!file)return;
+  if(file.size>5*1024*1024){alert("MIDI grande demais! Máx 5MB.");inp.value="";return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const media=ev.target.result;
+    if(!ws||ws.readyState!==WebSocket.OPEN)return;
+    const id=Date.now().toString();msgStatus[id]="enviado";
+    ws.send(JSON.stringify({tipo:"midi",media,nome:meuNome,texto:"🎹 "+file.name,hora:horaLocal(),replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:"midi",nome:meuNome,media,texto:"🎹 "+file.name,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector('[data-id="'+id+'"]')){
+      todasMensagens.push({...m,eMinha:true});
+      document.getElementById("msgs").appendChild(criarBolha(m,true));
+      scroll();
+    }
+    cancelarReply();
+  };
+  reader.readAsDataURL(file);
+  inp.value="";
+}
+
+// =================== FULLSCREEN ===================
+function toggleFullscreen(){
+  const el=document.getElementById("app");
+  if(!document.fullscreenElement){
+    (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen).call(el);
+    document.getElementById("fs-btn").innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
+  } else {
+    (document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen).call(document);
+    document.getElementById("fs-btn").innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
+  }
+}
+
+
+
+// =================== CROP DE IMAGEM ===================
+function abrirCrop(b64, callback){
+  cropCb=callback;
+  const img=document.getElementById("crop-img");
+  img.src=b64;
+  img.style.left="0px";img.style.top="0px";
+  document.getElementById("crop-zoom").value=100;
+  document.getElementById("crop-zoom-val").textContent="100%";
+  img.onload=()=>{ atualizarCrop(); };
+  document.getElementById("crop-ov").style.display="flex";
+  // Drag para mover
+  const cont=document.getElementById("crop-container");
+  cont.onmousedown=e=>{
+    cropDrag.active=true;
+    cropDrag.x=e.clientX;cropDrag.y=e.clientY;
+    cropDrag.imgX=parseInt(img.style.left)||0;
+    cropDrag.imgY=parseInt(img.style.top)||0;
+    e.preventDefault();
+  };
+  document.onmousemove=e=>{
+    if(!cropDrag.active)return;
+    img.style.left=(cropDrag.imgX+(e.clientX-cropDrag.x))+"px";
+    img.style.top=(cropDrag.imgY+(e.clientY-cropDrag.y))+"px";
+  };
+  document.onmouseup=()=>{cropDrag.active=false;};
+}
+
+function atualizarCrop(){
+  const zoom=parseInt(document.getElementById("crop-zoom").value);
+  document.getElementById("crop-zoom-val").textContent=zoom+"%";
+  const img=document.getElementById("crop-img");
+  img.style.width=zoom+"%";img.style.height="auto";
+}
+
+function cancelarCrop(){
+  document.getElementById("crop-ov").style.display="none";
+  cropCb=null;
+}
+
+function confirmarCrop(){
+  const cont=document.getElementById("crop-container");
+  const img=document.getElementById("crop-img");
+  const canvas=document.createElement("canvas");
+  const size=200;canvas.width=size;canvas.height=size;
+  const ctx=canvas.getContext("2d");
+  // Corta imagem circular
+  ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();
+  const r=cont.getBoundingClientRect();
+  const ir=img.getBoundingClientRect();
+  const scaleX=img.naturalWidth/img.width;
+  const scaleY=img.naturalHeight/img.height;
+  const srcX=(r.left-ir.left)*scaleX;
+  const srcY=(r.top-ir.top)*scaleY;
+  const srcW=r.width*scaleX;
+  const srcH=r.height*scaleY;
+  ctx.drawImage(img,srcX,srcY,srcW,srcH,0,0,size,size);
+  const resultado=canvas.toDataURL("image/jpeg",0.88);
+  document.getElementById("crop-ov").style.display="none";
+  if(cropCb)cropCb(resultado);
+  cropCb=null;
+}
+
+// =================== MIDI ===================
+function enviarMidi(inp){
+  const file=inp.files[0];if(!file)return;
+  if(file.size>5*1024*1024){alert("MIDI grande demais! Máx 5MB.");inp.value="";return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const media=ev.target.result;
+    if(!ws||ws.readyState!==WebSocket.OPEN)return;
+    const id=Date.now().toString();msgStatus[id]="enviado";
+    ws.send(JSON.stringify({tipo:"midi",media,nome:meuNome,texto:"🎹 "+file.name,hora:horaLocal(),replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:"midi",nome:meuNome,media,texto:"🎹 "+file.name,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector('[data-id="'+id+'"]')){
+      todasMensagens.push({...m,eMinha:true});
+      document.getElementById("msgs").appendChild(criarBolha(m,true));
+      scroll();
+    }
+    cancelarReply();
+  };
+  reader.readAsDataURL(file);
+  inp.value="";
+}
+
+// =================== FULLSCREEN ===================
+function toggleFullscreen(){
+  const el=document.getElementById("app");
+  if(!document.fullscreenElement){
+    (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen).call(el);
+  } else {
+    (document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen).call(document);
+  }
+}
+document.addEventListener("fullscreenchange",()=>{
+  const btn=document.getElementById("btn-fullscreen");
+  if(!btn)return;
+  if(document.fullscreenElement){
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    btn.title="Sair da tela cheia";
+  } else {
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    btn.title="Tela cheia";
+  }
+});
 
 // =================== EVENTOS GLOBAIS ===================
 document.addEventListener("click",fecharTudo);

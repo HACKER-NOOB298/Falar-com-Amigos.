@@ -411,55 +411,45 @@
     conectarWebSocket();
   }
 
-  // ----- CONECTAR AO SERVIDOR -----
+  // ----- CONECTAR AO SERVIDOR (com reconexão automática) -----
+  let tentativas = 0;
+
   function conectarWebSocket() {
     const statusBar = document.getElementById("status-bar");
     statusBar.className = "conectando";
     statusBar.textContent = "Conectando ao servidor...";
 
-    try {
-      ws = new WebSocket(URL_SERVIDOR);
-    } catch(e) {
+    try { ws = new WebSocket(URL_SERVIDOR); }
+    catch(e) {
       statusBar.className = "erro";
-      statusBar.textContent = "❌ Erro: URL do servidor inválida. Verifique o código.";
+      statusBar.textContent = "❌ URL do servidor inválida.";
       return;
     }
 
     ws.onopen = () => {
       statusBar.className = "ok";
-
-      // Avisa o servidor quem entrou e em qual sala
-      ws.send(JSON.stringify({
-        tipo: "entrar",
-        nome: meuNome,
-        sala: minhaSala
-      }));
+      tentativas = 0;
+      ws.send(JSON.stringify({ tipo: "entrar", nome: meuNome, sala: minhaSala }));
     };
 
     ws.onmessage = (evento) => {
       const msg = JSON.parse(evento.data);
-
-      if (msg.tipo === "mensagem") {
-        adicionarMensagem(msg.nome, msg.texto, msg.hora, msg.nome === meuNome);
-      }
-
-      if (msg.tipo === "sistema") {
-        adicionarMsgSistema(msg.texto);
-      }
-
-      if (msg.tipo === "usuarios_online") {
-        atualizarOnline(msg.lista);
-      }
+      if (msg.tipo === "mensagem") adicionarMensagem(msg.nome, msg.texto, msg.hora, msg.nome === meuNome);
+      if (msg.tipo === "sistema") adicionarMsgSistema(msg.texto);
+      if (msg.tipo === "usuarios_online") atualizarOnline(msg.lista);
     };
 
     ws.onclose = () => {
-      statusBar.className = "erro";
-      statusBar.textContent = "⚠️ Desconectado. Recarregue a página para reconectar.";
+      tentativas++;
+      const espera = Math.min(3000 * tentativas, 15000);
+      statusBar.className = "conectando";
+      statusBar.textContent = "⚠️ Desconectado. Reconectando em " + (espera/1000) + "s...";
+      setTimeout(conectarWebSocket, espera);
     };
 
     ws.onerror = () => {
       statusBar.className = "erro";
-      statusBar.textContent = "❌ Não foi possível conectar. Verifique a URL do servidor.";
+      statusBar.textContent = "❌ Erro de conexão. Verifique a URL do servidor.";
     };
   }
 

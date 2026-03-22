@@ -62,13 +62,14 @@ wss.on("connection", (ws) => {
 
         console.log(`💬 [${usuario.sala}] ${usuario.nome}: ${msg.texto}`);
 
-        // Envia pra todo mundo na mesma sala
+        // Envia pra todo mundo na mesma sala EXCETO quem enviou
+        // (quem enviou já adicionou localmente na tela)
         broadcast({
           tipo: "mensagem",
           nome: usuario.nome,
           texto: msg.texto,
           hora: horaAtual()
-        }, usuario.sala);
+        }, usuario.sala, ws);
       }
 
     } catch (e) {

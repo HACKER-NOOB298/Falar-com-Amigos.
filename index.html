@@ -10,155 +10,263 @@
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:100vh;}
 
 /* LOGIN */
-#tela-login{background:#fff;border-radius:24px;padding:48px 40px;width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.12);}
-#tela-login h1{font-size:28px;font-weight:700;margin-bottom:8px;}
-#tela-login p{color:var(--mu);font-size:14px;margin-bottom:28px;line-height:1.6;}
-.logo{width:72px;height:72px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:34px;box-shadow:0 4px 20px rgba(37,211,102,.4);}
-.campo{text-align:left;margin-bottom:14px;}
+#tela-login{background:#fff;border-radius:24px;padding:44px 36px;width:370px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.13);}
+.logo-login{width:72px;height:72px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:34px;box-shadow:0 4px 18px rgba(37,211,102,.4);}
+#tela-login h1{font-size:26px;font-weight:700;margin-bottom:6px;}
+#tela-login>p{color:var(--mu);font-size:13px;margin-bottom:24px;line-height:1.5;}
+.campo{text-align:left;margin-bottom:13px;}
 .campo label{font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;display:block;margin-bottom:5px;}
-.campo input{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #e8e8e8;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;}
+.campo input{width:100%;padding:11px 13px;border-radius:11px;border:1.5px solid #e8e8e8;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;}
 .campo input:focus{border-color:var(--g);}
-.btn-p{width:100%;padding:13px;border-radius:12px;background:var(--g);color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:transform .15s;}
+.campo-foto{display:flex;align-items:center;gap:12px;margin-bottom:13px;}
+.foto-preview{width:52px;height:52px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;border:2px dashed #ccc;font-size:22px;}
+.foto-preview img{width:100%;height:100%;object-fit:cover;}
+.btn-p{width:100%;padding:12px;border-radius:11px;background:var(--g);color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:transform .15s;}
 .btn-p:hover{transform:translateY(-1px);}
 
 /* APP */
-#app{display:none;width:960px;height:650px;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+#app{display:none;width:980px;height:660px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.16);}
 #app-inner{display:flex;height:100%;}
 
 /* SIDEBAR */
-#sidebar{width:300px;border-right:1px solid #f0f0f0;display:flex;flex-direction:column;flex-shrink:0;}
-#sb-header{background:var(--gd);padding:11px 13px;display:flex;align-items:center;justify-content:space-between;}
-.hinfo{display:flex;align-items:center;gap:8px;}
-.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;font-size:13px;}
-#sb-nome{color:#fff;font-weight:600;font-size:14px;}
-.hbtns{display:flex;gap:5px;}
-.ibtn{background:rgba(255,255,255,.15);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-.ibtn:hover{background:rgba(255,255,255,.25);}
-#sb-busca-c{padding:7px 11px;background:#f6f6f6;}
-#sb-busca{width:100%;padding:8px 13px;border-radius:20px;border:1px solid #e8e8e8;font-size:13px;font-family:inherit;outline:none;background:#fff;}
-#online-t{padding:9px 15px 3px;font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;}
+#sidebar{width:310px;border-right:1px solid #f0f0f0;display:flex;flex-direction:column;flex-shrink:0;position:relative;}
+#sb-hdr{background:var(--gd);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;}
+.hinfo{display:flex;align-items:center;gap:9px;}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;overflow:hidden;}
+.av img{width:100%;height:100%;object-fit:cover;}
+#sb-nome-txt{color:#fff;font-weight:600;font-size:14px;}
+.hbtns{display:flex;gap:4px;}
+.ibtn{background:rgba(255,255,255,.15);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
+.ibtn:hover{background:rgba(255,255,255,.28);}
+#sb-busca-c{padding:7px 10px;background:#f6f6f6;}
+#sb-busca{width:100%;padding:8px 12px;border-radius:20px;border:1px solid #e8e8e8;font-size:13px;font-family:inherit;outline:none;background:#fff;}
+#online-t{padding:8px 14px 3px;font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;}
 #lista-on{flex:1;overflow-y:auto;padding:3px 0;}
-.uitem{display:flex;align-items:center;gap:9px;padding:9px 15px;}
-.uitem .av{width:36px;height:36px;font-size:13px;}
-.unome{font-size:14px;color:var(--tx);}
-.pontov{width:8px;height:8px;border-radius:50%;background:var(--g);margin-left:auto;flex-shrink:0;}
+.uitem{display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;border-radius:0;transition:background .15s;}
+.uitem:hover{background:#f5f5f5;}
+.uitem .av{width:38px;height:38px;font-size:14px;}
+.unome{font-size:14px;color:var(--tx);flex:1;}
+.pontov{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0;}
 
-/* CHAT */
-#chat{flex:1;display:flex;flex-direction:column;}
-#chat-hdr{background:var(--gd);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;}
+/* MAIN CHAT */
+#chat{flex:1;display:flex;flex-direction:column;position:relative;}
+#chat-hdr{background:var(--gd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+#chat-hdr-left{display:flex;align-items:center;gap:10px;}
+#chat-hdr-av{width:38px;height:38px;font-size:14px;cursor:pointer;}
 #chat-title{color:#fff;font-weight:700;font-size:15px;}
-#chat-sub{color:rgba(255,255,255,.6);font-size:12px;}
+#chat-sub{color:rgba(255,255,255,.65);font-size:12px;}
+#chat-hdr-btns{display:flex;gap:4px;align-items:center;}
+.hbtn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.85);padding:6px;border-radius:50%;display:flex;align-items:center;transition:background .2s;}
+.hbtn:hover{background:rgba(255,255,255,.15);}
+
 #status-bar{padding:5px 14px;font-size:12px;font-weight:500;text-align:center;display:none;}
 #status-bar.c{background:#fff3cd;color:#856404;display:block;}
 #status-bar.e{background:#f8d7da;color:#721c24;display:block;}
-#digitando-bar{padding:4px 16px;font-size:12px;color:var(--gm);font-style:italic;min-height:22px;background:#fff;}
+#digitando-bar{padding:3px 16px;font-size:12px;color:var(--gm);font-style:italic;min-height:20px;background:#fff;}
 
-#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:5px;
+#msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:4px;
   background-color:#efeae2;
   background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
 
-.mwrap{display:flex;flex-direction:column;}
+/* MENSAGENS */
+.mwrap{display:flex;flex-direction:column;position:relative;}
 .mwrap.minha{align-items:flex-end;}
 .mwrap.deles{align-items:flex-start;}
 .mnome{font-size:11px;font-weight:700;margin-bottom:2px;padding:0 4px;}
-.mbolha{max-width:68%;padding:7px 11px 5px;border-radius:11px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;}
-.mwrap.minha .mbolha{background:#dcf8c6;border-radius:11px 11px 2px 11px;}
-.mwrap.deles .mbolha{background:#fff;border-radius:11px 11px 11px 2px;box-shadow:0 1px 2px rgba(0,0,0,.07);}
-.mhora{font-size:10px;color:var(--mu);text-align:right;margin-top:2px;display:flex;align-items:center;justify-content:flex-end;gap:3px;}
-.msistema{text-align:center;font-size:11px;color:var(--mu);background:rgba(255,255,255,.7);border-radius:8px;padding:3px 11px;margin:3px auto;}
-.mimg{max-width:220px;max-height:220px;border-radius:8px;display:block;cursor:pointer;margin-bottom:2px;}
+.mbolha{max-width:67%;padding:7px 11px 4px;border-radius:10px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;}
+.mwrap.minha .mbolha{background:#dcf8c6;border-radius:10px 10px 2px 10px;}
+.mwrap.deles .mbolha{background:#fff;border-radius:10px 10px 10px 2px;box-shadow:0 1px 2px rgba(0,0,0,.07);}
+.mhora{font-size:10px;color:var(--mu);text-align:right;margin-top:2px;display:flex;align-items:center;justify-content:flex-end;gap:2px;}
+.msistema{text-align:center;font-size:11px;color:var(--mu);background:rgba(255,255,255,.75);border-radius:8px;padding:3px 11px;margin:3px auto;}
+.mimg{max-width:220px;max-height:220px;border-radius:7px;display:block;cursor:zoom-in;margin-bottom:2px;}
 .maudio{width:200px;margin-bottom:2px;}
-
-/* Reply quote inside bubble */
-.mreply{background:rgba(0,0,0,.07);border-left:3px solid var(--gm);border-radius:5px;padding:5px 8px;margin-bottom:5px;font-size:12px;}
+.mreply{background:rgba(0,0,0,.07);border-left:3px solid var(--gm);border-radius:5px;padding:4px 8px;margin-bottom:4px;font-size:12px;}
 .mreply-nome{font-weight:700;color:var(--gm);margin-bottom:1px;}
-.mreply-txt{color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:250px;}
+.mreply-txt{color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;}
+.reacoes{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px;}
+.reacao-b{background:rgba(255,255,255,.88);border:1px solid #ddd;border-radius:12px;padding:2px 7px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:2px;transition:background .15s;}
+.reacao-b:hover{background:#f0f0f0;}
+.reacao-b span{font-size:11px;color:#555;}
+.status-c{font-size:12px;}
+.status-c.enviado{color:#aaa;}
+.status-c.entregue{color:#aaa;}
+.status-c.visto{color:#53bdeb;}
 
-/* Reactions */
-.reacoes{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
-.reacao-badge{background:rgba(255,255,255,.85);border:1px solid #ddd;border-radius:12px;padding:2px 7px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:3px;}
-.reacao-badge span{font-size:11px;color:#555;}
+/* ENQUETE */
+.enquete-card{min-width:200px;}
+.enquete-pergunta{font-weight:600;margin-bottom:8px;}
+.enquete-opcao{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:rgba(0,0,0,.06);margin-bottom:5px;cursor:pointer;transition:background .2s;}
+.enquete-opcao:hover{background:rgba(0,0,0,.11);}
+.enquete-bar{flex:1;height:4px;border-radius:2px;background:#ccc;overflow:hidden;}
+.enquete-bar-fill{height:100%;background:var(--g);transition:width .3s;}
+.enquete-pct{font-size:11px;color:var(--mu);min-width:28px;text-align:right;}
 
-/* Status visto */
-.status-check{font-size:12px;}
-.status-check.enviado{color:#aaa;}
-.status-check.entregue{color:#aaa;}
-.status-check.visto{color:#53bdeb;}
+/* LOCALIZAÇÃO */
+.loc-card{min-width:180px;}
+.loc-map{width:100%;height:90px;background:#ddd;border-radius:7px;margin-bottom:4px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;}
 
-/* REPLY BAR (acima do input) */
-#reply-bar{display:none;background:#f0f0f0;border-top:1px solid #ddd;padding:8px 14px;align-items:center;gap:10px;}
+/* CONTATO */
+.contato-card{display:flex;align-items:center;gap:10px;padding:4px 0;}
+.contato-av{width:38px;height:38px;border-radius:50%;background:var(--gm);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;}
+
+/* REPLY BAR */
+#reply-bar{display:none;background:#f0f0f0;border-top:1px solid #ddd;padding:7px 12px;align-items:center;gap:10px;}
 #reply-bar.show{display:flex;}
-#reply-content{flex:1;}
-#reply-nome{font-size:12px;font-weight:700;color:var(--gm);}
-#reply-txt{font-size:12px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;}
-#reply-close{background:none;border:none;cursor:pointer;font-size:18px;color:#888;padding:0 4px;}
+#reply-nome-bar{font-size:12px;font-weight:700;color:var(--gm);}
+#reply-txt-bar{font-size:12px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px;}
+#reply-close-btn{background:none;border:none;cursor:pointer;font-size:17px;color:#888;}
 
-/* INPUT AREA */
-#input-area{padding:8px 12px;background:#f0f2f5;display:flex;gap:8px;align-items:center;}
-#btn-attach{background:none;border:none;cursor:pointer;padding:6px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#666;transition:background .2s;flex-shrink:0;}
-#btn-attach:hover{background:rgba(0,0,0,.07);}
-#input-msg{flex:1;padding:11px 16px;border-radius:22px;border:none;font-size:14px;font-family:inherit;outline:none;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);}
-#btn-mic,#btn-send{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;}
+/* INPUT */
+#input-area{padding:7px 10px;background:#f0f2f5;display:flex;gap:7px;align-items:center;}
+#btn-plus{background:none;border:none;cursor:pointer;padding:7px;border-radius:50%;color:#666;display:flex;transition:background .2s;flex-shrink:0;}
+#btn-plus:hover{background:rgba(0,0,0,.07);}
+#btn-emoji{background:none;border:none;cursor:pointer;padding:7px;border-radius:50%;color:#666;display:flex;transition:background .2s;flex-shrink:0;}
+#btn-emoji:hover{background:rgba(0,0,0,.07);}
+#input-msg{flex:1;padding:10px 14px;border-radius:22px;border:none;font-size:14px;font-family:inherit;outline:none;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+#btn-mic,#btn-send{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
 #btn-send{background:var(--g);}#btn-send:hover{background:var(--gm);}
-#btn-mic{background:#e0e0e0;}#btn-mic:hover{background:#d0d0d0;}
-#btn-mic.gravando{background:#f44336;animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
-#file-input{display:none;}
+#btn-mic{background:#e0e0e0;}#btn-mic.gravando{background:#f44336;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+input[type=file]{display:none;}
+
+/* PLUS MENU */
+#plus-menu{position:fixed;background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.17);padding:8px;z-index:9000;display:none;min-width:180px;}
+.pm-item{display:flex;align-items:center;gap:11px;width:100%;padding:9px 13px;border:none;background:none;cursor:pointer;font-size:14px;font-family:inherit;color:var(--tx);transition:background .15s;border-radius:8px;text-align:left;}
+.pm-item:hover{background:#f5f5f5;}
+.pm-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
 
 /* CONTEXT MENU */
-#ctx-menu{position:fixed;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:5px 0;z-index:9999;display:none;min-width:180px;overflow:hidden;}
-.ctx-item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;border:none;background:none;cursor:pointer;font-size:14px;font-family:inherit;color:var(--tx);transition:background .15s;white-space:nowrap;}
-.ctx-item:hover{background:#f5f5f5;}
-.ctx-item.danger{color:#e53935;}
+#ctx-menu{position:fixed;background:#fff;border-radius:11px;box-shadow:0 4px 22px rgba(0,0,0,.18);padding:4px 0;z-index:9500;display:none;min-width:170px;overflow:hidden;}
+.ctx-i{display:flex;align-items:center;gap:9px;width:100%;padding:9px 14px;border:none;background:none;cursor:pointer;font-size:13px;font-family:inherit;color:var(--tx);transition:background .15s;}
+.ctx-i:hover{background:#f5f5f5;}
+.ctx-i.danger{color:#e53935;}
 .ctx-sep{height:1px;background:#f0f0f0;margin:3px 0;}
 
 /* EMOJI PICKER */
-#emoji-picker{position:fixed;background:#fff;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.15);padding:10px;z-index:10000;display:none;gap:4px;flex-wrap:wrap;width:auto;}
-.epick-btn{background:none;border:none;cursor:pointer;font-size:22px;padding:5px;border-radius:8px;transition:background .15s;}
-.epick-btn:hover{background:#f0f0f0;}
+#emoji-picker{position:fixed;background:#fff;border-radius:14px;box-shadow:0 4px 22px rgba(0,0,0,.16);z-index:9600;display:none;width:320px;max-height:340px;flex-direction:column;overflow:hidden;}
+#ep-search{padding:8px 12px;border-bottom:1px solid #f0f0f0;}
+#ep-search input{width:100%;padding:7px 11px;border:1px solid #e0e0e0;border-radius:20px;font-size:13px;font-family:inherit;outline:none;}
+#ep-cats{display:flex;padding:6px 8px;gap:2px;border-bottom:1px solid #f0f0f0;flex-shrink:0;}
+.ecat{background:none;border:none;cursor:pointer;font-size:18px;padding:4px 6px;border-radius:8px;transition:background .15s;}
+.ecat:hover,.ecat.on{background:#f0f0f0;}
+#ep-grid{display:flex;flex-wrap:wrap;padding:8px;gap:2px;overflow-y:auto;flex:1;}
+.ep-btn{background:none;border:none;cursor:pointer;font-size:22px;padding:5px;border-radius:8px;transition:background .15s;}
+.ep-btn:hover{background:#f0f0f0;}
 
-/* MODAL SALA/SAIR */
-#modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:8888;display:none;align-items:center;justify-content:center;}
+/* REACTION EMOJI PICKER */
+#react-picker{position:fixed;background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.16);padding:8px 10px;z-index:9700;display:none;gap:3px;flex-wrap:nowrap;}
+.rp-btn{background:none;border:none;cursor:pointer;font-size:24px;padding:5px;border-radius:8px;transition:all .15s;}
+.rp-btn:hover{background:#f0f0f0;transform:scale(1.25);}
+
+/* MODAL GENÉRICO */
+#modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:8000;display:none;align-items:center;justify-content:center;}
 #modal-ov.on{display:flex;}
-#modal{background:#fff;border-radius:20px;padding:30px;width:330px;text-align:center;}
-#modal h2{font-size:19px;font-weight:700;margin-bottom:7px;}
-#modal p{color:var(--mu);font-size:13px;margin-bottom:20px;}
-.mcampo{text-align:left;margin-bottom:14px;}
-.mcampo label{font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;display:block;margin-bottom:5px;}
-.mcampo input{width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid #e8e8e8;font-size:14px;font-family:inherit;outline:none;}
-.mcampo input:focus{border-color:var(--g);}
-.mbtns{display:flex;gap:9px;}
-.mbtn-c{flex:1;padding:11px;border-radius:10px;border:1.5px solid #e0e0e0;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
-.mbtn-ok{flex:1;padding:11px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
-.mbtn-exit{width:100%;padding:11px;border-radius:10px;border:none;background:#ff5252;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;}
+#modal{background:#fff;border-radius:18px;padding:28px;width:330px;text-align:center;position:relative;}
+#modal h2{font-size:18px;font-weight:700;margin-bottom:6px;}
+#modal p{color:var(--mu);font-size:13px;margin-bottom:18px;}
+.mcampo{text-align:left;margin-bottom:12px;}
+.mcampo label{font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;display:block;margin-bottom:4px;}
+.mcampo input,.mcampo textarea{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #e8e8e8;font-size:14px;font-family:inherit;outline:none;resize:vertical;}
+.mcampo input:focus,.mcampo textarea:focus{border-color:var(--g);}
+.mbtns{display:flex;gap:8px;}
+.mbtn-c{flex:1;padding:10px;border-radius:10px;border:1.5px solid #ddd;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.mbtn-ok{flex:1;padding:10px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.mbtn-danger{width:100%;padding:10px;border-radius:10px;border:none;background:#ff4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;}
 
-/* IMAGE LIGHTBOX */
-#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:11000;display:none;align-items:center;justify-content:center;cursor:zoom-out;}
+/* PAINEL LATERAL (perfil / dados contato) */
+#painel-lateral{position:absolute;right:0;top:0;width:300px;height:100%;background:#fff;z-index:7000;display:none;flex-direction:column;border-left:1px solid #f0f0f0;transform:translateX(100%);transition:transform .25s;}
+#painel-lateral.on{display:flex;transform:translateX(0);}
+#pl-hdr{background:var(--gd);padding:14px 14px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+#pl-hdr button{background:none;border:none;cursor:pointer;color:#fff;padding:4px;}
+#pl-body{flex:1;overflow-y:auto;padding:0 0 20px;}
+#pl-av-grande{width:100px;height:100px;border-radius:50%;margin:-30px auto 12px;display:block;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;}
+#pl-av-grande img{width:100%;height:100%;object-fit:cover;}
+#pl-nome{text-align:center;font-size:17px;font-weight:700;padding:0 16px;}
+#pl-bio{text-align:center;font-size:13px;color:var(--mu);padding:4px 16px 12px;}
+.pl-secao{padding:12px 16px;border-top:1px solid #f5f5f5;}
+.pl-secao-title{font-size:11px;font-weight:700;color:var(--g);letter-spacing:1px;margin-bottom:8px;}
+.pl-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;cursor:pointer;border-radius:8px;transition:background .15s;}
+.pl-item:hover{background:#f8f8f8;padding-left:4px;}
+.pl-item.danger{color:#e53935;}
+.pl-item svg{flex-shrink:0;}
+
+/* GALERIA MÍDIA */
+.pl-galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:6px;}
+.pl-galeria-img{aspect-ratio:1;object-fit:cover;border-radius:4px;cursor:pointer;width:100%;}
+
+/* CHAMADA */
+#chamada-ov{position:fixed;inset:0;background:rgba(7,94,84,.95);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+#chamada-ov.on{display:flex;}
+#chamada-av{width:90px;height:90px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff;overflow:hidden;}
+#chamada-av img{width:100%;height:100%;object-fit:cover;}
+#chamada-nome{color:#fff;font-size:22px;font-weight:700;}
+#chamada-status{color:rgba(255,255,255,.7);font-size:14px;}
+#videos-area{display:flex;gap:12px;margin-top:10px;}
+#video-local,#video-remoto{width:180px;height:135px;background:#000;border-radius:10px;object-fit:cover;}
+#chamada-btns{display:flex;gap:16px;margin-top:10px;}
+.cbtn{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;}
+.cbtn:hover{transform:scale(1.08);}
+#btn-desligar{background:#f44336;}
+#btn-mute{background:rgba(255,255,255,.2);}
+#btn-cam{background:rgba(255,255,255,.2);}
+
+/* ENQUETE BUILDER */
+#enquete-builder{display:none;}
+.eq-opcao-row{display:flex;gap:6px;margin-bottom:6px;}
+.eq-opcao-inp{flex:1;padding:8px 10px;border-radius:8px;border:1px solid #e0e0e0;font-size:13px;font-family:inherit;outline:none;}
+.eq-opcao-inp:focus{border-color:var(--g);}
+.eq-rm{background:none;border:none;cursor:pointer;color:#e53935;font-size:18px;padding:0 4px;}
+
+/* LIGHTBOX */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.87);z-index:11000;display:none;align-items:center;justify-content:center;cursor:zoom-out;}
 #lightbox.on{display:flex;}
 #lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;}
+
+/* CAMERA MODAL */
+#camera-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#camera-ov.on{display:flex;}
+#camera-video{width:480px;max-width:90vw;border-radius:10px;background:#000;}
+#camera-canvas{display:none;}
+.camera-btns{display:flex;gap:12px;}
+.cbtn2{padding:10px 22px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;}
 
 ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px;}
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="tela-login">
-  <div class="logo">💬</div>
+  <div class="logo-login">💬</div>
   <h1>MeuChat</h1>
-  <p>Entre com seu nome e escolha uma sala</p>
-  <div class="campo"><label>SEU NOME</label><input id="inp-nome" type="text" placeholder="Como seus amigos vão te ver" maxlength="20"/></div>
-  <div class="campo"><label>SALA</label><input id="inp-sala" type="text" placeholder="Nome da sala" value="geral" maxlength="20"/></div>
+  <p>Entre com seu nome e escolha uma sala para começar</p>
+  <div class="campo-foto">
+    <div class="foto-preview" id="foto-preview-login" onclick="document.getElementById('foto-login-inp').click()">📷
+      <img id="foto-preview-img" src="" style="display:none"/>
+    </div>
+    <div style="flex:1">
+      <div class="campo" style="margin-bottom:0"><label>FOTO DE PERFIL</label></div>
+      <span style="font-size:11px;color:var(--mu)">Clique para adicionar</span>
+    </div>
+  </div>
+  <input type="file" id="foto-login-inp" accept="image/*" onchange="previewFotoLogin(this)"/>
+  <div class="campo"><label>SEU NOME</label><input id="inp-nome" type="text" placeholder="Como seus amigos vão te ver" maxlength="24"/></div>
+  <div class="campo"><label>BIO (opcional)</label><input id="inp-bio" type="text" placeholder="Uma frase sobre você" maxlength="60"/></div>
+  <div class="campo"><label>SALA</label><input id="inp-sala" type="text" placeholder="Nome da sala" value="geral" maxlength="24"/></div>
   <button class="btn-p" onclick="entrar()">Entrar no Chat →</button>
-  <p style="font-size:11px;color:#bbb;margin-top:14px;">Compartilhe o link com seus amigos!</p>
+  <p style="font-size:11px;color:#bbb;margin-top:12px">Compartilhe o link com seus amigos!</p>
 </div>
 
+<!-- APP -->
 <div id="app">
  <div id="app-inner">
+
+  <!-- SIDEBAR -->
   <div id="sidebar">
-    <div id="sb-header">
+    <div id="sb-hdr">
       <div class="hinfo">
-        <div class="av" id="av-proprio" style="width:32px;height:32px;background:var(--g)">?</div>
-        <span id="sb-nome">Você</span>
+        <div class="av" id="sb-av" style="width:34px;height:34px;background:var(--g);font-size:13px" onclick="abrirMeuPerfil()">?</div>
+        <span id="sb-nome-txt">Você</span>
       </div>
       <div class="hbtns">
         <button class="ibtn" onclick="abrirModal('sala')" title="Trocar sala">
@@ -174,541 +282,1179 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:fle
     <div id="lista-on"></div>
   </div>
 
+  <!-- CHAT -->
   <div id="chat">
     <div id="chat-hdr">
-      <div><div id="chat-title">Sala: geral</div><div id="chat-sub">0 pessoas online</div></div>
+      <div id="chat-hdr-left">
+        <div class="av" id="chat-hdr-av" style="width:38px;height:38px;font-size:14px;background:var(--g)" onclick="abrirInfoSala()">G</div>
+        <div><div id="chat-title">Sala: geral</div><div id="chat-sub">0 online</div></div>
+      </div>
+      <div id="chat-hdr-btns">
+        <button class="hbtn" onclick="iniciarChamada('audio')" title="Chamada de voz">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.2 15.2 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11.6 11.6 0 003.63.58 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.6 11.6 0 00.58 3.63 1 1 0 01-.25 1L6.6 10.8z" fill="currentColor"/></svg>
+        </button>
+        <button class="hbtn" onclick="iniciarChamada('video')" title="Videochamada">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 10l4.55-2.56A1 1 0 0121 8.37v7.26a1 1 0 01-1.45.89L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" fill="currentColor"/></svg>
+        </button>
+        <button class="hbtn" onclick="toggleBuscarMsgs()" title="Pesquisar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="hbtn" onclick="abrirMenuTresPontos(this)" title="Mais opções">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Busca inline -->
+    <div id="busca-inline" style="display:none;padding:6px 12px;background:#f0f2f5;border-bottom:1px solid #ddd;">
+      <input id="busca-inline-inp" placeholder="Pesquisar nas mensagens..." style="width:100%;padding:8px 12px;border-radius:20px;border:1px solid #ddd;font-size:13px;font-family:inherit;outline:none;" oninput="buscarInline(this.value)"/>
     </div>
     <div id="status-bar">Conectando...</div>
     <div id="digitando-bar"></div>
     <div id="msgs"></div>
-
     <div id="reply-bar">
-      <div style="color:var(--g);font-size:18px;">↩</div>
-      <div id="reply-content">
-        <div id="reply-nome">Nome</div>
-        <div id="reply-txt">mensagem</div>
-      </div>
-      <button id="reply-close" onclick="cancelarReply()">✕</button>
+      <div style="color:var(--g);font-size:16px">↩</div>
+      <div style="flex:1"><div id="reply-nome-bar">Nome</div><div id="reply-txt-bar">msg</div></div>
+      <button id="reply-close-btn" onclick="cancelarReply()">✕</button>
     </div>
-
     <div id="input-area">
-      <button id="btn-attach" onclick="document.getElementById('file-input').click()" title="Enviar imagem">
+      <button id="btn-plus" onclick="togglePlusMenu(event)" title="Anexar">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
       </button>
-      <input id="file-input" type="file" accept="image/*" onchange="enviarImagem(this)"/>
+      <button id="btn-emoji" onclick="toggleEmojiPicker(event)" title="Emoji">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8.5 14s1 2 3.5 2 3.5-2 3.5-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></svg>
+      </button>
       <input id="input-msg" type="text" placeholder="Digite uma mensagem..." maxlength="1000"
         onkeydown="onInputKey(event)" oninput="onInputChange()"/>
       <button id="btn-mic" onclick="toggleGravacao()" title="Gravar áudio">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z" fill="#666"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8" stroke="#666" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z" fill="#666"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8" stroke="#666" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
       <button id="btn-send" onclick="enviarTexto()">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
   </div>
+
+  <!-- PAINEL LATERAL (perfil/contato) -->
+  <div id="painel-lateral">
+    <div id="pl-hdr">
+      <button onclick="fecharPainel()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <span style="color:#fff;font-weight:600;font-size:15px" id="pl-hdr-titulo">Dados do contato</span>
+    </div>
+    <div id="pl-body">
+      <div id="pl-av-grande" onclick="editarFotoIfMeu()">?</div>
+      <div id="pl-nome">Nome</div>
+      <div id="pl-bio">Bio</div>
+      <div class="pl-secao">
+        <div class="pl-secao-title">MÍDIA</div>
+        <div class="pl-galeria" id="pl-galeria"></div>
+        <div id="pl-galeria-vazia" style="font-size:13px;color:var(--mu)">Nenhuma mídia</div>
+      </div>
+      <div class="pl-secao" id="pl-acoes"></div>
+    </div>
+  </div>
+
  </div>
 </div>
 
-<!-- Context Menu -->
+<!-- MENUS -->
+<div id="plus-menu">
+  <button class="pm-item" onclick="pmAcao('foto')"><div class="pm-ico" style="background:#e8f4ff">🖼️</div>Fotos e Vídeos</button>
+  <button class="pm-item" onclick="pmAcao('doc')"><div class="pm-ico" style="background:#e8f0ff">📄</div>Documento</button>
+  <button class="pm-item" onclick="pmAcao('camera')"><div class="pm-ico" style="background:#ffe8e8">📷</div>Câmera</button>
+  <button class="pm-item" onclick="pmAcao('audio-file')"><div class="pm-ico" style="background:#fff0e8">🎵</div>Áudio</button>
+  <button class="pm-item" onclick="pmAcao('localizacao')"><div class="pm-ico" style="background:#e8ffe8">📍</div>Localização</button>
+  <button class="pm-item" onclick="pmAcao('contato')"><div class="pm-ico" style="background:#f0e8ff">👤</div>Contato</button>
+  <button class="pm-item" onclick="pmAcao('enquete')"><div class="pm-ico" style="background:#fff8e8">📊</div>Enquete</button>
+</div>
+<input type="file" id="file-foto" accept="image/*,video/*" onchange="enviarArquivo(this,'imagem')"/>
+<input type="file" id="file-doc" accept="*/*" onchange="enviarArquivo(this,'imagem')"/>
+<input type="file" id="file-audio" accept="audio/*" onchange="enviarArquivo(this,'audio')"/>
+
 <div id="ctx-menu">
-  <button class="ctx-item" onclick="ctxAcao('responder')">↩ Responder</button>
-  <button class="ctx-item" onclick="ctxAcao('reagir')">😊 Reagir</button>
-  <button class="ctx-item" onclick="ctxAcao('copiar')">📋 Copiar</button>
-  <button class="ctx-item" onclick="ctxAcao('encaminhar')">↪ Encaminhar</button>
+  <button class="ctx-i" onclick="ctxAcao('responder')">↩ Responder</button>
+  <button class="ctx-i" onclick="ctxAcao('reagir')">😊 Reagir</button>
+  <button class="ctx-i" onclick="ctxAcao('copiar')">📋 Copiar</button>
+  <button class="ctx-i" onclick="ctxAcao('encaminhar')">↪ Encaminhar</button>
   <div class="ctx-sep"></div>
-  <button class="ctx-item danger" id="ctx-apagar" onclick="ctxAcao('apagar')" style="display:none">🗑 Apagar</button>
+  <button class="ctx-i danger" id="ctx-apagar-btn" onclick="ctxAcao('apagar')" style="display:none">🗑 Apagar</button>
 </div>
 
-<!-- Emoji Picker -->
+<div id="react-picker">
+  <button class="rp-btn" onclick="enviarReacao('👍')">👍</button>
+  <button class="rp-btn" onclick="enviarReacao('❤️')">❤️</button>
+  <button class="rp-btn" onclick="enviarReacao('😂')">😂</button>
+  <button class="rp-btn" onclick="enviarReacao('😮')">😮</button>
+  <button class="rp-btn" onclick="enviarReacao('😢')">😢</button>
+  <button class="rp-btn" onclick="enviarReacao('🙏')">🙏</button>
+  <button class="rp-btn" onclick="enviarReacao('🔥')">🔥</button>
+  <button class="rp-btn" onclick="enviarReacao('👏')">👏</button>
+  <button class="rp-btn" onclick="ctxAcao('reagir-mais')">➕</button>
+</div>
+
+<!-- EMOJI PICKER COMPLETO -->
 <div id="emoji-picker">
-  <button class="epick-btn" onclick="enviarReacao('👍')">👍</button>
-  <button class="epick-btn" onclick="enviarReacao('❤️')">❤️</button>
-  <button class="epick-btn" onclick="enviarReacao('😂')">😂</button>
-  <button class="epick-btn" onclick="enviarReacao('😮')">😮</button>
-  <button class="epick-btn" onclick="enviarReacao('😢')">😢</button>
-  <button class="epick-btn" onclick="enviarReacao('🙏')">🙏</button>
-  <button class="epick-btn" onclick="enviarReacao('🔥')">🔥</button>
-  <button class="epick-btn" onclick="enviarReacao('👏')">👏</button>
+  <div id="ep-search"><input id="ep-search-inp" placeholder="Pesquisar emoji..." oninput="filtrarEmoji(this.value)"/></div>
+  <div id="ep-cats">
+    <button class="ecat on" onclick="mostrarCatEmoji(0,this)">😀</button>
+    <button class="ecat" onclick="mostrarCatEmoji(1,this)">👋</button>
+    <button class="ecat" onclick="mostrarCatEmoji(2,this)">🐶</button>
+    <button class="ecat" onclick="mostrarCatEmoji(3,this)">🍕</button>
+    <button class="ecat" onclick="mostrarCatEmoji(4,this)">⚽</button>
+    <button class="ecat" onclick="mostrarCatEmoji(5,this)">🚗</button>
+    <button class="ecat" onclick="mostrarCatEmoji(6,this)">💡</button>
+    <button class="ecat" onclick="mostrarCatEmoji(7,this)">❤️</button>
+    <button class="ecat" onclick="mostrarCatEmoji(8,this)">🔢</button>
+  </div>
+  <div id="ep-grid"></div>
 </div>
 
-<!-- Modal -->
+<!-- MODAL GENÉRICO -->
 <div id="modal-ov">
   <div id="modal">
-    <h2 id="modal-title">Trocar de sala</h2>
-    <p id="modal-desc">Digite o nome da nova sala</p>
-    <div class="mcampo" id="modal-campo">
-      <label>NOVA SALA</label>
-      <input id="inp-nova-sala" type="text" placeholder="ex: amigos" maxlength="20"/>
-    </div>
-    <div class="mbtns">
+    <h2 id="modal-title">Modal</h2>
+    <p id="modal-desc"></p>
+    <div id="modal-content"></div>
+    <div class="mbtns" id="modal-btns">
       <button class="mbtn-c" onclick="fecharModal()">Cancelar</button>
-      <button class="mbtn-ok" onclick="confirmarModal()">Entrar</button>
+      <button class="mbtn-ok" id="modal-ok-btn" onclick="confirmarModal()">OK</button>
     </div>
-    <button class="mbtn-exit" id="btn-exit" onclick="deslogar()" style="display:none">🚪 Sair da conta</button>
+    <button class="mbtn-danger" id="modal-danger-btn" style="display:none"></button>
   </div>
 </div>
 
-<!-- Lightbox imagem -->
+<!-- CHAMADA -->
+<div id="chamada-ov">
+  <div id="chamada-av">?</div>
+  <div id="chamada-nome">Nome</div>
+  <div id="chamada-status">Chamando...</div>
+  <div id="videos-area" style="display:none">
+    <video id="video-local" autoplay muted playsinline></video>
+    <video id="video-remoto" autoplay playsinline></video>
+  </div>
+  <div id="chamada-btns">
+    <button class="cbtn" id="btn-mute" onclick="toggleMute()" title="Mudo" style="color:#fff">🎤</button>
+    <button class="cbtn" id="btn-cam" onclick="toggleCam()" title="Câmera" style="color:#fff;display:none">📹</button>
+    <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()">📵</button>
+  </div>
+</div>
+
+<!-- CÂMERA -->
+<div id="camera-ov">
+  <video id="camera-video" autoplay playsinline></video>
+  <canvas id="camera-canvas"></canvas>
+  <div class="camera-btns">
+    <button class="cbtn2" style="background:#fff" onclick="fecharCamera()">Cancelar</button>
+    <button class="cbtn2" style="background:var(--g);color:#fff" onclick="tirarFoto()">📸 Foto</button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
 <div id="lightbox" onclick="this.classList.remove('on')">
   <img id="lightbox-img" src="" alt=""/>
 </div>
 
 <script>
-// ======= CONFIG =======
+// =================== CONFIG ===================
 const URL_SERVIDOR = "wss://exciting-courtesy-production-a20c.up.railway.app";
 
-// ======= STATE =======
-let ws = null, meuNome = "", minhaSala = "", tentativas = 0;
-let todasMensagens = [], replyTo = null;
-let ctxMsgId = null, ctxEMinha = false;
-let digitandoMap = {}, digitandoTimer = null, estouDigitando = false;
-let mediaRecorder = null, audioChunks = [], gravando = false;
-let msgStatus = {}; // id -> "enviado"|"entregue"|"visto"
-let unreadIds = []; // IDs de mensagens recebidas não marcadas como vistas
+// =================== EMOJIS ===================
+const EMOJI_CATS = [
+  ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","😉","😊","😇","🥰","😍","🤩","😘","😗","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🤫","🤔","🤐","🤨","😐","😑","😶","😏","😒","🙄","😬","🤥","😌","😔","😪","🤤","😴","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","💫","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","😟","🙁","☹️","😮","😯","😲","😳","🥺","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👾","🤖"],
+  ["👋","🤚","🖐️","✋","🖖","👌","🤌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦵","🦶","👂","🦻","👃","🫀","🫁","🧠","🦷","🦴","👀","👁️","👅","👄","💋","🫦","🧔","👱","👩","🧑","👦","👧","🧒","👶","👴","👵"],
+  ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧","🐦","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🐛","🦋","🐌","🐞","🐜","🦟","🦗","🕷️","🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🦣","🐘","🦛","🦏","🐪","🐫","🦒","🦘","🦬","🐃","🐂","🐄","🐎","🐖","🐏","🐑","🦙","🐐","🦌","🐕","🐩","🦮","🐈","🐓","🦃","🦚","🦜","🦢","🦩","🕊️","🐇","🦝","🦨","🦡","🦫","🦦","🦥","🐁","🐀","🐿️","🦔"],
+  ["🍕","🍔","🍟","🌭","🍿","🧂","🥓","🥚","🍳","🧇","🥞","🧈","🍞","🥐","🥖","🫓","🥨","🧀","🥗","🥙","🌮","🌯","🫔","🥫","🍝","🍜","🍛","🍣","🍱","🥟","🦪","🍤","🍙","🍚","🍘","🍥","🥮","🍡","🧁","🍰","🎂","🍮","🍭","🍬","🍫","🍿","🍩","🍪","🌰","🥜","🍯","🧃","🥤","🧋","☕","🍵","🫖","🍺","🍻","🥂","🍷","🥃","🍸","🍹","🧉","🍾","🧊","🥄","🍴","🍽️"],
+  ["⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱","🏓","🏸","🏒","🥊","🥋","⛳","🏹","🎣","🤿","🎽","🎿","🛷","🥌","🎯","🎮","🎲","♟️","🎭","🎨","🎬","🎤","🎧","🎼","🎹","🥁","🪘","🎷","🎺","🎸","🪕","🎻"],
+  ["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🚚","🚛","🚜","🦯","🦽","🦼","🛴","🚲","🛵","🏍️","🛺","🚨","🚔","🚍","🚘","🚖","🛻","🚡","🚠","🚟","🚃","🚋","🚞","🚝","🚄","🚅","🚈","🚂","🚆","🚇","🚊","🚉","✈️","🛫","🛬","🛩️","💺","🛸","🚁","🛶","⛵","🚤","🛥️","🛳️","⛴️","🚢","⚓","🪝","⛽","🚧","🚦","🚥","🗺️","🧭","🏔️","⛰️","🌋","🗻","🏕️","🏖️","🏜️","🏝️","🏞️","🏟️","🏛️","🏗️","🧱","🏘️","🏚️","🏠","🏡","🏢","🏣","🏤","🏥","🏦","🏨","🏩","🏪","🏫","🏬","🏭","🏯","🏰","💒","🗼","🗽"],
+  ["💡","🔦","🕯️","🪔","🧯","🛢️","💰","💴","💵","💶","💷","💸","💳","🪙","💹","📈","📉","📊","📋","📌","📍","📎","🖇️","📏","📐","✂️","🗃️","🗄️","🗑️","🔒","🔓","🔏","🔐","🔑","🗝️","🔨","🪓","⛏️","⚒️","🛠️","🗡️","⚔️","🔫","🏹","🛡️","🔧","🔩","⚙️","🗜️","⚖️","🦯","🔗","⛓️","🧲","🔬","🔭","📡","💉","🩹","🩺","💊","🩻","🚪","🛏️","🛋️","🪑","🚽","🚿","🛁","📦","📫","📪","📬","📭","📮","🗳️","✏️","✒️","🖊️","🖋️","📝","📁","📂","🗂️","📅","📆","🗒️","🗓️","📇","📃","📄","📑","🔖","🏷️","💰","🔍","🔎","🗝️"],
+  ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❣️","💕","💞","💓","💗","💖","💘","💝","💟","☮️","✝️","☯️","🕉️","🔯","🪯","✡️","🛐","⛎","♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓","🆔","⚛️","🉑","☢️","☣️","📴","📳","🈶","🈚","🈸","🈺","🈷️","✴️","🆚","💮","🉐","㊙️","㊗️","🈴","🈵","🈹","🈲","🅰️","🅱️","🆎","🆑","🅾️","🆘","❌","⭕","🛑","⛔","📛","🚫","💯","💢","♨️","🚷","🚯","🚳","🚱","🔞","📵","🚭","❗","❕","❓","❔","‼️","⁉️","🔅","🔆","〽️","⚠️","🚸","🔱","⚜️","🔰","♻️","✅","🈯","💹","❎","🌐","🔣","ℹ️"],
+  ["0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","🔢","#️⃣","*️⃣","⏏️","▶️","⏸️","⏹️","⏺️","⏭️","⏮️","⏩","⏪","⏫","⏬","◀️","🔼","🔽","➡️","⬅️","⬆️","⬇️","↗️","↘️","↙️","↖️","↕️","↔️","↩️","↪️","⤴️","⤵️","🔀","🔁","🔂","🔃","🎦","🔅","🔆","📶","🛜","📳","📴","♀️","♂️","⚧️","✖️","➕","➖","➗","🟰","♾️","‼️","⁉️","❓","❔","❕","❗","〰️","💱","💲","⚕️","♻️","⚜️","🔱","📛","🔰","⭕","✅","☑️","✔️","❌","❎","➰","➿","〽️","✳️","✴️","❇️","©️","®️","™️"]
+];
 
-const CORES = ["#25D366","#128C7E","#075E54","#34B7F1","#E91E63","#9C27B0","#FF5722","#FF9800"];
-function cor(n){ let s=0; for(let c of n) s+=c.charCodeAt(0); return CORES[s%CORES.length]; }
-function ini(n){ return n.split(" ").slice(0,2).map(x=>x[0].toUpperCase()).join(""); }
-function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function linkify(t){ return esc(t).replace(/(https?:\/\/[^\s<>"]+)/g,'<a href="$1" target="_blank" style="color:#0d6efd;text-decoration:underline;word-break:break-all;">$1</a>'); }
-function hora(){ return new Date().toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit"}); }
-function scroll(){ const el=document.getElementById("msgs"); el.scrollTop=el.scrollHeight; }
+// =================== STATE ===================
+let ws=null, meuNome="", minhaSala="", meuFoto="", meuBio="";
+let tentativas=0, todasMensagens=[], replyTo=null;
+let ctxMsgId=null, ctxEMinha=false, ctxMsgData=null;
+let digitandoMap={}, estouDigitando=false, digitandoTimer=null;
+let mediaRecorder=null, audioChunks=[], gravando=false;
+let msgStatus={}, unreadIds=[];
+let fotoPerfis={}, panelPerfil=null, panelEMeu=false;
+let localStream=null, remoteStream=null, peerConn=null;
+let chamandoPara="", recebendoChamada=null, tipoCall="audio";
+let mutado=false, camOff=false;
+let cameraStream=null;
+let modalModo="", modalCallbackOk=null;
+let emojiCatAtual=0;
 
-// ======= LOGIN =======
+const CORES=["#25D366","#128C7E","#075E54","#34B7F1","#E91E63","#9C27B0","#FF5722","#FF9800","#2196F3","#00BCD4"];
+function cor(n){let s=0;for(let c of n)s+=c.charCodeAt(0);return CORES[s%CORES.length];}
+function ini(n){return n.split(" ").slice(0,2).map(x=>x[0].toUpperCase()).join("");}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function linkify(t){return esc(t).replace(/(https?:\/\/[^\s<>"]+)/g,'<a href="$1" target="_blank" style="color:#0d6efd;text-decoration:underline;word-break:break-all;">$1</a>');}
+function horaLocal(){return new Date().toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit"});}
+function scroll(){const el=document.getElementById("msgs");el.scrollTop=el.scrollHeight;}
+function fecharTudo(){["ctx-menu","plus-menu","react-picker","emoji-picker"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});}
+
+// =================== LOGIN ===================
+let fotoLoginB64="";
+function previewFotoLogin(inp){
+  const f=inp.files[0];if(!f)return;
+  comprimir(f,200,b64=>{
+    fotoLoginB64=b64;
+    const img=document.getElementById("foto-preview-img");
+    img.src=b64;img.style.display="block";
+    document.getElementById("foto-preview-login").style.fontSize="0";
+  });
+}
+
 function entrar(){
-  const nome = document.getElementById("inp-nome").value.trim();
-  const sala = document.getElementById("inp-sala").value.trim()||"geral";
-  if(!nome){ alert("Digite seu nome!"); return; }
-  meuNome=nome; minhaSala=sala;
-  localStorage.setItem("chat_n",nome); localStorage.setItem("chat_s",sala);
+  const nome=document.getElementById("inp-nome").value.trim();
+  const sala=document.getElementById("inp-sala").value.trim()||"geral";
+  const bio=document.getElementById("inp-bio").value.trim();
+  if(!nome){alert("Digite seu nome!");return;}
+  meuNome=nome;minhaSala=sala;meuBio=bio;meuFoto=fotoLoginB64;
+  localStorage.setItem("cn",nome);localStorage.setItem("cs",sala);
+  localStorage.setItem("cb",bio);localStorage.setItem("cf",fotoLoginB64);
   document.getElementById("tela-login").style.display="none";
   document.getElementById("app").style.display="block";
-  document.getElementById("sb-nome").textContent=nome;
-  document.getElementById("chat-title").textContent="Sala: "+sala;
-  const a=document.getElementById("av-proprio"); a.textContent=ini(nome); a.style.background=cor(nome);
+  atualizarUI();
   pedirNotificacao();
   conectar();
 }
 
+function atualizarUI(){
+  document.getElementById("sb-nome-txt").textContent=meuNome;
+  document.getElementById("chat-title").textContent="Sala: "+minhaSala;
+  setAv("sb-av",meuNome,meuFoto);
+}
+
 window.onload=()=>{
-  const n=localStorage.getItem("chat_n"), s=localStorage.getItem("chat_s");
-  if(n&&s){ document.getElementById("inp-nome").value=n; document.getElementById("inp-sala").value=s; entrar(); }
+  const n=localStorage.getItem("cn"),s=localStorage.getItem("cs");
+  if(n&&s){
+    meuNome=n;minhaSala=s;meuBio=localStorage.getItem("cb")||"";
+    meuFoto=localStorage.getItem("cf")||"";
+    document.getElementById("inp-nome").value=n;
+    document.getElementById("inp-sala").value=s;
+    document.getElementById("inp-bio").value=meuBio;
+    if(meuFoto){fotoLoginB64=meuFoto;const img=document.getElementById("foto-preview-img");img.src=meuFoto;img.style.display="block";}
+    entrar();
+  }
+  renderEmojiCat(0);
 };
 
-// ======= WEBSOCKET =======
+// =================== AVATAR HELPER ===================
+function setAv(id,nome,foto){
+  const el=document.getElementById(id);if(!el)return;
+  el.style.background=cor(nome);
+  if(foto){el.innerHTML=`<img src="${foto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`;} 
+  else{el.innerHTML=ini(nome);}
+}
+function setAvEl(el,nome,foto){
+  if(!el)return;
+  el.style.background=cor(nome);
+  if(foto){el.innerHTML=`<img src="${foto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`;} 
+  else{el.innerHTML=ini(nome);}
+}
+
+// =================== WEBSOCKET ===================
 function conectar(){
   const sb=document.getElementById("status-bar");
-  sb.className="c"; sb.textContent="Conectando...";
-  try{ ws=new WebSocket(URL_SERVIDOR); }
-  catch(e){ sb.className="e"; sb.textContent="❌ URL inválida"; return; }
+  sb.className="c";sb.textContent="Conectando...";sb.style.display="block";
+  try{ws=new WebSocket(URL_SERVIDOR);}
+  catch(e){sb.className="e";sb.textContent="❌ URL inválida";return;}
 
-  ws.onopen=()=>{ sb.className=""; sb.style.display="none"; tentativas=0;
-    ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:minhaSala})); };
+  ws.onopen=()=>{
+    sb.className="";sb.style.display="none";tentativas=0;
+    ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:minhaSala}));
+    // Envia perfil
+    if(meuFoto||meuBio) ws.send(JSON.stringify({tipo:"perfil",foto:meuFoto,bio:meuBio}));
+  };
 
   ws.onmessage=(ev)=>{
     const m=JSON.parse(ev.data);
     if(m.tipo==="historico") carregarHistorico(m.mensagens);
-    if(m.tipo==="mensagem"||m.tipo==="imagem"||m.tipo==="audio") receberMsg(m);
-    if(m.tipo==="sistema") addSistema(m.texto);
-    if(m.tipo==="usuarios_online") atualizarOnline(m.lista);
-    if(m.tipo==="confirmado"){
-      // Server confirmed message - status stays as "enviado" (already set)
-      // Update status check element to ensure it's visible
-      atualizarStatus(m.clientId, "enviado");
-    }
-    if(m.tipo==="apagar") removerMsg(m.id);
-    if(m.tipo==="reagir") atualizarReacoes(m.id,m.reacoes);
-    if(m.tipo==="digitando") onDigitando(m.nome);
-    if(m.tipo==="parou") onParou(m.nome);
-    if(m.tipo==="status") atualizarStatus(m.id,m.status);
+    else if(m.tipo==="perfis") Object.assign(fotoPerfis,m.perfis);
+    else if(m.tipo==="perfil_update"){fotoPerfis[m.nome]={foto:m.foto,bio:m.bio};atualizarOnlineUI();}
+    else if(["mensagem","imagem","audio","localizacao","contato","enquete"].includes(m.tipo)) receberMsg(m);
+    else if(m.tipo==="sistema") addSistema(m.texto);
+    else if(m.tipo==="usuarios_online") atualizarOnline(m.lista);
+    else if(m.tipo==="apagar") removerMsg(m.id);
+    else if(m.tipo==="reagir") atualizarReacoes(m.id,m.reacoes);
+    else if(m.tipo==="votar_update") atualizarVotos(m.id,m.votos);
+    else if(m.tipo==="digitando") onDigitando(m.nome);
+    else if(m.tipo==="parou") onParou(m.nome);
+    else if(m.tipo==="status") atualizarStatus(m.id,m.status);
+    else if(m.tipo==="limpar"){todasMensagens=[];document.getElementById("msgs").innerHTML="";}
+    else if(m.tipo==="confirmado"){/* ID confirmado */}
+    // WebRTC
+    else if(m.tipo==="call_offer") receberChamada(m);
+    else if(m.tipo==="call_answer") aceitarResposta(m);
+    else if(m.tipo==="call_reject") chamadaRejeitada();
+    else if(m.tipo==="call_end") encerrarChamada(true);
+    else if(m.tipo==="ice_candidate") adicionarIce(m);
   };
 
   ws.onclose=()=>{
     tentativas++;
     const t=Math.min(3000*tentativas,15000);
     const sb=document.getElementById("status-bar");
-    sb.className="c"; sb.textContent=`⚠️ Reconectando em ${t/1000}s...`;
+    sb.className="c";sb.style.display="block";
+    sb.textContent=`⚠️ Reconectando em ${t/1000}s...`;
     setTimeout(conectar,t);
   };
-  ws.onerror=()=>{ const sb=document.getElementById("status-bar"); sb.className="e"; sb.textContent="❌ Erro de conexão"; };
+  ws.onerror=()=>{const sb=document.getElementById("status-bar");sb.className="e";sb.style.display="block";sb.textContent="❌ Erro de conexão";};
 }
 
-// ======= MENSAGENS =======
+// =================== MENSAGENS ===================
 function carregarHistorico(msgs){
-  todasMensagens=[]; document.getElementById("msgs").innerHTML="";
-  msgs.forEach(m=>renderMsg(m, m.nome===meuNome, false));
+  const container=document.getElementById("msgs");
+  const existentes=new Set([...container.querySelectorAll("[data-id]")].map(e=>e.dataset.id));
+  // Limpa e re-renderiza para evitar duplicatas
+  todasMensagens=[];container.innerHTML="";
+  msgs.forEach(m=>{
+    if(!existentes.has(m.id)||true){// sempre re-renderiza do histórico limpo
+      todasMensagens.push({...m,eMinha:m.nome===meuNome});
+      container.appendChild(criarBolha(m,m.nome===meuNome));
+    }
+  });
+  scroll();
 }
 
 function receberMsg(m){
+  // Verifica duplicata (pode vir do histórico E em tempo real)
+  if(document.querySelector(`[data-id="${m.id}"]`)) return;
   const eMinha=(m.nome===meuNome);
-  renderMsg(m, eMinha, true);
+  todasMensagens.push({...m,eMinha});
+  document.getElementById("msgs").appendChild(criarBolha(m,eMinha));
+  scroll();
   if(!eMinha){
-    notificar(m.nome, m.tipo==="imagem"?"📷 Imagem":m.tipo==="audio"?"🎤 Áudio":m.texto);
+    notificar(m.nome,m.tipo==="imagem"?"📷 Imagem":m.tipo==="audio"?"🎤 Áudio":m.texto||"");
     unreadIds.push(m.id);
-    setTimeout(marcarVisto,1000);
+    setTimeout(marcarVisto,1200);
   }
 }
 
-function renderMsg(m, eMinha, novo){
-  todasMensagens.push({...m, eMinha});
-  const el=criarBolha(m, eMinha);
-  document.getElementById("msgs").appendChild(el);
-  if(novo) scroll();
-}
-
-function criarBolha(m, eMinha){
+function criarBolha(m,eMinha){
   const wrap=document.createElement("div");
   wrap.className="mwrap "+(eMinha?"minha":"deles");
   wrap.dataset.id=m.id;
 
   if(!eMinha){
-    const n=document.createElement("div");
-    n.className="mnome"; n.textContent=m.nome; n.style.color=cor(m.nome);
+    const n=document.createElement("div");n.className="mnome";
+    n.textContent=m.nome;n.style.color=cor(m.nome);
     wrap.appendChild(n);
   }
 
-  const bolha=document.createElement("div");
-  bolha.className="mbolha";
+  const bolha=document.createElement("div");bolha.className="mbolha";
 
-  // Reply quote
+  // Reply
   if(m.replyTo){
-    const rq=document.createElement("div"); rq.className="mreply";
-    const rn=document.createElement("div"); rn.className="mreply-nome"; rn.textContent=m.replyTo.nome;
-    const rt=document.createElement("div"); rt.className="mreply-txt";
-    rt.textContent=m.replyTo.tipo==="imagem"?"📷 Imagem":m.replyTo.tipo==="audio"?"🎤 Áudio":m.replyTo.texto;
-    rq.appendChild(rn); rq.appendChild(rt); bolha.appendChild(rq);
+    const rq=document.createElement("div");rq.className="mreply";
+    rq.innerHTML=`<div class="mreply-nome">${esc(m.replyTo.nome)}</div><div class="mreply-txt">${esc(m.replyTo.tipo==="imagem"?"📷 Imagem":m.replyTo.tipo==="audio"?"🎤 Áudio":m.replyTo.texto||"")}</div>`;
+    bolha.appendChild(rq);
   }
 
-  // Conteúdo
+  // Conteúdo por tipo
   if(m.tipo==="imagem"&&m.media){
-    const img=document.createElement("img"); img.className="mimg"; img.src=m.media;
-    img.onclick=(e)=>{ e.stopPropagation(); abrirLightbox(m.media); };
+    const img=document.createElement("img");img.className="mimg";img.src=m.media;
+    img.onclick=e=>{e.stopPropagation();document.getElementById("lightbox-img").src=m.media;document.getElementById("lightbox").classList.add("on");};
     bolha.appendChild(img);
   } else if(m.tipo==="audio"&&m.media){
-    const aud=document.createElement("audio"); aud.className="maudio"; aud.controls=true; aud.src=m.media;
-    bolha.appendChild(aud);
+    const aud=document.createElement("audio");aud.className="maudio";aud.controls=true;aud.src=m.media;bolha.appendChild(aud);
+  } else if(m.tipo==="localizacao"&&m.lat){
+    const d=document.createElement("div");d.className="loc-card";
+    d.innerHTML=`<div class="loc-map" onclick="window.open('https://maps.google.com/?q=${m.lat},${m.lng}','_blank')">📍</div><div style="font-size:12px;color:var(--mu)">📍 ${m.lat.toFixed(4)}, ${m.lng.toFixed(4)}<br><a href="https://maps.google.com/?q=${m.lat},${m.lng}" target="_blank" style="color:#0d6efd;font-size:11px">Abrir no Maps</a></div>`;
+    bolha.appendChild(d);
+  } else if(m.tipo==="contato"&&m.contatoNome){
+    const d=document.createElement("div");d.className="contato-card";
+    d.innerHTML=`<div class="contato-av">${ini(m.contatoNome)}</div><div><div style="font-weight:600;font-size:14px">${esc(m.contatoNome)}</div><div style="font-size:12px;color:var(--mu)">Contato</div></div>`;
+    bolha.appendChild(d);
+  } else if(m.tipo==="enquete"&&m.opcoes){
+    const d=document.createElement("div");d.className="enquete-card";
+    d.id="eq-"+m.id;
+    renderEnquete(d,m,eMinha);
+    bolha.appendChild(d);
   } else if(m.semMidia){
-    const sp=document.createElement("span"); sp.style.color="#999"; sp.style.fontStyle="italic";
-    sp.textContent=(m.tipo==="imagem"?"📷 Imagem":"🎤 Áudio")+" (não disponível offline)";
-    bolha.appendChild(sp);
+    const sp=document.createElement("span");sp.style.cssText="color:#999;font-style:italic";
+    sp.textContent=(m.tipo==="imagem"?"📷 Imagem":"🎤 Áudio")+" (offline)";bolha.appendChild(sp);
   }
 
-  if(m.texto){
-    const sp=document.createElement("span"); sp.innerHTML=linkify(m.texto); bolha.appendChild(sp);
+  if(m.texto&&m.tipo!=="enquete"){
+    const sp=document.createElement("span");sp.innerHTML=linkify(m.texto);bolha.appendChild(sp);
   }
 
   // Hora + status
-  const hora_div=document.createElement("div"); hora_div.className="mhora";
-  hora_div.innerHTML=m.hora;
+  const hd=document.createElement("div");hd.className="mhora";hd.innerHTML=m.hora;
   if(eMinha){
-    const st=document.createElement("span"); st.className="status-check enviado";
-    st.dataset.msgid=m.id; st.textContent="✓";
-    if(msgStatus[m.id]==="visto"){ st.textContent="✓✓"; st.className="status-check visto"; }
-    else if(msgStatus[m.id]==="entregue"){ st.textContent="✓✓"; st.className="status-check entregue"; }
-    hora_div.appendChild(st);
+    const st=document.createElement("span");st.className="status-c enviado";st.dataset.msgid=m.id;
+    const s=msgStatus[m.id];
+    if(s==="visto"){st.textContent="✓✓";st.className="status-c visto";}
+    else if(s==="entregue"){st.textContent="✓✓";st.className="status-c entregue";}
+    else{st.textContent="✓";}
+    hd.appendChild(st);
   }
-  bolha.appendChild(hora_div);
+  bolha.appendChild(hd);
 
   // Reações
-  const reac=document.createElement("div"); reac.className="reacoes"; reac.id="reac-"+m.id;
-  if(m.reacoes) atualizarReacoesEl(reac, m.reacoes);
-  wrap.appendChild(bolha); wrap.appendChild(reac);
+  const reac=document.createElement("div");reac.className="reacoes";reac.id="reac-"+m.id;
+  if(m.reacoes)atualizarReacoesEl(reac,m.reacoes);
+  wrap.appendChild(bolha);wrap.appendChild(reac);
 
   // Eventos
-  bolha.addEventListener("contextmenu",(e)=>{ e.preventDefault(); mostrarCtx(e,m.id,eMinha,m); });
-  bolha.addEventListener("click",(e)=>{ if(e.detail===2) mostrarCtx(e,m.id,eMinha,m); });
+  bolha.addEventListener("contextmenu",e=>{e.preventDefault();mostrarCtxMenu(e,m.id,eMinha,m);});
+  bolha.addEventListener("dblclick",e=>{mostrarCtxMenu(e,m.id,eMinha,m);});
 
   return wrap;
 }
 
-function mostrarCtx(e, id, eMinha, m){
-  fecharTudo(); ctxMsgId=id; ctxEMinha=eMinha; ctxMsgData=m;
-  const menu=document.getElementById("ctx-menu");
-  document.getElementById("ctx-apagar").style.display=eMinha?"block":"none";
-  menu.style.display="block";
-  const x=Math.min(e.clientX, window.innerWidth-190);
-  const y=Math.min(e.clientY, window.innerHeight-200);
-  menu.style.left=x+"px"; menu.style.top=y+"px";
-}
-
-let ctxMsgData=null;
-function ctxAcao(acao){
-  fecharTudo();
-  if(!ctxMsgId) return;
-  if(acao==="responder") iniciarReply(ctxMsgId, ctxMsgData);
-  if(acao==="reagir") mostrarEmojiPicker();
-  if(acao==="copiar"){ if(ctxMsgData) navigator.clipboard.writeText(ctxMsgData.texto||""); }
-  if(acao==="encaminhar") encaminhar(ctxMsgId, ctxMsgData);
-  if(acao==="apagar"){
-    if(ws&&ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({tipo:"apagar",id:ctxMsgId}));
-    removerMsg(ctxMsgId);
-  }
-}
-
-function mostrarEmojiPicker(){
-  const ep=document.getElementById("emoji-picker");
-  const menu=document.getElementById("ctx-menu");
-  const r=menu.getBoundingClientRect();
-  ep.style.display="flex";
-  ep.style.left=r.left+"px"; ep.style.top=(r.top-60)+"px";
-}
-
-function enviarReacao(emoji){
-  fecharTudo();
-  if(!ctxMsgId||!ws||ws.readyState!==WebSocket.OPEN) return;
-  // Envia pro servidor - o servidor vai mandar de volta pra TODOS atualizar
-  ws.send(JSON.stringify({tipo:"reagir",id:ctxMsgId,emoji}));
-}
-
-function atualizarReacoes(id, reacoes){
-  const el=document.getElementById("reac-"+id);
-  if(el) atualizarReacoesEl(el,reacoes);
-  const m=todasMensagens.find(x=>x.id===id);
-  if(m) m.reacoes=reacoes;
-}
-
-function atualizarReacoesEl(el, reacoes){
-  el.innerHTML="";
-  if(!reacoes) return;
-  Object.entries(reacoes).forEach(([emoji,nomes])=>{
-    if(!nomes.length) return;
-    const b=document.createElement("button"); b.className="reacao-badge";
-    b.title=nomes.join(", ");
-    b.innerHTML=`${emoji}<span>${nomes.length}</span>`;
-    b.onclick=()=>{ ctxMsgId=el.id.replace("reac-",""); enviarReacao(emoji); };
-    el.appendChild(b);
+function renderEnquete(el,m,eMinha){
+  const votos=m.votos||{};
+  const totalVotos=Object.values(votos).reduce((a,v)=>a+(v||[]).length,0);
+  let html=`<div class="enquete-pergunta">📊 ${esc(m.texto)}</div>`;
+  (m.opcoes||[]).forEach((op,i)=>{
+    const v=(votos[i]||[]).length;
+    const pct=totalVotos>0?Math.round(v/totalVotos*100):0;
+    const meuVoto=(votos[i]||[]).includes(meuNome);
+    html+=`<div class="enquete-opcao${meuVoto?" style='border:1.5px solid var(--g)':''}" onclick="votarEnquete('${m.id}',${i})">
+      <span style="font-size:13px;flex:none">${esc(op)}</span>
+      <div class="enquete-bar"><div class="enquete-bar-fill" style="width:${pct}%"></div></div>
+      <span class="enquete-pct">${pct}%</span>
+    </div>`;
   });
+  html+=`<div style="font-size:11px;color:var(--mu);margin-top:4px">${totalVotos} voto${totalVotos!==1?"s":""}</div>`;
+  el.innerHTML=html;
 }
 
-// ======= REPLY =======
-function iniciarReply(id, m){
-  replyTo={id, nome:m.nome, texto:m.texto||"", tipo:m.tipo};
-  document.getElementById("reply-nome").textContent=m.nome;
-  document.getElementById("reply-txt").textContent=m.tipo==="imagem"?"📷 Imagem":m.tipo==="audio"?"🎤 Áudio":m.texto;
-  document.getElementById("reply-bar").classList.add("show");
-  document.getElementById("input-msg").focus();
-}
-function cancelarReply(){ replyTo=null; document.getElementById("reply-bar").classList.remove("show"); }
-
-// ======= ENCAMINHAR =======
-function encaminhar(id, m){
-  const texto=(m.tipo==="imagem"||m.tipo==="audio") ? null : m.texto;
-  const media=m.media||null;
-  if(!ws||ws.readyState!==WebSocket.OPEN) return;
-  const novaMsg={
-    tipo: m.tipo,
-    texto: texto ? "↪ (Encaminhado)\n"+texto : "",
-    media: media,
-    mediaType: m.mediaType,
-    replyTo: null
-  };
-  ws.send(JSON.stringify(novaMsg));
-  const id2=Date.now().toString();
-  const renderObj={...novaMsg, id:id2, nome:meuNome, hora:hora(), reacoes:{}};
-  renderMsg(renderObj, true, true);
+function votarEnquete(msgId,opcao){
+  if(!ws||ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({tipo:"votar",id:msgId,opcao}));
 }
 
-// ======= ENVIAR TEXTO =======
+function atualizarVotos(id,votos){
+  const m=todasMensagens.find(x=>x.id===id);
+  if(m){m.votos=votos;const el=document.getElementById("eq-"+id);if(el)renderEnquete(el,m,m.eMinha);}
+}
+
+// =================== ENVIAR ===================
 function enviarTexto(){
   const inp=document.getElementById("input-msg");
   const texto=inp.value.trim();
-  if(!texto||!ws||ws.readyState!==WebSocket.OPEN) return;
+  if(!texto||!ws||ws.readyState!==WebSocket.OPEN)return;
   const id=Date.now().toString();
   msgStatus[id]="enviado";
   ws.send(JSON.stringify({tipo:"mensagem",texto,replyTo:replyTo||null,clientId:id}));
-  const m={id,tipo:"mensagem",nome:meuNome,texto,hora:hora(),replyTo:replyTo||null,reacoes:{}};
-  renderMsg(m, true, true);
-  inp.value=""; cancelarReply();
-  pararDigitando();
-}
-
-function onInputKey(e){ if(e.key==="Enter") enviarTexto(); }
-function onInputChange(){
-  if(!estouDigitando&&ws&&ws.readyState===WebSocket.OPEN){
-    estouDigitando=true; ws.send(JSON.stringify({tipo:"digitando"}));
+  const m={id,tipo:"mensagem",nome:meuNome,texto,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+  // Adiciona localmente sem esperar servidor
+  if(!document.querySelector(`[data-id="${id}"]`)){
+    todasMensagens.push({...m,eMinha:true});
+    document.getElementById("msgs").appendChild(criarBolha(m,true));
+    scroll();
   }
-  clearTimeout(digitandoTimer);
-  digitandoTimer=setTimeout(pararDigitando, 3000);
-}
-function pararDigitando(){
-  if(!estouDigitando) return;
-  estouDigitando=false;
-  if(ws&&ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({tipo:"parou"}));
+  inp.value="";cancelarReply();pararDigitando();
 }
 
-// ======= IMAGEM =======
-function enviarImagem(input){
-  const file=input.files[0]; if(!file) return;
-  if(file.size>16*1024*1024){ alert("Imagem muito grande! Máximo 16MB por foto.\nPara arquivos maiores, envie como link."); return; }
+function onInputKey(e){if(e.key==="Enter")enviarTexto();}
+function onInputChange(){
+  if(!estouDigitando&&ws&&ws.readyState===WebSocket.OPEN){estouDigitando=true;ws.send(JSON.stringify({tipo:"digitando"}));}
+  clearTimeout(digitandoTimer);digitandoTimer=setTimeout(pararDigitando,3000);
+}
+function pararDigitando(){if(!estouDigitando)return;estouDigitando=false;if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"parou"}));}
+
+// =================== ARQUIVOS ===================
+function comprimir(file,maxKB,cb){
   const reader=new FileReader();
-  reader.onload=(e)=>{
-    const media=e.target.result;
-    if(!ws||ws.readyState!==WebSocket.OPEN) return;
-    const id=Date.now().toString();
-    msgStatus[id]="enviado";
-    ws.send(JSON.stringify({tipo:"imagem",media,mediaType:file.type,texto:"",replyTo:replyTo||null,clientId:id}));
-    const m={id,tipo:"imagem",nome:meuNome,media,hora:hora(),replyTo:replyTo||null,reacoes:{}};
-    renderMsg(m,true,true); cancelarReply();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement("canvas");
+      let w=img.width,h=img.height;
+      const max=1600;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext("2d").drawImage(img,0,0,w,h);
+      cb(canvas.toDataURL("image/jpeg",0.82));
+    };
+    img.src=ev.target.result;
   };
   reader.readAsDataURL(file);
-  input.value="";
 }
 
-// CTRL+V para imagem
-document.addEventListener("paste",(e)=>{
-  const item=Array.from(e.clipboardData.items).find(i=>i.type.startsWith("image/"));
-  if(!item) return;
-  const file=item.getAsFile();
-  if(file.size>16*1024*1024){ alert("Imagem muito grande! Máximo 16MB por foto.\nPara arquivos maiores, envie como link."); return; }
+function enviarArquivo(inp,tipo){
+  const file=inp.files[0];if(!file)return;
+  if(file.size>16*1024*1024){alert("Arquivo grande demais! Máximo 16MB.");inp.value="";return;}
   const reader=new FileReader();
-  reader.onload=(ev)=>{
+  reader.onload=ev=>{
     const media=ev.target.result;
-    if(!ws||ws.readyState!==WebSocket.OPEN) return;
+    if(!ws||ws.readyState!==WebSocket.OPEN)return;
     const id=Date.now().toString();
     msgStatus[id]="enviado";
-    ws.send(JSON.stringify({tipo:"imagem",media,mediaType:file.type,texto:"",replyTo:replyTo||null,clientId:id}));
-    const m={id,tipo:"imagem",nome:meuNome,media,hora:hora(),replyTo:replyTo||null,reacoes:{}};
-    renderMsg(m,true,true); cancelarReply();
+    const tipoFinal=file.type.startsWith("video/")?"imagem":tipo;
+    ws.send(JSON.stringify({tipo:tipoFinal,media,mediaType:file.type,texto:"",replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:tipoFinal,nome:meuNome,media,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector(`[data-id="${id}"]`)){
+      todasMensagens.push({...m,eMinha:true});
+      document.getElementById("msgs").appendChild(criarBolha(m,true));
+      scroll();
+    }
+    cancelarReply();
   };
-  reader.readAsDataURL(file);
+  if(tipo==="audio")reader.readAsDataURL(file);
+  else comprimir(file,800,b64=>{
+    if(!ws||ws.readyState!==WebSocket.OPEN)return;
+    const id=Date.now().toString();msgStatus[id]="enviado";
+    ws.send(JSON.stringify({tipo:"imagem",media:b64,mediaType:"image/jpeg",texto:"",replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:"imagem",nome:meuNome,media:b64,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector(`[data-id="${id}"]`)){
+      todasMensagens.push({...m,eMinha:true});
+      document.getElementById("msgs").appendChild(criarBolha(m,true));
+      scroll();
+    }
+    cancelarReply();
+  });
+  inp.value="";
+}
+
+// CTRL+V
+document.addEventListener("paste",e=>{
+  const item=Array.from(e.clipboardData.items).find(i=>i.type.startsWith("image/"));
+  if(!item||!ws||ws.readyState!==WebSocket.OPEN)return;
+  const file=item.getAsFile();
+  comprimir(file,800,b64=>{
+    const id=Date.now().toString();msgStatus[id]="enviado";
+    ws.send(JSON.stringify({tipo:"imagem",media:b64,mediaType:"image/jpeg",texto:"",replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:"imagem",nome:meuNome,media:b64,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector(`[data-id="${id}"]`)){
+      todasMensagens.push({...m,eMinha:true});
+      document.getElementById("msgs").appendChild(criarBolha(m,true));
+      scroll();
+    }
+    cancelarReply();
+  });
 });
 
-function abrirLightbox(src){ document.getElementById("lightbox-img").src=src; document.getElementById("lightbox").classList.add("on"); }
-
-// ======= ÁUDIO =======
+// =================== ÁUDIO ===================
 async function toggleGravacao(){
   if(!gravando){
     try{
       const stream=await navigator.mediaDevices.getUserMedia({audio:true});
       audioChunks=[];
       mediaRecorder=new MediaRecorder(stream);
-      mediaRecorder.ondataavailable=(e)=>audioChunks.push(e.data);
+      mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
       mediaRecorder.onstop=()=>{
         const blob=new Blob(audioChunks,{type:"audio/webm"});
         stream.getTracks().forEach(t=>t.stop());
-        if(blob.size>2*1024*1024){ alert("Áudio muito longo!"); return; }
         const reader=new FileReader();
-        reader.onload=(ev)=>{
+        reader.onload=ev=>{
           const media=ev.target.result;
-          if(!ws||ws.readyState!==WebSocket.OPEN) return;
-          const id=Date.now().toString();
-          msgStatus[id]="enviado";
+          if(!ws||ws.readyState!==WebSocket.OPEN)return;
+          const id=Date.now().toString();msgStatus[id]="enviado";
           ws.send(JSON.stringify({tipo:"audio",media,mediaType:"audio/webm",texto:"",replyTo:replyTo||null,clientId:id}));
-          const m={id,tipo:"audio",nome:meuNome,media,hora:hora(),replyTo:replyTo||null,reacoes:{}};
-          renderMsg(m,true,true); cancelarReply();
+          const m={id,tipo:"audio",nome:meuNome,media,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+          if(!document.querySelector(`[data-id="${id}"]`)){
+            todasMensagens.push({...m,eMinha:true});
+            document.getElementById("msgs").appendChild(criarBolha(m,true));
+            scroll();
+          }
+          cancelarReply();
         };
         reader.readAsDataURL(blob);
       };
-      mediaRecorder.start();
-      gravando=true;
-      const btn=document.getElementById("btn-mic"); btn.classList.add("gravando"); btn.title="Parar gravação";
-    } catch(e){ alert("Permissão de microfone negada!"); }
+      mediaRecorder.start();gravando=true;
+      document.getElementById("btn-mic").classList.add("gravando");
+    }catch(e){alert("Permissão de microfone negada!");}
   } else {
-    if(mediaRecorder) mediaRecorder.stop();
-    gravando=false;
-    const btn=document.getElementById("btn-mic"); btn.classList.remove("gravando"); btn.title="Gravar áudio";
+    if(mediaRecorder)mediaRecorder.stop();
+    gravando=false;document.getElementById("btn-mic").classList.remove("gravando");
   }
 }
 
-// ======= NOTIFICAÇÕES =======
-function pedirNotificacao(){ if("Notification" in window && Notification.permission==="default") Notification.requestPermission(); }
-function notificar(nome,texto){
-  if(document.hasFocus()) return;
-  if(Notification.permission==="granted"){
-    new Notification(`${nome} — MeuChat`,{body:texto,icon:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%2325D366'/%3E%3C/svg%3E"});
+// =================== PLUS MENU ===================
+function togglePlusMenu(e){
+  e.stopPropagation();
+  const m=document.getElementById("plus-menu");
+  const show=m.style.display!=="block";
+  fecharTudo();
+  if(show){
+    m.style.display="block";
+    const r=e.currentTarget.getBoundingClientRect();
+    m.style.left=r.left+"px";m.style.top=(r.top-m.offsetHeight-4)+"px";
+    // Recalcula após exibir
+    setTimeout(()=>{m.style.top=(r.top-m.offsetHeight-4)+"px";},0);
   }
 }
 
-// ======= STATUS (visto/entregue) =======
-function atualizarStatus(id, status){
-  msgStatus[id]=status;
-  const el=document.querySelector(`.status-check[data-msgid="${id}"]`);
-  if(!el) return;
-  if(status==="visto"){ el.textContent="✓✓"; el.className="status-check visto"; }
-  else if(status==="entregue"){ el.textContent="✓✓"; el.className="status-check entregue"; }
+function pmAcao(tipo){
+  fecharTudo();
+  if(tipo==="foto")document.getElementById("file-foto").click();
+  else if(tipo==="doc")document.getElementById("file-doc").click();
+  else if(tipo==="audio-file")document.getElementById("file-audio").click();
+  else if(tipo==="camera")abrirCamera();
+  else if(tipo==="localizacao")enviarLocalizacao();
+  else if(tipo==="contato")pedirContato();
+  else if(tipo==="enquete")abrirEnquete();
 }
 
-function marcarVisto(){
-  if(!unreadIds.length||!ws||ws.readyState!==WebSocket.OPEN) return;
-  ws.send(JSON.stringify({tipo:"visto",ids:[...unreadIds]}));
-  unreadIds=[];
+function enviarLocalizacao(){
+  if(!navigator.geolocation){alert("Geolocalização não suportada!");return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    if(!ws||ws.readyState!==WebSocket.OPEN)return;
+    const id=Date.now().toString();
+    ws.send(JSON.stringify({tipo:"localizacao",lat,lng,texto:`📍 Localização`,replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:"localizacao",nome:meuNome,lat,lng,texto:"📍 Localização",hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector(`[data-id="${id}"]`)){
+      todasMensagens.push({...m,eMinha:true});
+      document.getElementById("msgs").appendChild(criarBolha(m,true));
+      scroll();
+    }
+    cancelarReply();
+  },()=>alert("Não foi possível obter sua localização."));
 }
 
-// ======= DIGITANDO =======
-function onDigitando(nome){ digitandoMap[nome]=true; updateDigitando(); }
-function onParou(nome){ delete digitandoMap[nome]; updateDigitando(); }
-function updateDigitando(){
-  const nomes=Object.keys(digitandoMap);
-  const bar=document.getElementById("digitando-bar");
-  if(!nomes.length){ bar.textContent=""; return; }
-  bar.textContent=nomes.length===1?`${nomes[0]} está digitando...`:nomes.slice(0,-1).join(", ")+" e "+nomes.slice(-1)+" estão digitando...";
+function pedirContato(){
+  abrirModalGenerico("Enviar Contato","Nome do contato a enviar:",
+    `<div class="mcampo"><label>NOME</label><input id="m-contato-nome" placeholder="Nome do contato"/></div>`,
+    ()=>{
+      const nome=document.getElementById("m-contato-nome").value.trim();
+      if(!nome)return;
+      const id=Date.now().toString();
+      ws.send(JSON.stringify({tipo:"contato",contatoNome:nome,texto:nome,replyTo:replyTo||null,clientId:id}));
+      const m={id,tipo:"contato",nome:meuNome,contatoNome:nome,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+      if(!document.querySelector(`[data-id="${id}"]`)){
+        todasMensagens.push({...m,eMinha:true});
+        document.getElementById("msgs").appendChild(criarBolha(m,true));
+        scroll();
+      }
+      cancelarReply();fecharModal();
+    }
+  );
 }
 
-// ======= ONLINE =======
+function abrirEnquete(){
+  abrirModalGenerico("Criar Enquete","",
+    `<div class="mcampo"><label>PERGUNTA</label><input id="eq-pergunta" placeholder="Digite a pergunta..."/></div>
+     <div id="eq-opcoes-lista">
+       <div class="eq-opcao-row"><input class="eq-opcao-inp" placeholder="Opção 1"/></div>
+       <div class="eq-opcao-row"><input class="eq-opcao-inp" placeholder="Opção 2"/></div>
+     </div>
+     <button onclick="addOpcaoEq()" style="width:100%;padding:8px;border-radius:8px;border:1px dashed var(--g);background:none;color:var(--g);cursor:pointer;font-size:13px;margin-top:4px">+ Adicionar opção</button>`,
+    ()=>{
+      const pergunta=document.getElementById("eq-pergunta").value.trim();
+      const opcoes=[...document.querySelectorAll(".eq-opcao-inp")].map(i=>i.value.trim()).filter(Boolean);
+      if(!pergunta||opcoes.length<2){alert("Preencha a pergunta e ao menos 2 opções!");return;}
+      const id=Date.now().toString();
+      ws.send(JSON.stringify({tipo:"enquete",texto:pergunta,opcoes,votos:{},replyTo:replyTo||null,clientId:id}));
+      const m={id,tipo:"enquete",nome:meuNome,texto:pergunta,opcoes,votos:{},hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+      if(!document.querySelector(`[data-id="${id}"]`)){
+        todasMensagens.push({...m,eMinha:true});
+        document.getElementById("msgs").appendChild(criarBolha(m,true));
+        scroll();
+      }
+      cancelarReply();fecharModal();
+    }
+  );
+}
+
+function addOpcaoEq(){
+  const lista=document.getElementById("eq-opcoes-lista");
+  const row=document.createElement("div");row.className="eq-opcao-row";
+  row.innerHTML=`<input class="eq-opcao-inp" placeholder="Opção ${lista.children.length+1}"/><button class="eq-rm" onclick="this.parentElement.remove()">✕</button>`;
+  lista.appendChild(row);
+}
+
+// =================== CÂMERA ===================
+async function abrirCamera(){
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({video:true});
+    document.getElementById("camera-video").srcObject=cameraStream;
+    document.getElementById("camera-ov").classList.add("on");
+  }catch(e){alert("Câmera não disponível!");}
+}
+function fecharCamera(){
+  if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());
+  cameraStream=null;document.getElementById("camera-ov").classList.remove("on");
+}
+function tirarFoto(){
+  const video=document.getElementById("camera-video");
+  const canvas=document.getElementById("camera-canvas");
+  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+  canvas.getContext("2d").drawImage(video,0,0);
+  const b64=canvas.toDataURL("image/jpeg",0.85);
+  fecharCamera();
+  const id=Date.now().toString();msgStatus[id]="enviado";
+  ws.send(JSON.stringify({tipo:"imagem",media:b64,mediaType:"image/jpeg",texto:"",replyTo:replyTo||null,clientId:id}));
+  const m={id,tipo:"imagem",nome:meuNome,media:b64,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+  if(!document.querySelector(`[data-id="${id}"]`)){
+    todasMensagens.push({...m,eMinha:true});
+    document.getElementById("msgs").appendChild(criarBolha(m,true));
+    scroll();
+  }
+  cancelarReply();
+}
+
+// =================== CONTEXT MENU ===================
+function mostrarCtxMenu(e,id,eMinha,m){
+  fecharTudo();ctxMsgId=id;ctxEMinha=eMinha;ctxMsgData=m;
+  const menu=document.getElementById("ctx-menu");
+  document.getElementById("ctx-apagar-btn").style.display=eMinha?"block":"none";
+  menu.style.display="block";
+  const x=Math.min(e.clientX,window.innerWidth-185);
+  const y=Math.min(e.clientY,window.innerHeight-180);
+  menu.style.left=x+"px";menu.style.top=y+"px";
+}
+
+function ctxAcao(acao){
+  fecharTudo();
+  if(!ctxMsgId)return;
+  if(acao==="responder")iniciarReply(ctxMsgId,ctxMsgData);
+  else if(acao==="reagir"){
+    const m=document.getElementById("ctx-menu");
+    const rp=document.getElementById("react-picker");
+    rp.style.display="flex";
+    rp.style.left=(parseInt(m.style.left)||0)+"px";
+    rp.style.top=(parseInt(m.style.top||0)-60)+"px";
+    setTimeout(()=>{},0);
+    return;
+  }
+  else if(acao==="reagir-mais"){fecharTudo();toggleEmojiPickerReacao();}
+  else if(acao==="copiar"){if(ctxMsgData)navigator.clipboard.writeText(ctxMsgData.texto||"");}
+  else if(acao==="encaminhar")encaminhar(ctxMsgData);
+  else if(acao==="apagar"){
+    if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"apagar",id:ctxMsgId}));
+    removerMsg(ctxMsgId);
+  }
+}
+
+function enviarReacao(emoji){
+  fecharTudo();
+  if(!ctxMsgId||!ws||ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({tipo:"reagir",id:ctxMsgId,emoji}));
+}
+
+function atualizarReacoes(id,reacoes){
+  const el=document.getElementById("reac-"+id);
+  if(el)atualizarReacoesEl(el,reacoes);
+  const m=todasMensagens.find(x=>x.id===id);
+  if(m)m.reacoes=reacoes;
+}
+
+function atualizarReacoesEl(el,reacoes){
+  el.innerHTML="";
+  if(!reacoes)return;
+  Object.entries(reacoes).forEach(([emoji,nomes])=>{
+    if(!nomes.length)return;
+    const b=document.createElement("button");b.className="reacao-b";
+    b.title=nomes.join(", ");b.innerHTML=`${emoji}<span>${nomes.length}</span>`;
+    b.onclick=()=>{ctxMsgId=el.id.replace("reac-","");enviarReacao(emoji);};
+    el.appendChild(b);
+  });
+}
+
+function encaminhar(m){
+  if(!m||!ws||ws.readyState!==WebSocket.OPEN)return;
+  const id=Date.now().toString();
+  const msg={tipo:m.tipo,texto:m.texto?("|↪ Encaminhado|\n"+m.texto):"|↪ Encaminhado|",media:m.media||null,mediaType:m.mediaType||null,lat:m.lat||null,lng:m.lng||null,clientId:id};
+  ws.send(JSON.stringify(msg));
+  const novo={...m,...msg,id,nome:meuNome,hora:horaLocal(),replyTo:null,reacoes:{}};
+  if(!document.querySelector(`[data-id="${id}"]`)){
+    todasMensagens.push({...novo,eMinha:true});
+    document.getElementById("msgs").appendChild(criarBolha(novo,true));
+    scroll();
+  }
+}
+
+// =================== REPLY ===================
+function iniciarReply(id,m){
+  replyTo={id,nome:m.nome,texto:m.texto||"",tipo:m.tipo};
+  document.getElementById("reply-nome-bar").textContent=m.nome;
+  document.getElementById("reply-txt-bar").textContent=m.tipo==="imagem"?"📷 Imagem":m.tipo==="audio"?"🎤 Áudio":m.texto||"";
+  document.getElementById("reply-bar").classList.add("show");
+  document.getElementById("input-msg").focus();
+}
+function cancelarReply(){replyTo=null;document.getElementById("reply-bar").classList.remove("show");}
+
+// =================== EMOJI PICKER ===================
+function toggleEmojiPicker(e){
+  e.stopPropagation();
+  const ep=document.getElementById("emoji-picker");
+  const show=ep.style.display!=="flex";
+  fecharTudo();
+  if(show){
+    ep.style.display="flex";
+    const r=e.currentTarget.getBoundingClientRect();
+    ep.style.left=r.left+"px";ep.style.top=(r.top-350)+"px";
+  }
+}
+
+function toggleEmojiPickerReacao(){
+  const ep=document.getElementById("emoji-picker");
+  ep.style.display="flex";ep.style.left="50%";ep.style.top="50%";ep.style.transform="translate(-50%,-50%)";
+}
+
+function renderEmojiCat(idx){
+  emojiCatAtual=idx;
+  const grid=document.getElementById("ep-grid");grid.innerHTML="";
+  EMOJI_CATS[idx].forEach(e=>{
+    const btn=document.createElement("button");btn.className="ep-btn";btn.textContent=e;
+    btn.onclick=()=>{inserirEmoji(e);};
+    grid.appendChild(btn);
+  });
+}
+
+function mostrarCatEmoji(idx,btn){
+  document.querySelectorAll(".ecat").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");renderEmojiCat(idx);
+}
+
+function filtrarEmoji(q){
+  const grid=document.getElementById("ep-grid");grid.innerHTML="";
+  if(!q){renderEmojiCat(emojiCatAtual);return;}
+  const todos=EMOJI_CATS.flat();
+  todos.forEach(e=>{
+    const btn=document.createElement("button");btn.className="ep-btn";btn.textContent=e;
+    btn.onclick=()=>inserirEmoji(e);
+    grid.appendChild(btn);
+  });
+}
+
+function inserirEmoji(e){
+  const inp=document.getElementById("input-msg");
+  const pos=inp.selectionStart;
+  inp.value=inp.value.slice(0,pos)+e+inp.value.slice(inp.selectionEnd);
+  inp.focus();inp.setSelectionRange(pos+e.length,pos+e.length);
+}
+
+// =================== ONLINE ===================
+let onlineAtual=[];
 function atualizarOnline(lista){
-  const c=document.getElementById("lista-on"); c.innerHTML="";
-  document.getElementById("chat-sub").textContent=`${lista.length} pessoa${lista.length!==1?"s":""} online`;
-  lista.forEach(n=>{
-    const d=document.createElement("div"); d.className="uitem";
-    d.innerHTML=`<div class="av" style="width:36px;height:36px;background:${cor(n)}">${ini(n)}</div><span class="unome">${esc(n)}</span><div class="pontov"></div>`;
+  onlineAtual=lista;
+  atualizarOnlineUI();
+}
+function atualizarOnlineUI(){
+  const c=document.getElementById("lista-on");c.innerHTML="";
+  document.getElementById("chat-sub").textContent=`${onlineAtual.length} pessoa${onlineAtual.length!==1?"s":""} online`;
+  onlineAtual.forEach(n=>{
+    const p=fotoPerfis[n]||{};
+    const d=document.createElement("div");d.className="uitem";
+    d.innerHTML=`<div class="av" style="width:38px;height:38px;font-size:13px;background:${cor(n)};overflow:hidden">${p.foto?`<img src="${p.foto}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`:ini(n)}</div><span class="unome">${esc(n)}</span><div class="pontov"></div>`;
+    d.onclick=()=>abrirPerfil(n);
     c.appendChild(d);
   });
 }
 
-// ======= UTILS =======
-function addSistema(t){ const d=document.createElement("div"); d.className="msistema"; d.textContent=t; document.getElementById("msgs").appendChild(d); scroll(); }
-function removerMsg(id){ const e=document.querySelector(`[data-id="${id}"]`); if(e) e.remove(); todasMensagens=todasMensagens.filter(m=>m.id!==id); }
-function buscar(t){
-  const c=document.getElementById("msgs"); c.innerHTML="";
-  const f=t?todasMensagens.filter(m=>(m.texto||"").toLowerCase().includes(t.toLowerCase())):todasMensagens;
-  f.forEach(m=>c.appendChild(criarBolha(m,m.eMinha))); scroll();
+// =================== STATUS / VISTO ===================
+function atualizarStatus(id,status){
+  msgStatus[id]=status;
+  const el=document.querySelector(`.status-c[data-msgid="${id}"]`);
+  if(!el)return;
+  if(status==="visto"){el.textContent="✓✓";el.className="status-c visto";}
+  else if(status==="entregue"){el.textContent="✓✓";el.className="status-c entregue";}
 }
 
-// ======= MODAL =======
-let modalModo="sala";
+function marcarVisto(){
+  if(!unreadIds.length||!ws||ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({tipo:"visto",ids:[...unreadIds]}));unreadIds=[];
+}
+
+// =================== DIGITANDO ===================
+function onDigitando(nome){digitandoMap[nome]=true;updateDigBar();}
+function onParou(nome){delete digitandoMap[nome];updateDigBar();}
+function updateDigBar(){
+  const nomes=Object.keys(digitandoMap);
+  const bar=document.getElementById("digitando-bar");
+  bar.textContent=!nomes.length?"":nomes.length===1?`${nomes[0]} está digitando...`:nomes.slice(0,-1).join(", ")+" e "+nomes.slice(-1)+" estão digitando...";
+}
+
+// =================== UTILS ===================
+function addSistema(t){const d=document.createElement("div");d.className="msistema";d.textContent=t;document.getElementById("msgs").appendChild(d);scroll();}
+function removerMsg(id){const e=document.querySelector(`[data-id="${id}"]`);if(e)e.remove();todasMensagens=todasMensagens.filter(m=>m.id!==id);}
+function buscar(t){const c=document.getElementById("msgs");c.innerHTML="";const f=t?todasMensagens.filter(m=>(m.texto||"").toLowerCase().includes(t.toLowerCase())):todasMensagens;f.forEach(m=>c.appendChild(criarBolha(m,m.eMinha)));scroll();}
+
+function toggleBuscarMsgs(){
+  const bar=document.getElementById("busca-inline");
+  const show=bar.style.display==="none"||!bar.style.display;
+  bar.style.display=show?"block":"none";
+  if(show)document.getElementById("busca-inline-inp").focus();
+  else{document.getElementById("busca-inline-inp").value="";buscarInline("");}
+}
+
+function buscarInline(q){
+  const c=document.getElementById("msgs");c.innerHTML="";
+  const f=q?todasMensagens.filter(m=>(m.texto||"").toLowerCase().includes(q.toLowerCase())):todasMensagens;
+  f.forEach(m=>c.appendChild(criarBolha(m,m.eMinha)));scroll();
+}
+
+// =================== NOTIFICAÇÕES ===================
+function pedirNotificacao(){if("Notification"in window&&Notification.permission==="default")Notification.requestPermission();}
+function notificar(nome,texto){
+  if(document.hasFocus())return;
+  if(Notification.permission==="granted")
+    new Notification(`${nome} — MeuChat`,{body:texto,icon:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%2325D366'/%3E%3C/svg%3E"});
+}
+
+// =================== PAINEL LATERAL ===================
+function abrirPerfil(nome){
+  panelPerfil=nome;panelEMeu=(nome===meuNome);
+  const p=fotoPerfis[nome]||{};
+  document.getElementById("pl-hdr-titulo").textContent=panelEMeu?"Meu Perfil":"Dados do contato";
+  const avGrande=document.getElementById("pl-av-grande");
+  avGrande.style.background=cor(nome);
+  if(p.foto){avGrande.innerHTML=`<img src="${p.foto}" style="width:100%;height:100%;object-fit:cover"/>`;}
+  else{avGrande.innerHTML=`<span style="font-size:36px;font-weight:700;color:#fff">${ini(nome)}</span>`;}
+  document.getElementById("pl-nome").textContent=nome;
+  document.getElementById("pl-bio").textContent=p.bio||"";
+  // Galeria
+  const galeria=document.getElementById("pl-galeria");galeria.innerHTML="";
+  const vazia=document.getElementById("pl-galeria-vazia");
+  const midias=todasMensagens.filter(m=>m.tipo==="imagem"&&m.media&&(m.nome===nome||panelEMeu));
+  if(midias.length){vazia.style.display="none";midias.slice(0,9).forEach(m=>{const img=document.createElement("img");img.className="pl-galeria-img";img.src=m.media;img.onclick=()=>{document.getElementById("lightbox-img").src=m.media;document.getElementById("lightbox").classList.add("on");};galeria.appendChild(img);});}
+  else{vazia.style.display="block";}
+  // Ações
+  const acoes=document.getElementById("pl-acoes");acoes.innerHTML="";
+  if(panelEMeu){
+    acoes.innerHTML=`<div class="pl-secao-title">CONFIGURAÇÕES</div>
+    <div class="pl-item" onclick="editarBio()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--gm)" stroke-width="2"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--gm)" stroke-width="2"/></svg> Editar bio</div>
+    <div class="pl-item" onclick="editarFoto()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="var(--gm)" stroke-width="2"/><path d="M20 4h-3.17L15 2H9L7.17 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" stroke="var(--gm)" stroke-width="2"/></svg> Trocar foto</div>`;
+  } else {
+    acoes.innerHTML=`<div class="pl-secao-title">OPÇÕES</div>
+    <div class="pl-item" onclick="iniciarChamada('audio')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.2 15.2 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11.6 11.6 0 003.63.58 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.6 11.6 0 00.58 3.63 1 1 0 01-.25 1L6.6 10.8z" fill="var(--gm)"/></svg> Chamar ${nome}</div>
+    <div class="pl-item danger" onclick="limparConversa()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="#e53935" stroke-width="2"/></svg> Limpar conversa</div>`;
+  }
+  document.getElementById("painel-lateral").classList.add("on");
+}
+
+function abrirMeuPerfil(){abrirPerfil(meuNome);}
+function abrirInfoSala(){abrirPerfil(meuNome);}
+function fecharPainel(){document.getElementById("painel-lateral").classList.remove("on");}
+
+function editarFotoIfMeu(){if(panelEMeu)editarFoto();}
+function editarFoto(){
+  const inp=document.createElement("input");inp.type="file";inp.accept="image/*";
+  inp.onchange=()=>{
+    const f=inp.files[0];if(!f)return;
+    comprimir(f,200,b64=>{
+      meuFoto=b64;localStorage.setItem("cf",b64);
+      fotoPerfis[meuNome]={...fotoPerfis[meuNome]||{},foto:b64};
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"perfil",foto:b64}));
+      setAv("sb-av",meuNome,b64);
+      const avG=document.getElementById("pl-av-grande");
+      avG.innerHTML=`<img src="${b64}" style="width:100%;height:100%;object-fit:cover"/>`;
+    });
+  };
+  inp.click();
+}
+
+function editarBio(){
+  abrirModalGenerico("Editar Bio","",
+    `<div class="mcampo"><label>SUA BIO</label><input id="m-bio-inp" value="${esc(meuBio)}" placeholder="Uma frase sobre você" maxlength="60"/></div>`,
+    ()=>{
+      const bio=document.getElementById("m-bio-inp").value.trim();
+      meuBio=bio;localStorage.setItem("cb",bio);
+      fotoPerfis[meuNome]={...fotoPerfis[meuNome]||{},bio};
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"perfil",bio}));
+      document.getElementById("pl-bio").textContent=bio;
+      fecharModal();
+    }
+  );
+}
+
+function limparConversa(){
+  if(!confirm("Apagar todas as mensagens da sala para todos?"))return;
+  if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"limpar"}));
+  fecharPainel();
+}
+
+// =================== MENU 3 PONTOS ===================
+function abrirMenuTresPontos(btn){
+  fecharTudo();
+  const m=document.getElementById("ctx-menu");
+  m.innerHTML=`
+    <button class="ctx-i" onclick="abrirPerfil('${meuNome}');fecharTudo()">👤 Dados do contato</button>
+    <button class="ctx-i" onclick="fecharTudo()">✅ Selecionar mensagens</button>
+    <button class="ctx-i" onclick="fecharTudo()">🔕 Silenciar notificações</button>
+    <button class="ctx-i" onclick="fecharTudo()">⏱ Mensagens temporárias</button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-i danger" onclick="limparConversa();fecharTudo()">🗑 Limpar conversa</button>
+    <button class="ctx-i danger" onclick="deslogar()">🚪 Sair da conta</button>`;
+  const r=btn.getBoundingClientRect();
+  m.style.display="block";
+  m.style.right="10px";m.style.left="auto";
+  m.style.top=(r.bottom+4)+"px";
+}
+
+// =================== MODAL SALA/SAIR ===================
 function abrirModal(modo){
   modalModo=modo;
   if(modo==="sala"){
     document.getElementById("modal-title").textContent="Trocar de sala";
     document.getElementById("modal-desc").textContent="Digite o nome da nova sala";
-    document.getElementById("modal-campo").style.display="block";
-    document.getElementById("btn-exit").style.display="none";
+    document.getElementById("modal-content").innerHTML=`<div class="mcampo"><label>NOVA SALA</label><input id="inp-nova-sala" type="text" placeholder="ex: amigos" maxlength="24"/></div>`;
+    document.getElementById("modal-danger-btn").style.display="none";
+    document.getElementById("modal-ok-btn").textContent="Entrar";
+    modalCallbackOk=()=>{
+      const s=document.getElementById("inp-nova-sala").value.trim();if(!s){alert("Digite a sala!");return;}
+      minhaSala=s;localStorage.setItem("cs",s);
+      document.getElementById("chat-title").textContent="Sala: "+s;
+      document.getElementById("msgs").innerHTML="";todasMensagens=[];
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:s}));
+      fecharModal();
+    };
   } else {
     document.getElementById("modal-title").textContent="Opções";
     document.getElementById("modal-desc").textContent=`Logado: ${meuNome} • Sala: ${minhaSala}`;
-    document.getElementById("modal-campo").style.display="block";
-    document.getElementById("btn-exit").style.display="block";
+    document.getElementById("modal-content").innerHTML=`<div class="mcampo"><label>NOVA SALA</label><input id="inp-nova-sala" type="text" placeholder="ex: amigos" maxlength="24"/></div>`;
+    document.getElementById("modal-danger-btn").style.display="block";
+    document.getElementById("modal-danger-btn").textContent="🚪 Sair da conta";
+    document.getElementById("modal-danger-btn").onclick=deslogar;
+    document.getElementById("modal-ok-btn").textContent="Trocar sala";
+    modalCallbackOk=()=>{
+      const s=document.getElementById("inp-nova-sala").value.trim();if(!s){alert("Digite a sala!");return;}
+      minhaSala=s;localStorage.setItem("cs",s);
+      document.getElementById("chat-title").textContent="Sala: "+s;
+      document.getElementById("msgs").innerHTML="";todasMensagens=[];
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:s}));
+      fecharModal();
+    };
   }
-  document.getElementById("inp-nova-sala").value="";
   document.getElementById("modal-ov").classList.add("on");
-  setTimeout(()=>document.getElementById("inp-nova-sala").focus(),100);
 }
-function fecharModal(){ document.getElementById("modal-ov").classList.remove("on"); }
-function confirmarModal(){
-  const s=document.getElementById("inp-nova-sala").value.trim(); if(!s){alert("Digite a sala!");return;}
-  minhaSala=s; localStorage.setItem("chat_s",s);
-  document.getElementById("chat-title").textContent="Sala: "+s;
-  document.getElementById("msgs").innerHTML=""; todasMensagens=[];
-  if(ws&&ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:s}));
-  fecharModal();
+
+function abrirModalGenerico(titulo,desc,html,cbOk){
+  document.getElementById("modal-title").textContent=titulo;
+  document.getElementById("modal-desc").textContent=desc;
+  document.getElementById("modal-content").innerHTML=html;
+  document.getElementById("modal-danger-btn").style.display="none";
+  document.getElementById("modal-ok-btn").textContent="OK";
+  modalCallbackOk=cbOk;
+  document.getElementById("modal-ov").classList.add("on");
 }
+
+function fecharModal(){document.getElementById("modal-ov").classList.remove("on");}
+function confirmarModal(){if(modalCallbackOk)modalCallbackOk();}
+
 function deslogar(){
-  localStorage.removeItem("chat_n"); localStorage.removeItem("chat_s");
-  if(ws) ws.close();
-  fecharModal();
+  localStorage.removeItem("cn");localStorage.removeItem("cs");
+  if(ws)ws.close();fecharModal();
   document.getElementById("app").style.display="none";
   document.getElementById("tela-login").style.display="block";
-  document.getElementById("inp-nome").value=""; document.getElementById("inp-sala").value="geral";
   todasMensagens=[];
 }
 
-// ======= FECHAR MENUS =======
-function fecharTudo(){
-  document.getElementById("ctx-menu").style.display="none";
-  document.getElementById("emoji-picker").style.display="none";
+// =================== WEBRTC CHAMADAS ===================
+const ICE_SERVERS={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
+
+async function iniciarChamada(tipo){
+  const online=onlineAtual.filter(n=>n!==meuNome);
+  if(!online.length){alert("Ninguém online para chamar!");return;}
+  if(online.length===1){fazerChamada(online[0],tipo);}
+  else{
+    abrirModalGenerico("Iniciar Chamada","Escolha quem chamar:",
+      `<select id="m-call-sel" style="width:100%;padding:10px;border-radius:10px;border:1.5px solid #ddd;font-size:14px">${online.map(n=>`<option>${n}</option>`).join("")}</select>`,
+      ()=>{const nome=document.getElementById("m-call-sel").value;fecharModal();fazerChamada(nome,tipo);}
+    );
+  }
 }
+
+async function fazerChamada(para,tipo){
+  tipoCall=tipo;chamandoPara=para;
+  mostrarUIchamada(para,"Chamando...",tipo);
+  try{
+    localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:tipo==="video"});
+    if(tipo==="video"){const v=document.getElementById("video-local");v.srcObject=localStream;document.getElementById("videos-area").style.display="flex";}
+    peerConn=new RTCPeerConnection(ICE_SERVERS);
+    localStream.getTracks().forEach(t=>peerConn.addTrack(t,localStream));
+    peerConn.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({tipo:"ice_candidate",to:para,candidate:e.candidate}));};
+    peerConn.ontrack=e=>{remoteStream=e.streams[0];document.getElementById("video-remoto").srcObject=remoteStream;};
+    const offer=await peerConn.createOffer();
+    await peerConn.setLocalDescription(offer);
+    ws.send(JSON.stringify({tipo:"call_offer",to:para,offer,video:tipo==="video"}));
+  }catch(e){alert("Erro na chamada: "+e.message);encerrarChamada(true);}
+}
+
+function receberChamada(m){
+  recebendoChamada=m;tipoCall=m.video?"video":"audio";
+  mostrarUIchamada(m.from,"Chamada recebida... Aceitar?",tipoCall);
+  document.getElementById("chamada-btns").innerHTML=`
+    <button class="cbtn" style="background:var(--g);color:#fff" onclick="aceitarChamada()">📞</button>
+    <button class="cbtn" id="btn-desligar" onclick="rejeitarChamada()" style="background:#f44336">📵</button>`;
+}
+
+async function aceitarChamada(){
+  if(!recebendoChamada)return;
+  document.getElementById("chamada-status").textContent="Conectando...";
+  document.getElementById("chamada-btns").innerHTML=`
+    <button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff">🎤</button>
+    <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>`;
+  try{
+    localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:tipoCall==="video"});
+    if(tipoCall==="video"){const v=document.getElementById("video-local");v.srcObject=localStream;document.getElementById("videos-area").style.display="flex";}
+    peerConn=new RTCPeerConnection(ICE_SERVERS);
+    localStream.getTracks().forEach(t=>peerConn.addTrack(t,localStream));
+    peerConn.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({tipo:"ice_candidate",to:recebendoChamada.from,candidate:e.candidate}));};
+    peerConn.ontrack=e=>{remoteStream=e.streams[0];document.getElementById("video-remoto").srcObject=remoteStream;};
+    await peerConn.setRemoteDescription(recebendoChamada.offer);
+    const answer=await peerConn.createAnswer();
+    await peerConn.setLocalDescription(answer);
+    ws.send(JSON.stringify({tipo:"call_answer",to:recebendoChamada.from,answer}));
+    document.getElementById("chamada-status").textContent="Em chamada";
+  }catch(e){alert("Erro: "+e.message);encerrarChamada(true);}
+}
+
+async function aceitarResposta(m){
+  if(!peerConn)return;
+  await peerConn.setRemoteDescription(m.answer);
+  document.getElementById("chamada-status").textContent="Em chamada";
+  document.getElementById("chamada-btns").innerHTML=`
+    <button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff">🎤</button>
+    <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>`;
+}
+
+async function adicionarIce(m){if(peerConn&&m.candidate)await peerConn.addIceCandidate(m.candidate);}
+function rejeitarChamada(){if(recebendoChamada)ws.send(JSON.stringify({tipo:"call_reject",to:recebendoChamada.from}));encerrarChamada(true);}
+function chamadaRejeitada(){document.getElementById("chamada-status").textContent="Chamada recusada";setTimeout(()=>encerrarChamada(true),1500);}
+
+function encerrarChamada(silencioso=false){
+  if(!silencioso&&chamandoPara&&ws&&ws.readyState===WebSocket.OPEN)
+    ws.send(JSON.stringify({tipo:"call_end",to:chamandoPara||(recebendoChamada?.from)}));
+  if(peerConn){peerConn.close();peerConn=null;}
+  if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
+  remoteStream=null;recebendoChamada=null;chamandoPara="";
+  document.getElementById("chamada-ov").classList.remove("on");
+  document.getElementById("videos-area").style.display="none";
+  document.getElementById("video-local").srcObject=null;
+  document.getElementById("video-remoto").srcObject=null;
+  document.getElementById("chamada-btns").innerHTML=`
+    <button class="cbtn" id="btn-mute" onclick="toggleMute()" style="color:#fff;background:rgba(255,255,255,.2)">🎤</button>
+    <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>`;
+}
+
+function mostrarUIchamada(nome,status,tipo){
+  const p=fotoPerfis[nome]||{};
+  const av=document.getElementById("chamada-av");
+  av.style.background=cor(nome);
+  if(p.foto){av.innerHTML=`<img src="${p.foto}" style="width:100%;height:100%;object-fit:cover"/>`;}
+  else{av.innerHTML=ini(nome);}
+  document.getElementById("chamada-nome").textContent=nome;
+  document.getElementById("chamada-status").textContent=status;
+  if(tipo==="video")document.getElementById("btn-cam").style.display="flex";
+  document.getElementById("chamada-ov").classList.add("on");
+}
+
+function toggleMute(){
+  mutado=!mutado;
+  if(localStream)localStream.getAudioTracks().forEach(t=>t.enabled=!mutado);
+  document.getElementById("btn-mute").textContent=mutado?"🔇":"🎤";
+}
+function toggleCam(){
+  camOff=!camOff;
+  if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=!camOff);
+  document.getElementById("btn-cam").textContent=camOff?"📷":"📹";
+}
+
+// =================== EVENTOS GLOBAIS ===================
 document.addEventListener("click",fecharTudo);
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ fecharTudo(); fecharModal(); document.getElementById("lightbox").classList.remove("on"); } });
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){fecharTudo();fecharModal();document.getElementById("lightbox").classList.remove("on");fecharCamera();}
+});
 </script>
 </body>
 </html>

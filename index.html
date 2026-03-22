@@ -311,6 +311,11 @@ function conectar(){
     if(m.tipo==="mensagem"||m.tipo==="imagem"||m.tipo==="audio") receberMsg(m);
     if(m.tipo==="sistema") addSistema(m.texto);
     if(m.tipo==="usuarios_online") atualizarOnline(m.lista);
+    if(m.tipo==="confirmado"){
+      // Server confirmed message - status stays as "enviado" (already set)
+      // Update status check element to ensure it's visible
+      atualizarStatus(m.clientId, "enviado");
+    }
     if(m.tipo==="apagar") removerMsg(m.id);
     if(m.tipo==="reagir") atualizarReacoes(m.id,m.reacoes);
     if(m.tipo==="digitando") onDigitando(m.nome);
@@ -451,18 +456,8 @@ function mostrarEmojiPicker(){
 function enviarReacao(emoji){
   fecharTudo();
   if(!ctxMsgId||!ws||ws.readyState!==WebSocket.OPEN) return;
+  // Envia pro servidor - o servidor vai mandar de volta pra TODOS atualizar
   ws.send(JSON.stringify({tipo:"reagir",id:ctxMsgId,emoji}));
-  // Atualiza localmente
-  const m=todasMensagens.find(x=>x.id===ctxMsgId);
-  if(m){
-    if(!m.reacoes) m.reacoes={};
-    if(!m.reacoes[emoji]) m.reacoes[emoji]=[];
-    const idx=m.reacoes[emoji].indexOf(meuNome);
-    if(idx===-1) m.reacoes[emoji].push(meuNome);
-    else{ m.reacoes[emoji].splice(idx,1); if(!m.reacoes[emoji].length) delete m.reacoes[emoji]; }
-    const el=document.getElementById("reac-"+ctxMsgId);
-    if(el) atualizarReacoesEl(el,m.reacoes);
-  }
 }
 
 function atualizarReacoes(id, reacoes){
@@ -520,7 +515,7 @@ function enviarTexto(){
   if(!texto||!ws||ws.readyState!==WebSocket.OPEN) return;
   const id=Date.now().toString();
   msgStatus[id]="enviado";
-  ws.send(JSON.stringify({tipo:"mensagem",texto,replyTo:replyTo||null}));
+  ws.send(JSON.stringify({tipo:"mensagem",texto,replyTo:replyTo||null,clientId:id}));
   const m={id,tipo:"mensagem",nome:meuNome,texto,hora:hora(),replyTo:replyTo||null,reacoes:{}};
   renderMsg(m, true, true);
   inp.value=""; cancelarReply();
@@ -544,14 +539,14 @@ function pararDigitando(){
 // ======= IMAGEM =======
 function enviarImagem(input){
   const file=input.files[0]; if(!file) return;
-  if(file.size>2*1024*1024){ alert("Imagem muito grande! Máximo 2MB."); return; }
+  if(file.size>16*1024*1024){ alert("Imagem muito grande! Máximo 16MB por foto.\nPara arquivos maiores, envie como link."); return; }
   const reader=new FileReader();
   reader.onload=(e)=>{
     const media=e.target.result;
     if(!ws||ws.readyState!==WebSocket.OPEN) return;
     const id=Date.now().toString();
     msgStatus[id]="enviado";
-    ws.send(JSON.stringify({tipo:"imagem",media,mediaType:file.type,texto:"",replyTo:replyTo||null}));
+    ws.send(JSON.stringify({tipo:"imagem",media,mediaType:file.type,texto:"",replyTo:replyTo||null,clientId:id}));
     const m={id,tipo:"imagem",nome:meuNome,media,hora:hora(),replyTo:replyTo||null,reacoes:{}};
     renderMsg(m,true,true); cancelarReply();
   };
@@ -564,14 +559,14 @@ document.addEventListener("paste",(e)=>{
   const item=Array.from(e.clipboardData.items).find(i=>i.type.startsWith("image/"));
   if(!item) return;
   const file=item.getAsFile();
-  if(file.size>2*1024*1024){ alert("Imagem muito grande! Máximo 2MB."); return; }
+  if(file.size>16*1024*1024){ alert("Imagem muito grande! Máximo 16MB por foto.\nPara arquivos maiores, envie como link."); return; }
   const reader=new FileReader();
   reader.onload=(ev)=>{
     const media=ev.target.result;
     if(!ws||ws.readyState!==WebSocket.OPEN) return;
     const id=Date.now().toString();
     msgStatus[id]="enviado";
-    ws.send(JSON.stringify({tipo:"imagem",media,mediaType:file.type,texto:"",replyTo:replyTo||null}));
+    ws.send(JSON.stringify({tipo:"imagem",media,mediaType:file.type,texto:"",replyTo:replyTo||null,clientId:id}));
     const m={id,tipo:"imagem",nome:meuNome,media,hora:hora(),replyTo:replyTo||null,reacoes:{}};
     renderMsg(m,true,true); cancelarReply();
   };
@@ -598,7 +593,7 @@ async function toggleGravacao(){
           if(!ws||ws.readyState!==WebSocket.OPEN) return;
           const id=Date.now().toString();
           msgStatus[id]="enviado";
-          ws.send(JSON.stringify({tipo:"audio",media,mediaType:"audio/webm",texto:"",replyTo:replyTo||null}));
+          ws.send(JSON.stringify({tipo:"audio",media,mediaType:"audio/webm",texto:"",replyTo:replyTo||null,clientId:id}));
           const m={id,tipo:"audio",nome:meuNome,media,hora:hora(),replyTo:replyTo||null,reacoes:{}};
           renderMsg(m,true,true); cancelarReply();
         };

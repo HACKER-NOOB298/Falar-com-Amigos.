@@ -117,6 +117,7 @@ function horaAtual() {
   });
 }
 
-server.listen(PORT, () => {
-  console.log(`🌐 Acesse em: http://localhost:${PORT}`);
+// 0.0.0.0 é obrigatório pro Railway conseguir acessar o servidor
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`🌐 Servidor rodando na porta ${PORT}`);
 });

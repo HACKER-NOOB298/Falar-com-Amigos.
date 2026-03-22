@@ -18,7 +18,6 @@ function salvar() {
 
 function addMsg(sala, msg) {
   if (!historicoSalas[sala]) historicoSalas[sala] = [];
-  // Não salva media no disco (muito pesado), só texto
   const paraHistorico = { ...msg };
   if (paraHistorico.media) { paraHistorico.media = null; paraHistorico.semMidia = true; }
   historicoSalas[sala].push(paraHistorico);
@@ -28,7 +27,9 @@ function addMsg(sala, msg) {
 }
 
 const server = http.createServer((req, res) => { res.writeHead(200); res.end("OK"); });
-const wss = new WebSocket.Server({ server });
+
+// Aumenta limite do WebSocket para 100MB
+const wss = new WebSocket.Server({ server, maxPayload: 100 * 1024 * 1024 });
 const usuarios = new Map();
 const remetentes = new Map();
 
@@ -57,9 +58,11 @@ wss.on("connection", (ws) => {
 
       if (!usuario) return;
 
-      if (["mensagem","imagem","audio"].includes(msg.tipo)) {
+      if (["mensagem", "imagem", "audio"].includes(msg.tipo)) {
+        // Usa o ID do cliente para manter consistência de status
+        const id = msg.clientId || Date.now().toString();
         const novaMsg = {
-          id: Date.now().toString(),
+          id,
           tipo: msg.tipo,
           nome: usuario.nome,
           texto: msg.texto || "",
@@ -70,10 +73,17 @@ wss.on("connection", (ws) => {
           reacoes: {}
         };
         addMsg(usuario.sala, novaMsg);
+
+        // Confirma ID pro remetente
+        ws.send(JSON.stringify({ tipo: "confirmado", clientId: msg.clientId, id }));
+
         const count = broadcast(novaMsg, usuario.sala, ws);
-        remetentes.set(novaMsg.id, ws);
+        remetentes.set(id, ws);
+
+        // Avisa remetente sobre entrega
         if (count > 0)
-          ws.send(JSON.stringify({ tipo: "status", id: novaMsg.id, status: "entregue" }));
+          ws.send(JSON.stringify({ tipo: "status", id, status: "entregue" }));
+        return;
       }
 
       if (msg.tipo === "apagar") {
@@ -82,6 +92,7 @@ wss.on("connection", (ws) => {
           if (idx !== -1) { historicoSalas[usuario.sala].splice(idx, 1); salvar(); }
         }
         broadcast({ tipo: "apagar", id: msg.id }, usuario.sala, null);
+        return;
       }
 
       if (msg.tipo === "reagir") {
@@ -97,9 +108,11 @@ wss.on("connection", (ws) => {
               if (!m.reacoes[msg.emoji].length) delete m.reacoes[msg.emoji];
             }
             salvar();
-            broadcast({ tipo: "reagir", id: msg.id, reacoes: m.reacoes }, usuario.sala, null);
+            // Manda pra TODOS incluindo o remetente (não atualiza localmente no cliente)
+            broadcastTodos({ tipo: "reagir", id: msg.id, reacoes: m.reacoes }, usuario.sala);
           }
         }
+        return;
       }
 
       if (msg.tipo === "digitando")
@@ -139,6 +152,16 @@ function broadcast(dados, sala, excluir = null) {
     if (u && u.sala === sala) { c.send(json); count++; }
   });
   return count;
+}
+
+// Broadcast para TODOS incluindo o remetente
+function broadcastTodos(dados, sala) {
+  const json = JSON.stringify(dados);
+  wss.clients.forEach(c => {
+    if (c.readyState !== WebSocket.OPEN) return;
+    const u = usuarios.get(c);
+    if (u && u.sala === sala) c.send(json);
+  });
 }
 
 function broadcastOnline(sala) {

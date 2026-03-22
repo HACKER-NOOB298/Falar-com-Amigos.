@@ -1506,6 +1506,10 @@ async function aceitarChamada(){
     '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px">📵</button>';
   // Avisa quem chamou que foi aceito
   if(ws)ws.send(JSON.stringify({tipo:"call_answer",to:recebendoChamada.from}));
+  // Resume AudioContext (requer gesto do usuário — clique no botão Aceitar)
+  if(!audioCtxRemoto) audioCtxRemoto=new AudioContext();
+  if(audioCtxRemoto.state==="suspended") await audioCtxRemoto.resume();
+  audioNextTime=0;
   await iniciarCaptura(recebendoChamada.from);
 }
 
@@ -1514,6 +1518,10 @@ async function aceitarResposta(m){
   emChamada=true;chamando=false;
   setStatusChamada("✓ Em chamada");
   tocarToque(true);
+  // Resume AudioContext (requer gesto do usuário)
+  if(!audioCtxRemoto) audioCtxRemoto=new AudioContext();
+  if(audioCtxRemoto.state==="suspended") audioCtxRemoto.resume();
+  audioNextTime=0;
   document.getElementById("chamada-btns").innerHTML=
     '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">🎤</button>'+
     (tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">📹</button>':'')+
@@ -1535,16 +1543,28 @@ async function iniciarCaptura(para){
     setStatusChamada("✓ Em chamada");
 
     // Grava e envia áudio em chunks de 300ms
+    // Precisamos guardar o header do WebM (primeiro chunk) para decodificar os demais
     const mimeType=MediaRecorder.isTypeSupported("audio/webm;codecs=opus")?"audio/webm;codecs=opus":"audio/webm";
-    callRecorder=new MediaRecorder(localStream,{mimeType,audioBitsPerSecond:32000});
+    callRecorder=new MediaRecorder(localStream,{mimeType,audioBitsPerSecond:24000});
+    let headerChunk=null; // primeiro chunk contém o cabeçalho WebM
     callRecorder.ondataavailable=async e=>{
       if(!e.data||e.data.size<10||!emChamada)return;
       if(mutado)return;
-      const b64=await blobParaB64(e.data);
-      if(ws&&ws.readyState===WebSocket.OPEN)
-        ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:b64,kind:"audio"}));
+      if(!headerChunk){
+        // Primeiro chunk = header, salva e envia com flag
+        headerChunk=e.data;
+        const b64=await blobParaB64(headerChunk);
+        if(ws&&ws.readyState===WebSocket.OPEN)
+          ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:b64,kind:"audio",isHeader:true}));
+      } else {
+        // Chunks seguintes: envia header+chunk combinados para ser decodificável independentemente
+        const combined=new Blob([headerChunk,e.data],{type:mimeType});
+        const b64=await blobParaB64(combined);
+        if(ws&&ws.readyState===WebSocket.OPEN)
+          ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:b64,kind:"audio"}));
+      }
     };
-    callRecorder.start(300);
+    callRecorder.start(500); // chunks de 500ms - mais estável
 
     // Envia vídeo a 3fps como JPEG
     if(tipoCall==="video"){
@@ -1575,20 +1595,32 @@ function blobParaB64(blob){
 
 // Recebe chunk de áudio/vídeo do outro lado
 let audioCtxRemoto=null;
+let audioNextTime=0; // scheduler para tocar chunks em sequência
 async function receberChunk(m){
   if(!emChamada)return;
   if(m.kind==="audio"){
-    // Decodifica e toca
+    // Ignora chunks de header — foram enviados apenas para sync
+    if(m.isHeader)return;
     try{
-      if(!audioCtxRemoto)audioCtxRemoto=new AudioContext();
+      if(!audioCtxRemoto||audioCtxRemoto.state==="closed")audioCtxRemoto=new AudioContext();
+      if(audioCtxRemoto.state==="suspended")await audioCtxRemoto.resume();
       const raw=atob(m.chunk);
       const arr=new Uint8Array(raw.length);
       for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
-      audioCtxRemoto.decodeAudioData(arr.buffer.slice(0),buf=>{
+      audioCtxRemoto.decodeAudioData(arr.buffer.slice(0),(buf)=>{
         const src=audioCtxRemoto.createBufferSource();
-        src.buffer=buf;src.connect(audioCtxRemoto.destination);src.start();
-      },()=>{});
-    }catch(e){}
+        const gain=audioCtxRemoto.createGain();
+        gain.gain.value=1.2; // leve boost de volume
+        src.buffer=buf;
+        src.connect(gain);
+        gain.connect(audioCtxRemoto.destination);
+        // Agenda para tocar na sequência correta sem sobreposição
+        const now=audioCtxRemoto.currentTime;
+        if(audioNextTime<now) audioNextTime=now+0.05;
+        src.start(audioNextTime);
+        audioNextTime+=buf.duration;
+      },(err)=>console.log("decode err:",err));
+    }catch(e){console.log("audio chunk err:",e);}
   } else if(m.kind==="video"){
     // Mostra frame no video-remoto como imagem
     const vr=document.getElementById("video-remoto");

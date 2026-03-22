@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const PORT = process.env.PORT || 3000;
 const ARQUIVO = "./mensagens.json";
-const MAX_MSGS = 100;
+const MAX_MSGS = 150;
 
 let historicoSalas = {};
 try {
@@ -18,22 +18,32 @@ function salvar() {
 
 function addMsg(sala, msg) {
   if (!historicoSalas[sala]) historicoSalas[sala] = [];
-  const paraHistorico = { ...msg };
-  if (paraHistorico.media) { paraHistorico.media = null; paraHistorico.semMidia = true; }
-  historicoSalas[sala].push(paraHistorico);
+  const h = { ...msg };
+  if (h.media) { h.media = null; h.semMidia = true; }
+  historicoSalas[sala].push(h);
   if (historicoSalas[sala].length > MAX_MSGS)
     historicoSalas[sala] = historicoSalas[sala].slice(-MAX_MSGS);
   salvar();
 }
 
-const server = http.createServer((req, res) => { res.writeHead(200); res.end("OK"); });
+function updateMsgHistorico(sala, id, campos) {
+  if (!historicoSalas[sala]) return;
+  const idx = historicoSalas[sala].findIndex(m => m.id === id);
+  if (idx !== -1) Object.assign(historicoSalas[sala][idx], campos);
+  salvar();
+}
 
-// Aumenta limite do WebSocket para 100MB
-const wss = new WebSocket.Server({ server, maxPayload: 100 * 1024 * 1024 });
+const server = http.createServer((req, res) => { res.writeHead(200); res.end("MeuChat OK"); });
+const wss = new WebSocket.Server({ server, maxPayload: 20 * 1024 * 1024 });
+
+// usuarios: ws -> { nome, sala }
 const usuarios = new Map();
+// perfis: nome -> { foto, bio }
+const perfis = new Map();
+// remetentes: msgId -> ws
 const remetentes = new Map();
 
-console.log(`Servidor na porta ${PORT}`);
+console.log("Servidor iniciado na porta " + PORT);
 
 wss.on("connection", (ws) => {
   ws.on("message", (dados) => {
@@ -41,8 +51,10 @@ wss.on("connection", (ws) => {
       const msg = JSON.parse(dados);
       const usuario = usuarios.get(ws);
 
+      // ---- ENTRAR ----
       if (msg.tipo === "entrar") {
         const sala = msg.sala || "geral";
+        // Remove conexões duplicadas do mesmo nome+sala
         for (const [c, d] of usuarios.entries()) {
           if (d.nome === msg.nome && d.sala === sala && c !== ws) {
             usuarios.delete(c);
@@ -50,7 +62,12 @@ wss.on("connection", (ws) => {
           }
         }
         usuarios.set(ws, { nome: msg.nome, sala });
+        // Envia histórico
         ws.send(JSON.stringify({ tipo: "historico", mensagens: historicoSalas[sala] || [] }));
+        // Envia perfis existentes
+        const perfisObj = {};
+        for (const [n, p] of perfis.entries()) perfisObj[n] = p;
+        ws.send(JSON.stringify({ tipo: "perfis", perfis: perfisObj }));
         broadcast({ tipo: "sistema", texto: `${msg.nome} entrou no chat`, hora: hora() }, sala, ws);
         broadcastOnline(sala);
         return;
@@ -58,43 +75,38 @@ wss.on("connection", (ws) => {
 
       if (!usuario) return;
 
-      if (["mensagem", "imagem", "audio"].includes(msg.tipo)) {
-        // Usa o ID do cliente para manter consistência de status
+      // ---- MENSAGENS ----
+      if (["mensagem","imagem","audio","localizacao","contato","enquete"].includes(msg.tipo)) {
         const id = msg.clientId || Date.now().toString();
         const novaMsg = {
-          id,
-          tipo: msg.tipo,
-          nome: usuario.nome,
-          texto: msg.texto || "",
-          media: msg.media || null,
-          mediaType: msg.mediaType || null,
-          hora: hora(),
-          replyTo: msg.replyTo || null,
-          reacoes: {}
+          id, tipo: msg.tipo, nome: usuario.nome,
+          texto: msg.texto || "", media: msg.media || null,
+          mediaType: msg.mediaType || null, hora: hora(),
+          replyTo: msg.replyTo || null, reacoes: {},
+          // campos especiais
+          lat: msg.lat || null, lng: msg.lng || null,
+          contatoNome: msg.contatoNome || null,
+          opcoes: msg.opcoes || null, votos: msg.votos || null
         };
         addMsg(usuario.sala, novaMsg);
-
-        // Confirma ID pro remetente
         ws.send(JSON.stringify({ tipo: "confirmado", clientId: msg.clientId, id }));
-
         const count = broadcast(novaMsg, usuario.sala, ws);
         remetentes.set(id, ws);
-
-        // Avisa remetente sobre entrega
-        if (count > 0)
-          ws.send(JSON.stringify({ tipo: "status", id, status: "entregue" }));
+        if (count > 0) ws.send(JSON.stringify({ tipo: "status", id, status: "entregue" }));
         return;
       }
 
+      // ---- APAGAR ----
       if (msg.tipo === "apagar") {
         if (historicoSalas[usuario.sala]) {
           const idx = historicoSalas[usuario.sala].findIndex(m => m.id === msg.id && m.nome === usuario.nome);
           if (idx !== -1) { historicoSalas[usuario.sala].splice(idx, 1); salvar(); }
         }
-        broadcast({ tipo: "apagar", id: msg.id }, usuario.sala, null);
+        broadcastTodos({ tipo: "apagar", id: msg.id }, usuario.sala);
         return;
       }
 
+      // ---- REAGIR ----
       if (msg.tipo === "reagir") {
         if (historicoSalas[usuario.sala]) {
           const m = historicoSalas[usuario.sala].find(m => m.id === msg.id);
@@ -108,28 +120,76 @@ wss.on("connection", (ws) => {
               if (!m.reacoes[msg.emoji].length) delete m.reacoes[msg.emoji];
             }
             salvar();
-            // Manda pra TODOS incluindo o remetente (não atualiza localmente no cliente)
             broadcastTodos({ tipo: "reagir", id: msg.id, reacoes: m.reacoes }, usuario.sala);
           }
         }
         return;
       }
 
-      if (msg.tipo === "digitando")
-        broadcast({ tipo: "digitando", nome: usuario.nome }, usuario.sala, ws);
+      // ---- VOTAR ENQUETE ----
+      if (msg.tipo === "votar") {
+        if (historicoSalas[usuario.sala]) {
+          const m = historicoSalas[usuario.sala].find(m => m.id === msg.id && m.tipo === "enquete");
+          if (m) {
+            if (!m.votos) m.votos = {};
+            // Remove voto anterior deste usuario
+            for (const k of Object.keys(m.votos)) {
+              m.votos[k] = (m.votos[k] || []).filter(n => n !== usuario.nome);
+            }
+            if (!m.votos[msg.opcao]) m.votos[msg.opcao] = [];
+            m.votos[msg.opcao].push(usuario.nome);
+            salvar();
+            broadcastTodos({ tipo: "votar_update", id: msg.id, votos: m.votos }, usuario.sala);
+          }
+        }
+        return;
+      }
 
-      if (msg.tipo === "parou")
-        broadcast({ tipo: "parou", nome: usuario.nome }, usuario.sala, ws);
+      // ---- PERFIL ----
+      if (msg.tipo === "perfil") {
+        const p = perfis.get(usuario.nome) || {};
+        if (msg.foto !== undefined) p.foto = msg.foto;
+        if (msg.bio !== undefined) p.bio = msg.bio;
+        perfis.set(usuario.nome, p);
+        broadcastTodos({ tipo: "perfil_update", nome: usuario.nome, ...p }, usuario.sala);
+        return;
+      }
 
+      // ---- DIGITANDO ----
+      if (msg.tipo === "digitando") { broadcast({ tipo: "digitando", nome: usuario.nome }, usuario.sala, ws); return; }
+      if (msg.tipo === "parou") { broadcast({ tipo: "parou", nome: usuario.nome }, usuario.sala, ws); return; }
+
+      // ---- VISTO ----
       if (msg.tipo === "visto") {
         for (const id of (msg.ids || [])) {
           const sw = remetentes.get(id);
           if (sw && sw.readyState === WebSocket.OPEN && sw !== ws)
             sw.send(JSON.stringify({ tipo: "status", id, status: "visto" }));
         }
+        return;
       }
 
-    } catch(e) { console.error(e); }
+      // ---- WEBRTC SIGNALING ----
+      if (["call_offer","call_answer","call_reject","call_end","ice_candidate"].includes(msg.tipo)) {
+        // Roteia para usuário específico pelo nome
+        for (const [c, d] of usuarios.entries()) {
+          if (d.nome === msg.to && c.readyState === WebSocket.OPEN) {
+            c.send(JSON.stringify({ ...msg, from: usuario.nome }));
+            break;
+          }
+        }
+        return;
+      }
+
+      // ---- LIMPAR CONVERSA ----
+      if (msg.tipo === "limpar") {
+        historicoSalas[usuario.sala] = [];
+        salvar();
+        broadcastTodos({ tipo: "limpar" }, usuario.sala);
+        return;
+      }
+
+    } catch(e) { console.error("Erro:", e.message); }
   });
 
   ws.on("close", () => {
@@ -154,7 +214,6 @@ function broadcast(dados, sala, excluir = null) {
   return count;
 }
 
-// Broadcast para TODOS incluindo o remetente
 function broadcastTodos(dados, sala) {
   const json = JSON.stringify(dados);
   wss.clients.forEach(c => {
@@ -175,9 +234,7 @@ function broadcastOnline(sala) {
 }
 
 function hora() {
-  return new Date().toLocaleTimeString("pt-BR", {
-    timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit"
-  });
+  return new Date().toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
 }
 
-server.listen(PORT, "0.0.0.0", () => console.log(`Rodando na porta ${PORT}`));
+server.listen(PORT, "0.0.0.0", () => console.log("Rodando na porta " + PORT));

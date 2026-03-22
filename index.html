@@ -495,7 +495,7 @@
     const bolha = document.createElement("div");
     bolha.className = "msg-bolha";
     bolha.innerHTML = `
-      <span>${escapeHTML(texto)}</span>
+      <span>${linkify(texto)}</span>
       <div class="msg-hora">${hora}</div>
     `;
 
@@ -553,6 +553,15 @@
 
   function escapeHTML(str) {
     return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  // Transforma links em <a> clicáveis
+  function linkify(texto) {
+    const escaped = escapeHTML(texto);
+    return escaped.replace(
+      /(https?:\/\/[^\s<>"]+)/g,
+      '<a href="$1" target="_blank" style="color:#0d6efd;text-decoration:underline;word-break:break-all;">$1</a>'
+    );
   }
 
   // Enter no login

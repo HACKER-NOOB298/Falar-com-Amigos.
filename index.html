@@ -637,6 +637,7 @@ function conectar(){
     else if(m.tipo==="call_answer") aceitarResposta(m);
     else if(m.tipo==="call_reject") chamadaRejeitada(m);
     else if(m.tipo==="call_end"){tocarToque(true);encerrarChamada(true);}
+    else if(m.tipo==="call_chunk") receberChunk(m);
     else if(m.tipo==="ice_candidate") adicionarIce(m);
   };
 
@@ -1428,204 +1429,178 @@ function deslogar(){
 }
 
 // =================== SISTEMA DE CHAMADA (WebSocket Relay) ===================
-// Usa relay via WebSocket para garantir funcionamento sem TURN servers
+// Relay 100% via WebSocket — sem WebRTC, sem NAT, sempre funciona
 
-let chamando = false, emChamada = false;
-let chamandoPara = "", recebendoChamada = null, tipoCall = "audio";
-let localStream = null, remoteStream = null, peerConn = null, iceFila = [];
-let audioCtx = null, callAudioChunks = [];
-let callMediaRecorder = null, callVideoInterval = null;
-let toqueInterval = null;
+let chamando=false, emChamada=false;
+let chamandoPara="", recebendoChamada=null, tipoCall="audio";
+let localStream=null, remoteStream=null, peerConn=null, iceFila=[];
 
-// STUN + TURN servers (múltiplos fallbacks)
-const ICE_SERVERS = {iceServers:[
-  {urls:"stun:stun.l.google.com:19302"},
-  {urls:"stun:stun1.l.google.com:19302"},
-  {urls:"stun:stun2.l.google.com:19302"},
-  {urls:"stun:stun3.l.google.com:19302"},
-  {urls:"stun:stun4.l.google.com:19302"},
-  {urls:"stun:stun.cloudflare.com:3478"},
-  {urls:"turn:openrelay.metered.ca:80",username:"openrelayproject",credential:"openrelayproject"},
-  {urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"},
-  {urls:"turn:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"}
-]};
+let callRecorder=null, callVideoTimer=null;
+let toqueTimer=null;
+let audioPlayQueue=[], audioPlaying=false;
 
 function tocarToque(parar=false){
-  if(parar){clearInterval(toqueInterval);toqueInterval=null;return;}
-  if(toqueInterval)return;
+  clearInterval(toqueTimer);toqueTimer=null;
+  if(parar)return;
   function bip(){
-    const ctx=new AudioContext();
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(440,ctx.currentTime);
-    osc.frequency.setValueAtTime(480,ctx.currentTime+0.15);
-    gain.gain.setValueAtTime(0.3,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.4);
-    setTimeout(()=>ctx.close(),500);
+    try{
+      const ctx=new AudioContext();
+      [440,520].forEach((f,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.value=f;
+        g.gain.setValueAtTime(0.25,ctx.currentTime+i*0.18);
+        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.18+0.15);
+        o.start(ctx.currentTime+i*0.18);o.stop(ctx.currentTime+i*0.18+0.15);
+      });
+      setTimeout(()=>ctx.close(),600);
+    }catch(e){}
   }
-  bip();toqueInterval=setInterval(bip,1200);
+  bip();toqueTimer=setInterval(bip,1400);
 }
 
 async function iniciarChamada(tipo){
   const online=onlineAtual.filter(n=>n!==meuNome);
   if(!online.length){alert("Ninguém online para chamar!");return;}
+  if(emChamada||chamando){alert("Já há uma chamada em andamento.");return;}
   if(online.length===1){fazerChamada(online[0],tipo);}
   else{
     abrirModalGenerico("Iniciar Chamada","Escolha quem chamar:",
       '<select id="m-call-sel" style="width:100%;padding:10px;border-radius:10px;border:1.5px solid #ddd;font-size:14px">'+
-      online.map(n=>'<option>'+n+'</option>').join("")+'</select>',
+      online.map(n=>'<option>'+esc(n)+'</option>').join("")+'</select>',
       ()=>{const nome=document.getElementById("m-call-sel").value;fecharModal();fazerChamada(nome,tipo);}
     );
   }
 }
 
-async function fazerChamada(para, tipo){
-  if(emChamada||chamando){alert("Já existe uma chamada em andamento.");return;}
-  chamando=true;tipoCall=tipo;chamandoPara=para;iceFila=[];
+async function fazerChamada(para,tipo){
+  chamando=true;tipoCall=tipo;chamandoPara=para;
   mostrarUIchamada(para,"📞 Chamando "+para+"...",tipo);
   setStatusChamada("Aguardando resposta...");
-
-  // Tenta WebRTC primeiro
-  try{
-    const constraints={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
-                       video:tipo==="video"?{width:320,height:240,frameRate:15}:false};
-    localStream=await navigator.mediaDevices.getUserMedia(constraints);
-    if(tipo==="video"){
-      document.getElementById("video-local").srcObject=localStream;
-      document.getElementById("videos-area").style.display="flex";
-    }
-    peerConn=new RTCPeerConnection(ICE_SERVERS);
-    peerConn.onconnectionstatechange=()=>{
-      const s=peerConn&&peerConn.connectionState;
-      console.log("conn state:",s);
-      if(s==="connected"){emChamada=true;chamando=false;tocarToque(true);setStatusChamada("✓ Em chamada");}
-      if(s==="failed"){setStatusChamada("⚠ Conexão falhou. Tente novamente.");setTimeout(()=>encerrarChamada(true),2000);}
-    };
-    peerConn.oniceconnectionstatechange=()=>{
-      const s=peerConn&&peerConn.iceConnectionState;
-      console.log("ICE:",s);
-      if(s==="checking")setStatusChamada("Conectando...");
-      if(s==="connected"||s==="completed"){emChamada=true;chamando=false;tocarToque(true);}
-      if(s==="failed"){setStatusChamada("⚠ ICE falhou");setTimeout(()=>encerrarChamada(true),2000);}
-    };
-    localStream.getTracks().forEach(t=>peerConn.addTrack(t,localStream));
-    peerConn.onicecandidate=e=>{
-      if(e.candidate&&ws&&ws.readyState===WebSocket.OPEN)
-        ws.send(JSON.stringify({tipo:"ice_candidate",to:para,candidate:e.candidate}));
-    };
-    peerConn.ontrack=e=>{
-      console.log("ontrack:",e.track.kind);
-      remoteStream=e.streams[0]||new MediaStream([e.track]);
-      const ael=document.getElementById("audio-remoto");
-      ael.srcObject=remoteStream;ael.volume=1;
-      ael.play().catch(err=>console.warn("audio autoplay:",err));
-      if(tipo==="video"){
-        const vr=document.getElementById("video-remoto");
-        vr.srcObject=remoteStream;vr.play().catch(()=>{});
-      }
-    };
-    const offer=await peerConn.createOffer({offerToReceiveAudio:true,offerToReceiveVideo:tipo==="video"});
-    await peerConn.setLocalDescription(offer);
-    ws.send(JSON.stringify({tipo:"call_offer",to:para,offer,video:tipo==="video"}));
-    // Timeout de 30s
-    setTimeout(()=>{if(chamando&&!emChamada){setStatusChamada("Sem resposta.");setTimeout(()=>encerrarChamada(true),1500);}},30000);
-  }catch(e){
-    alert("Erro ao acessar microfone/câmera: "+e.message+". Verifique as permissões.");
-    encerrarChamada(true);
-  }
+  if(ws&&ws.readyState===WebSocket.OPEN)
+    ws.send(JSON.stringify({tipo:"call_offer",to:para,video:tipo==="video"}));
+  // Timeout 35s sem resposta
+  setTimeout(()=>{if(chamando&&!emChamada){setStatusChamada("Sem resposta.");setTimeout(()=>encerrarChamada(true),2000);}},35000);
 }
 
 function receberChamada(m){
   if(emChamada||chamando){
-    // Rejeita automaticamente se já estiver em chamada
     if(ws)ws.send(JSON.stringify({tipo:"call_reject",to:m.from,motivo:"ocupado"}));
     return;
   }
   recebendoChamada=m;tipoCall=m.video?"video":"audio";
   tocarToque();
-  mostrarUIchamada(m.from,
-    (m.video?"📹":"📞")+" "+m.from+" está ligando...",tipoCall);
+  mostrarUIchamada(m.from,(m.video?"📹":"📞")+" "+m.from+" está ligando...",tipoCall);
   document.getElementById("chamada-btns").innerHTML=
-    '<button class="cbtn" style="background:var(--g);color:#fff;font-size:22px" onclick="aceitarChamada()" title="Atender">📞</button>'+
-    '<button class="cbtn" style="background:#f44336;font-size:22px" onclick="rejeitarChamada()" title="Recusar">📵</button>';
+    '<button class="cbtn" style="background:#4caf50;color:#fff;font-size:24px" onclick="aceitarChamada()" title="Atender">📞</button>'+
+    '<button class="cbtn" style="background:#f44336;font-size:24px" onclick="rejeitarChamada()" title="Recusar">📵</button>';
 }
 
 async function aceitarChamada(){
   if(!recebendoChamada)return;
-  tocarToque(true);
+  tocarToque(true);emChamada=true;chamando=false;
   setStatusChamada("Conectando...");
   document.getElementById("chamada-btns").innerHTML=
-    '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px" title="Mudo">🎤</button>'+
-    (tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px" title="Câmera">📹</button>':'')+
-    '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px" title="Desligar">📵</button>';
+    '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">🎤</button>'+
+    (tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">📹</button>':'')+
+    '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px">📵</button>';
+  // Avisa quem chamou que foi aceito
+  if(ws)ws.send(JSON.stringify({tipo:"call_answer",to:recebendoChamada.from}));
+  await iniciarCaptura(recebendoChamada.from);
+}
+
+async function aceitarResposta(m){
+  // Chamada aceita — iniciar captura de áudio/vídeo
+  emChamada=true;chamando=false;
+  setStatusChamada("✓ Em chamada");
+  tocarToque(true);
+  document.getElementById("chamada-btns").innerHTML=
+    '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">🎤</button>'+
+    (tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">📹</button>':'')+
+    '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px">📵</button>';
+  await iniciarCaptura(chamandoPara);
+}
+
+async function iniciarCaptura(para){
   try{
-    iceFila=[];
-    const constraints={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
-                       video:tipoCall==="video"?{width:320,height:240,frameRate:15}:false};
+    const constraints={
+      audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
+      video:tipoCall==="video"?{width:320,height:240,frameRate:10}:false
+    };
     localStream=await navigator.mediaDevices.getUserMedia(constraints);
     if(tipoCall==="video"){
       document.getElementById("video-local").srcObject=localStream;
       document.getElementById("videos-area").style.display="flex";
     }
-    peerConn=new RTCPeerConnection(ICE_SERVERS);
-    peerConn.onconnectionstatechange=()=>{
-      const s=peerConn&&peerConn.connectionState;
-      console.log("conn state (callee):",s);
-      if(s==="connected"){emChamada=true;chamando=false;setStatusChamada("✓ Em chamada");}
-      if(s==="failed"){setStatusChamada("⚠ Falhou");setTimeout(()=>encerrarChamada(true),2000);}
+    setStatusChamada("✓ Em chamada");
+
+    // Grava e envia áudio em chunks de 300ms
+    const mimeType=MediaRecorder.isTypeSupported("audio/webm;codecs=opus")?"audio/webm;codecs=opus":"audio/webm";
+    callRecorder=new MediaRecorder(localStream,{mimeType,audioBitsPerSecond:32000});
+    callRecorder.ondataavailable=async e=>{
+      if(!e.data||e.data.size<10||!emChamada)return;
+      if(mutado)return;
+      const b64=await blobParaB64(e.data);
+      if(ws&&ws.readyState===WebSocket.OPEN)
+        ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:b64,kind:"audio"}));
     };
-    peerConn.oniceconnectionstatechange=()=>{
-      const s=peerConn&&peerConn.iceConnectionState;
-      console.log("ICE (callee):",s);
-      if(s==="checking")setStatusChamada("Conectando...");
-      if(s==="connected"||s==="completed"){emChamada=true;setStatusChamada("✓ Em chamada");}
-      if(s==="failed"){setStatusChamada("⚠ ICE falhou");setTimeout(()=>encerrarChamada(true),2000);}
-    };
-    localStream.getTracks().forEach(t=>peerConn.addTrack(t,localStream));
-    peerConn.onicecandidate=e=>{
-      if(e.candidate&&ws&&ws.readyState===WebSocket.OPEN)
-        ws.send(JSON.stringify({tipo:"ice_candidate",to:recebendoChamada.from,candidate:e.candidate}));
-    };
-    peerConn.ontrack=e=>{
-      console.log("ontrack (callee):",e.track.kind);
-      remoteStream=e.streams[0]||new MediaStream([e.track]);
-      const ael=document.getElementById("audio-remoto");
-      ael.srcObject=remoteStream;ael.volume=1;
-      ael.play().catch(err=>console.warn("audio:",err));
-      if(tipoCall==="video"){
-        const vr=document.getElementById("video-remoto");
-        vr.srcObject=remoteStream;vr.play().catch(()=>{});
+    callRecorder.start(300);
+
+    // Envia vídeo a 3fps como JPEG
+    if(tipoCall==="video"){
+      const cv=document.createElement("canvas");cv.width=320;cv.height=240;
+      const ctx=cv.getContext("2d");
+      const vl=document.getElementById("video-local");
+      callVideoTimer=setInterval(()=>{
+        if(!emChamada||camOff)return;
+        try{ctx.drawImage(vl,0,0,320,240);}catch(e){return;}
+        const jpegB64=cv.toDataURL("image/jpeg",0.4).split(",")[1];
+        if(ws&&ws.readyState===WebSocket.OPEN)
+          ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:jpegB64,kind:"video"}));
+      },333);
+    }
+  }catch(e){
+    alert("Erro ao acessar microfone/câmera: "+e.message);
+    encerrarChamada(true);
+  }
+}
+
+function blobParaB64(blob){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onloadend=()=>res(r.result.split(",")[1]);
+    r.readAsDataURL(blob);
+  });
+}
+
+// Recebe chunk de áudio/vídeo do outro lado
+let audioCtxRemoto=null;
+async function receberChunk(m){
+  if(!emChamada)return;
+  if(m.kind==="audio"){
+    // Decodifica e toca
+    try{
+      if(!audioCtxRemoto)audioCtxRemoto=new AudioContext();
+      const raw=atob(m.chunk);
+      const arr=new Uint8Array(raw.length);
+      for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
+      audioCtxRemoto.decodeAudioData(arr.buffer.slice(0),buf=>{
+        const src=audioCtxRemoto.createBufferSource();
+        src.buffer=buf;src.connect(audioCtxRemoto.destination);src.start();
+      },()=>{});
+    }catch(e){}
+  } else if(m.kind==="video"){
+    // Mostra frame no video-remoto como imagem
+    const vr=document.getElementById("video-remoto");
+    if(vr){
+      let imgEl=document.getElementById("call-remote-img");
+      if(!imgEl){
+        imgEl=document.createElement("img");imgEl.id="call-remote-img";
+        imgEl.style.cssText="width:300px;height:225px;border-radius:12px;object-fit:cover;display:block;";
+        vr.parentElement.insertBefore(imgEl,vr);vr.style.display="none";
       }
-    };
-    await peerConn.setRemoteDescription(new RTCSessionDescription(recebendoChamada.offer));
-    await processarFilaIce();
-    const answer=await peerConn.createAnswer();
-    await peerConn.setLocalDescription(answer);
-    ws.send(JSON.stringify({tipo:"call_answer",to:recebendoChamada.from,answer}));
-  }catch(e){alert("Erro: "+e.message);encerrarChamada(true);}
-}
-
-async function aceitarResposta(m){
-  if(!peerConn)return;
-  try{
-    await peerConn.setRemoteDescription(new RTCSessionDescription(m.answer));
-    await processarFilaIce();
-  }catch(e){console.error("aceitarResposta:",e);}
-}
-
-async function adicionarIce(m){
-  if(!m.candidate)return;
-  if(peerConn&&peerConn.remoteDescription&&peerConn.remoteDescription.type){
-    try{await peerConn.addIceCandidate(new RTCIceCandidate(m.candidate));}catch(e){}
-  }else{iceFila.push(m.candidate);}
-}
-
-async function processarFilaIce(){
-  while(iceFila.length&&peerConn&&peerConn.remoteDescription){
-    const cand=iceFila.shift();
-    try{await peerConn.addIceCandidate(new RTCIceCandidate(cand));}catch(e){}
+      imgEl.src="data:image/jpeg;base64,"+m.chunk;
+    }
   }
 }
 
@@ -1637,28 +1612,28 @@ function rejeitarChamada(){
 
 function chamadaRejeitada(m){
   tocarToque(true);
-  const motivo=m&&m.motivo==="offline"?"(destinatário offline)":m&&m.motivo==="ocupado"?"(linha ocupada)":"(chamada recusada)";
-  setStatusChamada("📵 "+motivo);
+  const motivo=m&&m.motivo==="offline"?"(offline)":m&&m.motivo==="ocupado"?"(linha ocupada)":"(recusada)";
+  setStatusChamada("📵 Chamada "+motivo);
   setTimeout(()=>encerrarChamada(true),2000);
 }
 
 function encerrarChamada(silencioso=false){
-  tocarToque(true);chamando=false;emChamada=false;
-  const destino=chamandoPara||(recebendoChamada&&recebendoChamada.from)||"";
-  if(!silencioso&&destino&&ws&&ws.readyState===WebSocket.OPEN)
-    ws.send(JSON.stringify({tipo:"call_end",to:destino}));
-  if(peerConn){try{peerConn.close();}catch(e){}peerConn=null;}
+  tocarToque(true);
+  const dest=chamandoPara||(recebendoChamada&&recebendoChamada.from)||"";
+  if(!silencioso&&dest&&ws&&ws.readyState===WebSocket.OPEN)
+    ws.send(JSON.stringify({tipo:"call_end",to:dest}));
+  chamando=false;emChamada=false;
+  if(callRecorder){try{callRecorder.stop();}catch(e){}callRecorder=null;}
+  if(callVideoTimer){clearInterval(callVideoTimer);callVideoTimer=null;}
   if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
-  if(callMediaRecorder){try{callMediaRecorder.stop();}catch(e){}callMediaRecorder=null;}
-  if(callVideoInterval){clearInterval(callVideoInterval);callVideoInterval=null;}
-  remoteStream=null;recebendoChamada=null;chamandoPara="";iceFila=[];
+  if(audioCtxRemoto){try{audioCtxRemoto.close();}catch(e){}audioCtxRemoto=null;}
+  recebendoChamada=null;chamandoPara="";iceFila=[];
   document.getElementById("chamada-ov").classList.remove("on");
   document.getElementById("videos-area").style.display="none";
-  document.getElementById("video-local").srcObject=null;
-  document.getElementById("video-remoto").srcObject=null;
-  const ael=document.getElementById("audio-remoto");
-  if(ael){ael.srcObject=null;}
-  // Resetar botões
+  const vl=document.getElementById("video-local");if(vl)vl.srcObject=null;
+  const vr=document.getElementById("video-remoto");if(vr)vr.srcObject=null;
+  const ci=document.getElementById("call-remote-img");if(ci)ci.remove();
+  const vrd=document.getElementById("video-remoto");if(vrd)vrd.style.display="block";
   document.getElementById("chamada-btns").innerHTML=
     '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="color:#fff;background:rgba(255,255,255,.2)">🎤</button>'+
     '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>';
@@ -1676,22 +1651,23 @@ function mostrarUIchamada(nome,status,tipo){
 }
 
 function setStatusChamada(txt){
-  const el=document.getElementById("chamada-status");
-  if(el)el.textContent=txt;
+  const el=document.getElementById("chamada-status");if(el)el.textContent=txt;
 }
 
 function toggleMute(){
   mutado=!mutado;
   if(localStream)localStream.getAudioTracks().forEach(t=>t.enabled=!mutado);
-  const btn=document.getElementById("btn-mute");
-  if(btn)btn.textContent=mutado?"🔇":"🎤";
+  const btn=document.getElementById("btn-mute");if(btn)btn.textContent=mutado?"🔇":"🎤";
 }
 function toggleCam(){
   camOff=!camOff;
   if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=!camOff);
-  const btn=document.getElementById("btn-cam");
-  if(btn)btn.textContent=camOff?"📷":"📹";
+  const btn=document.getElementById("btn-cam");if(btn)btn.textContent=camOff?"📷":"📹";
 }
+
+// Funções stub (WebRTC não usadas mas referenciadas em handlers)
+async function adicionarIce(m){}
+async function processarFilaIce(){}
 
 // =================== EVENTOS GLOBAIS ===================
 document.addEventListener("click",fecharTudo);

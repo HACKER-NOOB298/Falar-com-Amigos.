@@ -512,8 +512,12 @@ function entrar(){
   const bio=document.getElementById("inp-bio").value.trim();
   if(!nome){alert("Digite seu nome!");return;}
   meuNome=nome;minhaSala=sala;meuBio=bio;meuFoto=fotoLoginB64;
-  localStorage.setItem("cn",nome);localStorage.setItem("cs",sala);
-  localStorage.setItem("cb",bio);localStorage.setItem("cf",fotoLoginB64);
+  try{localStorage.setItem("cn",nome);localStorage.setItem("cs",sala);
+  localStorage.setItem("cb",bio);
+  // Só salva foto se não for muito grande pra localStorage
+  if(fotoLoginB64 && fotoLoginB64.length < 500000) localStorage.setItem("cf",fotoLoginB64);
+  else if(!fotoLoginB64) localStorage.removeItem("cf");
+  }catch(e){console.warn("localStorage cheio, continuando sem salvar foto");}
   document.getElementById("tela-login").style.display="none";
   document.getElementById("app").style.display="block";
   atualizarUI();
@@ -528,17 +532,25 @@ function atualizarUI(){
 }
 
 window.onload=()=>{
-  const n=localStorage.getItem("cn"),s=localStorage.getItem("cs");
-  if(n&&s){
-    meuNome=n;minhaSala=s;meuBio=localStorage.getItem("cb")||"";
-    meuFoto=localStorage.getItem("cf")||"";
-    document.getElementById("inp-nome").value=n;
-    document.getElementById("inp-sala").value=s;
-    document.getElementById("inp-bio").value=meuBio;
-    if(meuFoto){fotoLoginB64=meuFoto;const img=document.getElementById("foto-preview-img");img.src=meuFoto;img.style.display="block";}
-    entrar();
-  }
   renderEmojiCat(0);
+  try{
+    const n=localStorage.getItem("cn"),s=localStorage.getItem("cs");
+    if(n&&s){
+      meuNome=n;minhaSala=s;
+      meuBio=localStorage.getItem("cb")||"";
+      meuFoto=localStorage.getItem("cf")||"";
+      document.getElementById("inp-nome").value=n;
+      document.getElementById("inp-sala").value=s;
+      document.getElementById("inp-bio").value=meuBio;
+      if(meuFoto){
+        fotoLoginB64=meuFoto;
+        const img=document.getElementById("foto-preview-img");
+        img.src=meuFoto;img.style.display="block";
+        document.getElementById("foto-preview-login").style.fontSize="0";
+      }
+      entrar();
+    }
+  }catch(e){console.warn("Erro ao carregar sessão:",e);}
 };
 
 // =================== AVATAR HELPER ===================
@@ -709,19 +721,27 @@ function criarBolha(m,eMinha){
 function renderEnquete(el,m,eMinha){
   const votos=m.votos||{};
   const totalVotos=Object.values(votos).reduce((a,v)=>a+(v||[]).length,0);
-  let html=`<div class="enquete-pergunta">📊 ${esc(m.texto)}</div>`;
+  el.innerHTML="";
+  const perg=document.createElement("div");perg.className="enquete-pergunta";perg.textContent="📊 "+m.texto;
+  el.appendChild(perg);
   (m.opcoes||[]).forEach((op,i)=>{
     const v=(votos[i]||[]).length;
     const pct=totalVotos>0?Math.round(v/totalVotos*100):0;
     const meuVoto=(votos[i]||[]).includes(meuNome);
-    html+=`<div class="enquete-opcao${meuVoto?" style='border:1.5px solid var(--g)':''}" onclick="votarEnquete('${m.id}',${i})">
-      <span style="font-size:13px;flex:none">${esc(op)}</span>
-      <div class="enquete-bar"><div class="enquete-bar-fill" style="width:${pct}%"></div></div>
-      <span class="enquete-pct">${pct}%</span>
-    </div>`;
+    const row=document.createElement("div");row.className="enquete-opcao";
+    if(meuVoto)row.style.border="1.5px solid var(--g)";
+    row.onclick=()=>votarEnquete(m.id,i);
+    const label=document.createElement("span");label.style.cssText="font-size:13px;flex:none";label.textContent=op;
+    const bar=document.createElement("div");bar.className="enquete-bar";
+    const fill=document.createElement("div");fill.className="enquete-bar-fill";fill.style.width=pct+"%";
+    bar.appendChild(fill);
+    const pctEl=document.createElement("span");pctEl.className="enquete-pct";pctEl.textContent=pct+"%";
+    row.appendChild(label);row.appendChild(bar);row.appendChild(pctEl);
+    el.appendChild(row);
   });
-  html+=`<div style="font-size:11px;color:var(--mu);margin-top:4px">${totalVotos} voto${totalVotos!==1?"s":""}</div>`;
-  el.innerHTML=html;
+  const footer=document.createElement("div");footer.style.cssText="font-size:11px;color:var(--mu);margin-top:4px";
+  footer.textContent=totalVotos+" voto"+(totalVotos!==1?"s":"");
+  el.appendChild(footer);
 }
 
 function votarEnquete(msgId,opcao){
@@ -762,16 +782,20 @@ function pararDigitando(){if(!estouDigitando)return;estouDigitando=false;if(ws&&
 // =================== ARQUIVOS ===================
 function comprimir(file,maxKB,cb){
   const reader=new FileReader();
+  reader.onerror=()=>{ console.error("Erro ao ler arquivo"); };
   reader.onload=ev=>{
     const img=new Image();
+    img.onerror=()=>cb(ev.target.result); // fallback: usa original
     img.onload=()=>{
-      const canvas=document.createElement("canvas");
-      let w=img.width,h=img.height;
-      const max=1600;
-      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
-      canvas.width=w;canvas.height=h;
-      canvas.getContext("2d").drawImage(img,0,0,w,h);
-      cb(canvas.toDataURL("image/jpeg",0.82));
+      try{
+        const canvas=document.createElement("canvas");
+        let w=img.width,h=img.height;
+        const max=1400;
+        if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+        canvas.width=w;canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        cb(canvas.toDataURL("image/jpeg",0.82));
+      }catch(e){cb(ev.target.result);}
     };
     img.src=ev.target.result;
   };

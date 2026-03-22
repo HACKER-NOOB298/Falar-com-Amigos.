@@ -1,106 +1,145 @@
-// ============================================
-//   SERVIDOR DO SEU APP DE MENSAGENS
-//   Tecnologia: Node.js + WebSocket
-// ============================================
-
 const WebSocket = require("ws");
 const http = require("http");
 const fs = require("fs");
 
 const PORT = process.env.PORT || 3000;
-const ARQUIVO_MENSAGENS = "./mensagens.json";
-const MAX_MSGS_POR_SALA = 200;
+const ARQUIVO = "./mensagens.json";
+const MAX_MSGS = 100;
 
-// ---- Carrega mensagens salvas do disco ----
 let historicoSalas = {};
 try {
-  if (fs.existsSync(ARQUIVO_MENSAGENS)) {
-    historicoSalas = JSON.parse(fs.readFileSync(ARQUIVO_MENSAGENS, "utf-8"));
-    console.log("📂 Histórico carregado do disco");
-  }
-} catch (e) {
-  historicoSalas = {};
+  if (fs.existsSync(ARQUIVO))
+    historicoSalas = JSON.parse(fs.readFileSync(ARQUIVO, "utf-8"));
+} catch(e) { historicoSalas = {}; }
+
+function salvar() {
+  try { fs.writeFileSync(ARQUIVO, JSON.stringify(historicoSalas), "utf-8"); } catch(e) {}
 }
 
-function salvarHistorico() {
-  try { fs.writeFileSync(ARQUIVO_MENSAGENS, JSON.stringify(historicoSalas), "utf-8"); }
-  catch (e) { console.error("Erro ao salvar:", e); }
-}
-
-function adicionarMsgAoHistorico(sala, msg) {
+function addMsg(sala, msg) {
   if (!historicoSalas[sala]) historicoSalas[sala] = [];
-  historicoSalas[sala].push(msg);
-  if (historicoSalas[sala].length > MAX_MSGS_POR_SALA)
-    historicoSalas[sala] = historicoSalas[sala].slice(-MAX_MSGS_POR_SALA);
-  salvarHistorico();
+  // Não salva media no disco (muito pesado), só texto
+  const paraHistorico = { ...msg };
+  if (paraHistorico.media) { paraHistorico.media = null; paraHistorico.semMidia = true; }
+  historicoSalas[sala].push(paraHistorico);
+  if (historicoSalas[sala].length > MAX_MSGS)
+    historicoSalas[sala] = historicoSalas[sala].slice(-MAX_MSGS);
+  salvar();
 }
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Servidor de chat rodando!");
-});
-
+const server = http.createServer((req, res) => { res.writeHead(200); res.end("OK"); });
 const wss = new WebSocket.Server({ server });
 const usuarios = new Map();
+const remetentes = new Map();
 
-console.log(`🚀 Servidor iniciado na porta ${PORT}`);
+console.log(`Servidor na porta ${PORT}`);
 
 wss.on("connection", (ws) => {
   ws.on("message", (dados) => {
     try {
       const msg = JSON.parse(dados);
+      const usuario = usuarios.get(ws);
 
       if (msg.tipo === "entrar") {
         const sala = msg.sala || "geral";
+        for (const [c, d] of usuarios.entries()) {
+          if (d.nome === msg.nome && d.sala === sala && c !== ws) {
+            usuarios.delete(c);
+            try { c.terminate(); } catch(e) {}
+          }
+        }
         usuarios.set(ws, { nome: msg.nome, sala });
-        console.log(`👤 ${msg.nome} entrou em "${sala}"`);
-        // Envia histórico pra quem entrou
         ws.send(JSON.stringify({ tipo: "historico", mensagens: historicoSalas[sala] || [] }));
-        broadcast({ tipo: "sistema", texto: `${msg.nome} entrou no chat`, hora: horaAtual() }, sala, ws);
+        broadcast({ tipo: "sistema", texto: `${msg.nome} entrou no chat`, hora: hora() }, sala, ws);
         broadcastOnline(sala);
+        return;
       }
 
-      if (msg.tipo === "mensagem") {
-        const usuario = usuarios.get(ws);
-        if (!usuario) return;
+      if (!usuario) return;
+
+      if (["mensagem","imagem","audio"].includes(msg.tipo)) {
         const novaMsg = {
           id: Date.now().toString(),
-          tipo: "mensagem",
+          tipo: msg.tipo,
           nome: usuario.nome,
-          texto: msg.texto,
-          hora: horaAtual()
+          texto: msg.texto || "",
+          media: msg.media || null,
+          mediaType: msg.mediaType || null,
+          hora: hora(),
+          replyTo: msg.replyTo || null,
+          reacoes: {}
         };
-        adicionarMsgAoHistorico(usuario.sala, novaMsg);
-        broadcast(novaMsg, usuario.sala, ws);
+        addMsg(usuario.sala, novaMsg);
+        const count = broadcast(novaMsg, usuario.sala, ws);
+        remetentes.set(novaMsg.id, ws);
+        if (count > 0)
+          ws.send(JSON.stringify({ tipo: "status", id: novaMsg.id, status: "entregue" }));
       }
 
       if (msg.tipo === "apagar") {
-        const usuario = usuarios.get(ws);
-        if (!usuario) return;
-        const sala = usuario.sala;
-        if (historicoSalas[sala]) {
-          const idx = historicoSalas[sala].findIndex(m => m.id === msg.id && m.nome === usuario.nome);
-          if (idx !== -1) {
-            historicoSalas[sala].splice(idx, 1);
-            salvarHistorico();
-            broadcast({ tipo: "apagar", id: msg.id }, sala, null);
-            console.log(`🗑️ ${usuario.nome} apagou mensagem ${msg.id}`);
+        if (historicoSalas[usuario.sala]) {
+          const idx = historicoSalas[usuario.sala].findIndex(m => m.id === msg.id && m.nome === usuario.nome);
+          if (idx !== -1) { historicoSalas[usuario.sala].splice(idx, 1); salvar(); }
+        }
+        broadcast({ tipo: "apagar", id: msg.id }, usuario.sala, null);
+      }
+
+      if (msg.tipo === "reagir") {
+        if (historicoSalas[usuario.sala]) {
+          const m = historicoSalas[usuario.sala].find(m => m.id === msg.id);
+          if (m) {
+            if (!m.reacoes) m.reacoes = {};
+            if (!m.reacoes[msg.emoji]) m.reacoes[msg.emoji] = [];
+            const idx = m.reacoes[msg.emoji].indexOf(usuario.nome);
+            if (idx === -1) m.reacoes[msg.emoji].push(usuario.nome);
+            else {
+              m.reacoes[msg.emoji].splice(idx, 1);
+              if (!m.reacoes[msg.emoji].length) delete m.reacoes[msg.emoji];
+            }
+            salvar();
+            broadcast({ tipo: "reagir", id: msg.id, reacoes: m.reacoes }, usuario.sala, null);
           }
         }
       }
 
-    } catch (e) { console.error("Erro:", e); }
+      if (msg.tipo === "digitando")
+        broadcast({ tipo: "digitando", nome: usuario.nome }, usuario.sala, ws);
+
+      if (msg.tipo === "parou")
+        broadcast({ tipo: "parou", nome: usuario.nome }, usuario.sala, ws);
+
+      if (msg.tipo === "visto") {
+        for (const id of (msg.ids || [])) {
+          const sw = remetentes.get(id);
+          if (sw && sw.readyState === WebSocket.OPEN && sw !== ws)
+            sw.send(JSON.stringify({ tipo: "status", id, status: "visto" }));
+        }
+      }
+
+    } catch(e) { console.error(e); }
   });
 
   ws.on("close", () => {
-    const usuario = usuarios.get(ws);
-    if (usuario) {
-      broadcast({ tipo: "sistema", texto: `${usuario.nome} saiu do chat`, hora: horaAtual() }, usuario.sala);
+    const u = usuarios.get(ws);
+    if (u) {
+      broadcast({ tipo: "sistema", texto: `${u.nome} saiu`, hora: hora() }, u.sala);
+      broadcast({ tipo: "parou", nome: u.nome }, u.sala, ws);
       usuarios.delete(ws);
-      broadcastOnline(usuario.sala);
+      broadcastOnline(u.sala);
     }
   });
 });
+
+function broadcast(dados, sala, excluir = null) {
+  const json = JSON.stringify(dados);
+  let count = 0;
+  wss.clients.forEach(c => {
+    if (c.readyState !== WebSocket.OPEN || c === excluir) return;
+    const u = usuarios.get(c);
+    if (u && u.sala === sala) { c.send(json); count++; }
+  });
+  return count;
+}
 
 function broadcastOnline(sala) {
   const lista = [...usuarios.values()].filter(u => u.sala === sala).map(u => u.nome);
@@ -112,20 +151,10 @@ function broadcastOnline(sala) {
   });
 }
 
-function broadcast(dados, sala, excluir = null) {
-  const json = JSON.stringify(dados);
-  wss.clients.forEach(c => {
-    if (c.readyState !== WebSocket.OPEN) return;
-    if (c === excluir) return;
-    const u = usuarios.get(c);
-    if (u && u.sala === sala) c.send(json);
+function hora() {
+  return new Date().toLocaleTimeString("pt-BR", {
+    timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit"
   });
 }
 
-function horaAtual() {
-  return new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-}
-
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(`🌐 Servidor rodando na porta ${PORT}`);
-});
+server.listen(PORT, "0.0.0.0", () => console.log(`Rodando na porta ${PORT}`));

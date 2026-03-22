@@ -34,7 +34,7 @@ function updateMsgHistorico(sala, id, campos) {
 }
 
 const server = http.createServer((req, res) => { res.writeHead(200); res.end("MeuChat OK"); });
-const wss = new WebSocket.Server({ server, maxPayload: 20 * 1024 * 1024 });
+const wss = new WebSocket.Server({ server, maxPayload: 50 * 1024 * 1024 });
 
 // usuarios: ws -> { nome, sala }
 const usuarios = new Map();
@@ -177,6 +177,21 @@ wss.on("connection", (ws) => {
             c.send(JSON.stringify({ ...msg, from: usuario.nome }));
             break;
           }
+        }
+        return;
+      }
+
+      if(["call_offer","call_answer","call_reject","call_end","ice_candidate","call_chunk"].includes(msg.tipo)) {
+        let entregue = false;
+        for (const [c, d] of usuarios.entries()) {
+          if (d.nome === msg.to && c.readyState === WebSocket.OPEN) {
+            c.send(JSON.stringify({ ...msg, from: usuario.nome }));
+            entregue = true;
+            break;
+          }
+        }
+        if (!entregue && msg.tipo === "call_offer") {
+          ws.send(JSON.stringify({ tipo: "call_reject", from: msg.to, motivo: "offline" }));
         }
         return;
       }

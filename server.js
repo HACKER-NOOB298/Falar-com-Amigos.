@@ -44,15 +44,8 @@ wss.on("connection", (ws) => {
           hora: horaAtual()
         }, msg.sala || "geral", ws);
 
-        // Manda a lista de usuários online pra quem acabou de entrar
-        const onlineNaSala = [...usuarios.values()]
-          .filter(u => u.sala === (msg.sala || "geral"))
-          .map(u => u.nome);
-
-        ws.send(JSON.stringify({
-          tipo: "usuarios_online",
-          lista: onlineNaSala
-        }));
+        // Manda a lista atualizada pra TODOS na sala
+        broadcastOnline(msg.sala || "geral");
       }
 
       // --- TIPO 2: Mensagem normal ---
@@ -90,9 +83,25 @@ wss.on("connection", (ws) => {
       }, usuario.sala);
 
       usuarios.delete(ws);
+      broadcastOnline(usuario.sala);
     }
   });
 });
+
+// Envia a lista de usuários online pra todos na sala
+function broadcastOnline(sala) {
+  const lista = [...usuarios.values()]
+    .filter(u => u.sala === sala)
+    .map(u => u.nome);
+
+  const json = JSON.stringify({ tipo: "usuarios_online", lista });
+
+  wss.clients.forEach((cliente) => {
+    if (cliente.readyState !== WebSocket.OPEN) return;
+    const u = usuarios.get(cliente);
+    if (u && u.sala === sala) cliente.send(json);
+  });
+}
 
 // Envia mensagem pra todos na mesma sala
 // Se "excluir" for passado, não envia pra essa conexão específica

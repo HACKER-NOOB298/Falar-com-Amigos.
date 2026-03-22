@@ -357,6 +357,7 @@ input[type=file]{display:none;}
 </div>
 
 <!-- MENUS -->
+<div id="tres-pontos-menu" style="position:fixed;background:#fff;border-radius:11px;box-shadow:0 4px 22px rgba(0,0,0,.18);padding:4px 0;z-index:9500;display:none;min-width:200px;overflow:hidden;"></div>
 <div id="plus-menu">
   <button class="pm-item" onclick="pmAcao('foto')"><div class="pm-ico" style="background:#e8f4ff">🖼️</div>Fotos e Vídeos</button>
   <button class="pm-item" onclick="pmAcao('doc')"><div class="pm-ico" style="background:#e8f0ff">📄</div>Documento</button>
@@ -492,7 +493,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 function linkify(t){return esc(t).replace(/(https?:\/\/[^\s<>"]+)/g,'<a href="$1" target="_blank" style="color:#0d6efd;text-decoration:underline;word-break:break-all;">$1</a>');}
 function horaLocal(){return new Date().toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit"});}
 function scroll(){const el=document.getElementById("msgs");el.scrollTop=el.scrollHeight;}
-function fecharTudo(){["ctx-menu","plus-menu","react-picker","emoji-picker"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});}
+function fecharTudo(){["ctx-menu","plus-menu","react-picker","emoji-picker","tres-pontos-menu"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});}
 
 // =================== LOGIN ===================
 let fotoLoginB64="";
@@ -805,35 +806,50 @@ function comprimir(file,maxKB,cb){
 function enviarArquivo(inp,tipo){
   const file=inp.files[0];if(!file)return;
   if(file.size>16*1024*1024){alert("Arquivo grande demais! Máximo 16MB.");inp.value="";return;}
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const media=ev.target.result;
-    if(!ws||ws.readyState!==WebSocket.OPEN)return;
-    const id=Date.now().toString();
-    msgStatus[id]="enviado";
-    const tipoFinal=file.type.startsWith("video/")?"imagem":tipo;
-    ws.send(JSON.stringify({tipo:tipoFinal,media,mediaType:file.type,texto:"",replyTo:replyTo||null,clientId:id}));
-    const m={id,tipo:tipoFinal,nome:meuNome,media,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
-    if(!document.querySelector(`[data-id="${id}"]`)){
-      todasMensagens.push({...m,eMinha:true});
-      document.getElementById("msgs").appendChild(criarBolha(m,true));
-      scroll();
-    }
-    cancelarReply();
-  };
-  if(tipo==="audio")reader.readAsDataURL(file);
-  else comprimir(file,800,b64=>{
+  
+  function mandarMidia(media,tipoFinal,mediaType){
     if(!ws||ws.readyState!==WebSocket.OPEN)return;
     const id=Date.now().toString();msgStatus[id]="enviado";
-    ws.send(JSON.stringify({tipo:"imagem",media:b64,mediaType:"image/jpeg",texto:"",replyTo:replyTo||null,clientId:id}));
-    const m={id,tipo:"imagem",nome:meuNome,media:b64,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
-    if(!document.querySelector(`[data-id="${id}"]`)){
+    ws.send(JSON.stringify({tipo:tipoFinal,media,mediaType,texto:"",replyTo:replyTo||null,clientId:id}));
+    const m={id,tipo:tipoFinal,nome:meuNome,media,hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+    if(!document.querySelector('[data-id="'+id+'"]')){
       todasMensagens.push({...m,eMinha:true});
       document.getElementById("msgs").appendChild(criarBolha(m,true));
       scroll();
     }
     cancelarReply();
-  });
+  }
+
+  if(tipo==="audio"||file.type.startsWith("audio/")){
+    // Áudio: envia como base64 direto
+    const reader=new FileReader();
+    reader.onload=ev=>mandarMidia(ev.target.result,"audio",file.type);
+    reader.readAsDataURL(file);
+  } else if(tipo==="imagem"&&file.type.startsWith("image/")){
+    // Imagem: comprime antes
+    comprimir(file,800,b64=>mandarMidia(b64,"imagem","image/jpeg"));
+  } else if(file.type.startsWith("video/")){
+    // Vídeo: envia como imagem (base64)
+    const reader=new FileReader();
+    reader.onload=ev=>mandarMidia(ev.target.result,"imagem",file.type);
+    reader.readAsDataURL(file);
+  } else {
+    // Documento: envia como base64 com nome do arquivo no texto
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      if(!ws||ws.readyState!==WebSocket.OPEN)return;
+      const id=Date.now().toString();msgStatus[id]="enviado";
+      ws.send(JSON.stringify({tipo:"mensagem",texto:"📎 "+file.name+" ("+Math.round(file.size/1024)+"KB)",replyTo:replyTo||null,clientId:id}));
+      const m={id,tipo:"mensagem",nome:meuNome,texto:"📎 "+file.name+" ("+Math.round(file.size/1024)+"KB)",hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
+      if(!document.querySelector('[data-id="'+id+'"]')){
+        todasMensagens.push({...m,eMinha:true});
+        document.getElementById("msgs").appendChild(criarBolha(m,true));
+        scroll();
+      }
+      cancelarReply();
+    };
+    reader.readAsDataURL(file);
+  }
   inp.value="";
 }
 
@@ -919,19 +935,21 @@ function pmAcao(tipo){
 
 function enviarLocalizacao(){
   if(!navigator.geolocation){alert("Geolocalização não suportada!");return;}
+  let enviado=false; // evita disparo múltiplo
   navigator.geolocation.getCurrentPosition(pos=>{
+    if(enviado)return; enviado=true;
     const{latitude:lat,longitude:lng}=pos.coords;
     if(!ws||ws.readyState!==WebSocket.OPEN)return;
     const id=Date.now().toString();
-    ws.send(JSON.stringify({tipo:"localizacao",lat,lng,texto:`📍 Localização`,replyTo:replyTo||null,clientId:id}));
+    ws.send(JSON.stringify({tipo:"localizacao",lat,lng,texto:"📍 Localização",replyTo:replyTo||null,clientId:id}));
     const m={id,tipo:"localizacao",nome:meuNome,lat,lng,texto:"📍 Localização",hora:horaLocal(),replyTo:replyTo||null,reacoes:{}};
-    if(!document.querySelector(`[data-id="${id}"]`)){
+    if(!document.querySelector('[data-id="'+id+'"]')){
       todasMensagens.push({...m,eMinha:true});
       document.getElementById("msgs").appendChild(criarBolha(m,true));
       scroll();
     }
     cancelarReply();
-  },()=>alert("Não foi possível obter sua localização."));
+  },()=>alert("Não foi possível obter sua localização."),{maximumAge:30000,timeout:10000});
 }
 
 function pedirContato(){
@@ -1290,7 +1308,7 @@ function limparConversa(){
 // =================== MENU 3 PONTOS ===================
 function abrirMenuTresPontos(btn){
   fecharTudo();
-  const m=document.getElementById("ctx-menu");
+  const m=document.getElementById("tres-pontos-menu");
   m.innerHTML=`
     <button class="ctx-i" onclick="abrirPerfil('${meuNome}');fecharTudo()">👤 Dados do contato</button>
     <button class="ctx-i" onclick="fecharTudo()">✅ Selecionar mensagens</button>

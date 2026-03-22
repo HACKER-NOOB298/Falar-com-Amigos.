@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MeuChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --verde: #25D366;
+      --verde-escuro: #075E54;
+      --verde-medio: #128C7E;
+      --bg: #f0f2f5;
+      --branco: #ffffff;
+      --cinza-msg: #e9e9eb;
+      --texto: #111;
+      --texto-muted: #8696a0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* ========== TELA DE LOGIN ========== */
+    #tela-login {
+      background: var(--branco);
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+
+    .logo {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--verde);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      font-size: 38px;
+    }
+
+    #tela-login h1 {
+      font-size: 28px; font-weight: 700; color: var(--texto); margin-bottom: 8px;
+    }
+
+    #tela-login p {
+      color: var(--texto-muted); font-size: 14px; margin-bottom: 32px; line-height: 1.6;
+    }
+
+    .campo {
+      text-align: left; margin-bottom: 16px;
+    }
+
+    .campo label {
+      font-size: 11px; font-weight: 700; color: var(--texto-muted);
+      letter-spacing: 1px; display: block; margin-bottom: 6px;
+    }
+
+    .campo input, .campo select {
+      width: 100%; padding: 13px 16px; border-radius: 12px;
+      border: 1.5px solid #e8e8e8; font-size: 14px;
+      font-family: inherit; outline: none; color: var(--texto);
+      transition: border-color .2s;
+    }
+
+    .campo input:focus, .campo select:focus {
+      border-color: var(--verde);
+    }
+
+    .btn-entrar {
+      width: 100%; padding: 14px; border-radius: 12px;
+      background: var(--verde); color: #fff; font-size: 16px;
+      font-weight: 700; border: none; cursor: pointer;
+      font-family: inherit; margin-top: 8px;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .btn-entrar:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+    .btn-entrar:active { transform: translateY(0); }
+
+    /* ========== APP PRINCIPAL ========== */
+    #app {
+      display: none;
+      width: 900px;
+      height: 620px;
+      background: var(--branco);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      flex-direction: row;
+    }
+
+    /* ---- SIDEBAR ---- */
+    #sidebar {
+      width: 300px;
+      border-right: 1px solid #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    #sidebar-header {
+      background: var(--verde-escuro);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #meu-nome-header {
+      color: #fff; font-weight: 600; font-size: 15px;
+    }
+
+    #sala-atual-badge {
+      background: rgba(255,255,255,0.2);
+      color: #fff; font-size: 11px; padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    #busca-container {
+      padding: 8px 12px;
+      background: #f6f6f6;
+    }
+
+    #busca {
+      width: 100%; padding: 9px 14px; border-radius: 20px;
+      border: 1px solid #e8e8e8; font-size: 13px;
+      font-family: inherit; outline: none; background: #fff;
+    }
+
+    #online-titulo {
+      padding: 10px 16px 4px;
+      font-size: 11px; font-weight: 700;
+      color: var(--texto-muted); letter-spacing: 1px;
+    }
+
+    #lista-online {
+      flex: 1; overflow-y: auto; padding: 4px 0;
+    }
+
+    .usuario-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; cursor: default;
+    }
+
+    .avatar-mini {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0;
+    }
+
+    .usuario-nome-mini { font-size: 14px; color: var(--texto); }
+
+    .ponto-verde {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--verde); margin-left: auto; flex-shrink: 0;
+    }
+
+    /* ---- ÁREA DE CHAT ---- */
+    #chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chat-header {
+      background: var(--verde-escuro);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #chat-titulo { color: #fff; font-weight: 700; font-size: 16px; }
+    #chat-subtitulo { color: rgba(255,255,255,0.6); font-size: 12px; }
+
+    #mensagens {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background-color: #efeae2;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .msg-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .msg-wrapper.minha { align-items: flex-end; }
+    .msg-wrapper.deles  { align-items: flex-start; }
+
+    .msg-nome {
+      font-size: 11px; font-weight: 700;
+      margin-bottom: 2px; padding: 0 4px;
+    }
+
+    .msg-bolha {
+      max-width: 65%;
+      padding: 9px 13px 6px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+      position: relative;
+    }
+
+    .msg-wrapper.minha .msg-bolha {
+      background: #dcf8c6;
+      border-radius: 12px 12px 2px 12px;
+    }
+
+    .msg-wrapper.deles .msg-bolha {
+      background: #fff;
+      border-radius: 12px 12px 12px 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+    }
+
+    .msg-hora {
+      font-size: 10px;
+      color: var(--texto-muted);
+      text-align: right;
+      margin-top: 3px;
+    }
+
+    .msg-sistema {
+      text-align: center;
+      font-size: 11px;
+      color: var(--texto-muted);
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      padding: 4px 12px;
+      margin: 4px auto;
+    }
+
+    /* ---- INPUT ---- */
+    #input-area {
+      padding: 10px 14px;
+      background: #f0f2f5;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #input-msg {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 24px;
+      border: none;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    #btn-enviar {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--verde); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background .2s;
+    }
+
+    #btn-enviar:hover { background: var(--verde-medio); }
+
+    /* ---- STATUS DE CONEXÃO ---- */
+    #status-bar {
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      display: none;
+    }
+
+    #status-bar.conectando { background: #fff3cd; color: #856404; display: block; }
+    #status-bar.erro { background: #f8d7da; color: #721c24; display: block; }
+    #status-bar.ok { display: none; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- ========== TELA DE LOGIN ========== -->
+<div id="tela-login">
+  <div class="logo">💬</div>
+  <h1>MeuChat</h1>
+  <p>Entre com seu nome e escolha uma sala para começar a conversar com seus amigos</p>
+
+  <div class="campo">
+    <label>SEU NOME</label>
+    <input type="text" id="input-nome" placeholder="Como seus amigos vão te ver" maxlength="20" />
+  </div>
+
+  <div class="campo">
+    <label>SALA</label>
+    <input type="text" id="input-sala" placeholder="Nome da sala (ex: amigos, família)" value="geral" maxlength="20" />
+  </div>
+
+  <button class="btn-entrar" onclick="entrar()">Entrar no Chat →</button>
+
+  <p style="font-size:11px; color:#bbb; margin-top:20px;">
+    Compartilhe o link desse site com seus amigos e entrem na mesma sala!
+  </p>
+</div>
+
+<!-- ========== APP PRINCIPAL ========== -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <span id="meu-nome-header">Você</span>
+      <span id="sala-atual-badge">geral</span>
+    </div>
+    <div id="busca-container">
+      <input id="busca" placeholder="🔍  Buscar na conversa..." oninput="buscar(this.value)" />
+    </div>
+    <div id="online-titulo">ONLINE AGORA</div>
+    <div id="lista-online"></div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chat-area">
+    <div id="chat-header">
+      <div>
+        <div id="chat-titulo">Sala: geral</div>
+        <div id="chat-subtitulo">0 pessoas online</div>
+      </div>
+    </div>
+
+    <div id="status-bar" class="conectando">Conectando ao servidor...</div>
+    <div id="mensagens"></div>
+
+    <div id="input-area">
+      <input id="input-msg" type="text" placeholder="Digite uma mensagem..." maxlength="500"
+             onkeydown="if(event.key==='Enter') enviar()" />
+      <button id="btn-enviar" onclick="enviar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============================================
+  //   ⬇️  COLOQUE A URL DO SEU SERVIDOR AQUI  ⬇️
+  //   Exemplo Railway:  wss://meuapp.railway.app
+  //   Exemplo Render:   wss://meuapp.onrender.com
+  //   Teste local:      ws://localhost:3000
+  // ============================================
+  const URL_SERVIDOR = "ws://localhost:3000";
+  // ============================================
+
+  let ws = null;
+  let meuNome = "";
+  let minhaSala = "";
+  let todasMensagens = [];
+  const coresAvatar = ["#25D366","#128C7E","#075E54","#34B7F1","#E91E63","#9C27B0","#FF5722"];
+
+  function corPorNome(nome) {
+    let soma = 0;
+    for (let c of nome) soma += c.charCodeAt(0);
+    return coresAvatar[soma % coresAvatar.length];
+  }
+
+  function iniciaisNome(nome) {
+    return nome.split(" ").slice(0,2).map(n => n[0].toUpperCase()).join("");
+  }
+
+  function horaAgora() {
+    return new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+  }
+
+  // ----- ENTRAR NO CHAT -----
+  function entrar() {
+    const nome = document.getElementById("input-nome").value.trim();
+    const sala = document.getElementById("input-sala").value.trim() || "geral";
+
+    if (!nome) {
+      alert("Digite seu nome primeiro!");
+      return;
+    }
+
+    meuNome = nome;
+    minhaSala = sala;
+
+    document.getElementById("tela-login").style.display = "none";
+    document.getElementById("app").style.display = "flex";
+    document.getElementById("meu-nome-header").textContent = nome;
+    document.getElementById("sala-atual-badge").textContent = sala;
+    document.getElementById("chat-titulo").textContent = `Sala: ${sala}`;
+
+    conectarWebSocket();
+  }
+
+  // ----- CONECTAR AO SERVIDOR -----
+  function conectarWebSocket() {
+    const statusBar = document.getElementById("status-bar");
+    statusBar.className = "conectando";
+    statusBar.textContent = "Conectando ao servidor...";
+
+    try {
+      ws = new WebSocket(URL_SERVIDOR);
+    } catch(e) {
+      statusBar.className = "erro";
+      statusBar.textContent = "❌ Erro: URL do servidor inválida. Verifique o código.";
+      return;
+    }
+
+    ws.onopen = () => {
+      statusBar.className = "ok";
+
+      // Avisa o servidor quem entrou e em qual sala
+      ws.send(JSON.stringify({
+        tipo: "entrar",
+        nome: meuNome,
+        sala: minhaSala
+      }));
+    };
+
+    ws.onmessage = (evento) => {
+      const msg = JSON.parse(evento.data);
+
+      if (msg.tipo === "mensagem") {
+        adicionarMensagem(msg.nome, msg.texto, msg.hora, msg.nome === meuNome);
+      }
+
+      if (msg.tipo === "sistema") {
+        adicionarMsgSistema(msg.texto);
+      }
+
+      if (msg.tipo === "usuarios_online") {
+        atualizarOnline(msg.lista);
+      }
+    };
+
+    ws.onclose = () => {
+      statusBar.className = "erro";
+      statusBar.textContent = "⚠️ Desconectado. Recarregue a página para reconectar.";
+    };
+
+    ws.onerror = () => {
+      statusBar.className = "erro";
+      statusBar.textContent = "❌ Não foi possível conectar. Verifique a URL do servidor.";
+    };
+  }
+
+  // ----- ENVIAR MENSAGEM -----
+  function enviar() {
+    const input = document.getElementById("input-msg");
+    const texto = input.value.trim();
+    if (!texto) return;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      alert("Você não está conectado ao servidor!");
+      return;
+    }
+
+    ws.send(JSON.stringify({ tipo: "mensagem", texto }));
+
+    // Mostra a mensagem na tela imediatamente (sem esperar o servidor)
+    adicionarMensagem(meuNome, texto, horaAgora(), true);
+    input.value = "";
+  }
+
+  // ----- RENDERIZAR MENSAGEM -----
+  function adicionarMensagem(nome, texto, hora, eMinha) {
+    const obj = { nome, texto, hora, eMinha };
+    todasMensagens.push(obj);
+
+    const div = criarBolhaMensagem(obj);
+    document.getElementById("mensagens").appendChild(div);
+    scrollParaBaixo();
+  }
+
+  function criarBolhaMensagem({ nome, texto, hora, eMinha }) {
+    const wrapper = document.createElement("div");
+    wrapper.className = `msg-wrapper ${eMinha ? "minha" : "deles"}`;
+
+    if (!eMinha) {
+      const nomeEl = document.createElement("div");
+      nomeEl.className = "msg-nome";
+      nomeEl.textContent = nome;
+      nomeEl.style.color = corPorNome(nome);
+      wrapper.appendChild(nomeEl);
+    }
+
+    const bolha = document.createElement("div");
+    bolha.className = "msg-bolha";
+    bolha.innerHTML = `
+      <span>${escapeHTML(texto)}</span>
+      <div class="msg-hora">${hora}</div>
+    `;
+
+    wrapper.appendChild(bolha);
+    return wrapper;
+  }
+
+  function adicionarMsgSistema(texto) {
+    const div = document.createElement("div");
+    div.className = "msg-sistema";
+    div.textContent = texto;
+    document.getElementById("mensagens").appendChild(div);
+    scrollParaBaixo();
+  }
+
+  // ----- USUÁRIOS ONLINE -----
+  function atualizarOnline(lista) {
+    const container = document.getElementById("lista-online");
+    container.innerHTML = "";
+    document.getElementById("chat-subtitulo").textContent = `${lista.length} pessoa${lista.length !== 1 ? "s" : ""} online`;
+
+    lista.forEach(nome => {
+      const item = document.createElement("div");
+      item.className = "usuario-item";
+      item.innerHTML = `
+        <div class="avatar-mini" style="background:${corPorNome(nome)}">${iniciaisNome(nome)}</div>
+        <span class="usuario-nome-mini">${escapeHTML(nome)}</span>
+        <div class="ponto-verde"></div>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  // ----- BUSCA -----
+  function buscar(termo) {
+    const container = document.getElementById("mensagens");
+    container.innerHTML = "";
+
+    const filtradas = termo
+      ? todasMensagens.filter(m => m.texto.toLowerCase().includes(termo.toLowerCase()))
+      : todasMensagens;
+
+    filtradas.forEach(m => {
+      container.appendChild(criarBolhaMensagem(m));
+    });
+
+    scrollParaBaixo();
+  }
+
+  // ----- UTILS -----
+  function scrollParaBaixo() {
+    const el = document.getElementById("mensagens");
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  // Enter no login
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && document.getElementById("tela-login").style.display !== "none") {
+      entrar();
+    }
+  });
+</script>
+</body>
+</html>

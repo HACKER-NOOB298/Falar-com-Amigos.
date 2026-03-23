@@ -195,13 +195,32 @@ input[type=file]{display:none;}
 .pl-galeria-img{aspect-ratio:1;object-fit:cover;border-radius:4px;cursor:pointer;width:100%;}
 
 /* CHAMADA */
-#chamada-ov{position:fixed;inset:0;background:rgba(7,94,84,.95);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+/* CHAMADA */
+#chamada-ov{position:fixed;inset:0;background:linear-gradient(160deg,#064e3b 0%,#065f46 60%,#047857 100%);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:all .3s;}
 #chamada-ov.on{display:flex;}
-#chamada-av{width:90px;height:90px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff;overflow:hidden;}
+#chamada-ov.minimizado{width:220px!important;height:auto!important;inset:auto!important;bottom:80px!important;right:16px!important;border-radius:16px!important;padding:12px!important;gap:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.4)!important;}
+#chamada-ov.minimizado #videos-area{display:none!important;}
+#chamada-ov.minimizado #chamada-av{width:44px;height:44px;font-size:16px;}
+#chamada-ov.minimizado #chamada-nome{font-size:13px;}
+#chamada-ov.minimizado #chamada-status{font-size:11px;}
+#chamada-ov.minimizado .cbtn{width:36px;height:36px;font-size:16px;}
+#chamada-ov.minimizado #chamada-btns{gap:8px;margin-top:4px;}
+#chamada-av-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+#chamada-av{width:100px;height:100px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:700;color:#fff;overflow:hidden;z-index:1;position:relative;}
 #chamada-av img{width:100%;height:100%;object-fit:cover;}
-#chamada-nome{color:#fff;font-size:22px;font-weight:700;}
-#chamada-status{color:rgba(255,255,255,.7);font-size:14px;}
-#videos-area{display:flex;gap:12px;margin-top:10px;}
+.pulse-ring{position:absolute;border-radius:50%;border:3px solid rgba(255,255,255,.4);animation:pulsar 1.8s ease-out infinite;}
+.pulse-ring:nth-child(1){width:120px;height:120px;animation-delay:0s;}
+.pulse-ring:nth-child(2){width:150px;height:150px;animation-delay:.5s;}
+.pulse-ring:nth-child(3){width:180px;height:180px;animation-delay:1s;}
+@keyframes pulsar{0%{transform:scale(.8);opacity:.8;}100%{transform:scale(1.2);opacity:0;}}
+@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+#chamada-nome{color:#fff;font-size:22px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+#chamada-status{color:rgba(255,255,255,.75);font-size:14px;letter-spacing:.3px;}
+#chamada-timer{color:#fff;font-size:18px;font-weight:600;font-family:monospace;letter-spacing:2px;display:none;}
+#videos-area{display:flex;gap:12px;margin-top:6px;align-items:flex-start;position:relative;}
+#cam-off-remote{width:300px;height:225px;border-radius:12px;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+#cam-off-remote .cam-av{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;}
+#cam-topo{position:absolute;top:6px;right:6px;display:flex;gap:6px;z-index:5;}
 #video-local{width:140px;height:105px;background:#222;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,.3);}
 #video-remoto{width:300px;height:225px;background:#111;border-radius:12px;object-fit:cover;}
 #chamada-btns{display:flex;gap:16px;margin-top:10px;}
@@ -435,17 +454,36 @@ input[type=file]{display:none;}
 
 <!-- CHAMADA -->
 <div id="chamada-ov">
-  <div id="chamada-av">?</div>
+  <!-- Botões topo -->
+  <div id="cam-topo">
+    <button onclick="minimizarChamada()" title="Minimizar" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">⬇</button>
+    <button id="btn-screen" onclick="compartilharTela()" title="Compartilhar tela" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background .2s;display:none" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">🖥</button>
+  </div>
+  <!-- Avatar com pulso -->
+  <div id="chamada-av-wrap">
+    <div class="pulse-ring" id="pr1"></div>
+    <div class="pulse-ring" id="pr2"></div>
+    <div class="pulse-ring" id="pr3"></div>
+    <div id="chamada-av">?</div>
+  </div>
   <div id="chamada-nome">Nome</div>
   <div id="chamada-status">Chamando...</div>
+  <div id="chamada-timer">00:00</div>
+  <!-- Vídeos -->
   <div id="videos-area" style="display:none">
-    <video id="video-local" autoplay muted playsinline></video>
-    <video id="video-remoto" autoplay playsinline></video>
+    <video id="video-local" autoplay muted playsinline style="width:140px;height:105px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,.3);"></video>
+    <!-- Remoto: vídeo ou avatar se câmera desligada -->
+    <div style="position:relative">
+      <video id="video-remoto" autoplay playsinline style="width:300px;height:225px;border-radius:12px;object-fit:cover;background:#000;"></video>
+      <div id="cam-off-remote">
+        <div class="cam-av" id="cam-off-av">?</div>
+        <span style="color:rgba(255,255,255,.6);font-size:12px">📵 Câmera desligada</span>
+      </div>
+    </div>
   </div>
   <div id="chamada-btns">
-    <button class="cbtn" id="btn-mute" onclick="toggleMute()" title="Mudo" style="color:#fff">🎤</button>
-    <button class="cbtn" id="btn-cam" onclick="toggleCam()" title="Câmera" style="color:#fff;display:none">📹</button>
-    <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()">📵</button>
+    <button class="cbtn" id="btn-mute" onclick="toggleMute()" title="Mudo" style="color:#fff;background:rgba(255,255,255,.2)">🎤</button>
+    <button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px">📵</button>
   </div>
 </div>
 
@@ -1486,7 +1524,7 @@ async function iniciarChamada(tipo){
 
 async function fazerChamada(para,tipo){
   chamando=true;tipoCall=tipo;chamandoPara=para;
-  mostrarUIchamada(para,"📞 Chamando "+para+"...",tipo);
+  mostrarUIchamada(para,"📞 Chamando "+para+"...",tipo,"chamando");
   setStatusChamada("Aguardando resposta...");
   if(ws&&ws.readyState===WebSocket.OPEN)
     ws.send(JSON.stringify({tipo:"call_offer",to:para,video:tipo==="video"}));
@@ -1501,7 +1539,7 @@ function receberChamada(m){
   }
   recebendoChamada=m;tipoCall=m.video?"video":"audio";
   tocarToque();
-  mostrarUIchamada(m.from,(m.video?"📹":"📞")+" "+m.from+" está ligando...",tipoCall);
+  mostrarUIchamada(m.from,(m.video?"📹":"📞")+" "+m.from+" está ligando...",tipoCall,"recebendo");
   document.getElementById("chamada-btns").innerHTML=
     '<button class="cbtn" style="background:#4caf50;color:#fff;font-size:24px" onclick="aceitarChamada()" title="Atender">📞</button>'+
     '<button class="cbtn" style="background:#f44336;font-size:24px" onclick="rejeitarChamada()" title="Recusar">📵</button>';
@@ -1529,6 +1567,9 @@ async function aceitarResposta(m){
   emChamada=true;chamando=false;
   setStatusChamada("✓ Em chamada");
   tocarToque(true);
+  ["pr1","pr2","pr3"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});
+  document.getElementById("chamada-timer").style.display="block";
+  iniciarTimer();
   // Resume AudioContext (requer gesto do usuário)
   if(!audioCtxRemoto) audioCtxRemoto=new AudioContext();
   if(audioCtxRemoto.state==="suspended") audioCtxRemoto.resume();
@@ -1552,6 +1593,17 @@ async function iniciarCaptura(para){
       document.getElementById("videos-area").style.display="flex";
     }
     setStatusChamada("✓ Em chamada");
+    // Para pulsação e inicia timer
+    ["pr1","pr2","pr3"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});
+    document.getElementById("chamada-timer").style.display="block";
+    iniciarTimer();
+    // Câmera remota: mostrar avatar enquanto não chega vídeo
+    if(tipoCall==="video"){
+      const vr=document.getElementById("video-remoto");
+      const co=document.getElementById("cam-off-remote");
+      if(co)co.style.display="flex";
+      if(vr)vr.style.opacity="0";
+    }
 
     // Usa AudioContext com a taxa nativa do navegador (sem forçar sampleRate)
     const capCtx=new AudioContext();
@@ -1604,7 +1656,12 @@ async function iniciarCaptura(para){
       },125);
     }
   }catch(e){
-    alert("Erro ao acessar microfone/câmera: "+e.message);
+    const errMsg=e.name==="NotAllowedError"||e.name==="PermissionDeniedError"
+      ?"Permissão negada. Clique no 🔒 na barra de endereço e libere microfone/câmera."
+      :e.name==="NotFoundError"
+      ?"Nenhum microfone encontrado neste dispositivo."
+      :"Erro ao acessar microfone/câmera: "+e.message;
+    showToast(errMsg,"error");
     encerrarChamada(true);
   }
 }
@@ -1670,6 +1727,7 @@ async function receberChunk(m){
       if(vr&&vr.parentElement){vr.parentElement.insertBefore(imgEl,vr);vr.style.display="none";}
     }
     imgEl.src="data:image/jpeg;base64,"+m.chunk;
+    onVideoRemotoChegou();
   }
 }
 
@@ -1692,6 +1750,8 @@ function encerrarChamada(silencioso=false){
   if(!silencioso&&dest&&ws&&ws.readyState===WebSocket.OPEN)
     ws.send(JSON.stringify({tipo:"call_end",to:dest}));
   chamando=false;emChamada=false;
+  clearInterval(callTimerInterval);callTimerInterval=null;
+  const timerEl=document.getElementById("chamada-timer");if(timerEl){timerEl.style.display="none";timerEl.textContent="00:00";}
   if(callRecorder){try{callRecorder.stop();}catch(e){}callRecorder=null;}
   if(callVideoTimer){clearInterval(callVideoTimer);callVideoTimer=null;}
   if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
@@ -1708,7 +1768,7 @@ function encerrarChamada(silencioso=false){
     '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336">📵</button>';
 }
 
-function mostrarUIchamada(nome,status,tipo){
+function mostrarUIchamada(nome,status,tipo,modo){
   const p=fotoPerfis[nome]||{};
   const av=document.getElementById("chamada-av");
   av.style.background=cor(nome);
@@ -1716,7 +1776,20 @@ function mostrarUIchamada(nome,status,tipo){
   else{av.innerHTML=ini(nome);}
   document.getElementById("chamada-nome").textContent=nome;
   document.getElementById("chamada-status").textContent=status;
+  // Pulsação: mostrar só enquanto chama/recebe
+  const pulsing=modo==="chamando"||modo==="recebendo";
+  ["pr1","pr2","pr3"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.style.display=pulsing?"block":"none";
+  });
+  // Botão de tela na videochamada
+  const bs=document.getElementById("btn-screen");
+  if(bs)bs.style.display=tipo==="video"?"flex":"none";
+  // cam-off avatar
+  const co=document.getElementById("cam-off-av");
+  if(co){co.textContent=ini(nome);co.style.background=cor(nome);}
   document.getElementById("chamada-ov").classList.add("on");
+  document.getElementById("chamada-ov").classList.remove("minimizado");
 }
 
 function setStatusChamada(txt){
@@ -1759,6 +1832,81 @@ function atualizarBtnFs(){
   btn.innerHTML=full
     ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
     :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+}
+
+
+// =================== CALL EXTRAS ===================
+let callTimerInterval=null, callSeconds=0;
+
+function iniciarTimer(){
+  callSeconds=0;
+  clearInterval(callTimerInterval);
+  callTimerInterval=setInterval(()=>{
+    callSeconds++;
+    const m=String(Math.floor(callSeconds/60)).padStart(2,"0");
+    const s=String(callSeconds%60).padStart(2,"0");
+    const el=document.getElementById("chamada-timer");
+    if(el)el.textContent=m+":"+s;
+  },1000);
+}
+
+function minimizarChamada(){
+  const ov=document.getElementById("chamada-ov");
+  ov.classList.toggle("minimizado");
+}
+
+async function compartilharTela(){
+  try{
+    const screenStream=await navigator.mediaDevices.getDisplayMedia({video:true});
+    const vl=document.getElementById("video-local");
+    if(vl){vl.srcObject=screenStream;}
+    // Substitui track de vídeo na captura
+    if(localStream){
+      const videoTrack=screenStream.getVideoTracks()[0];
+      if(videoTrack){
+        // Para o track antigo
+        localStream.getVideoTracks().forEach(t=>t.stop());
+        // Reinicia envio com nova tela
+        chamandoPara=chamandoPara||(recebendoChamada&&recebendoChamada.from)||"";
+        clearInterval(callVideoTimer);
+        const cv=document.createElement("canvas");cv.width=640;cv.height=360;
+        const ctx2d=cv.getContext("2d");
+        callVideoTimer=setInterval(()=>{
+          if(!emChamada)return;
+          try{ctx2d.drawImage(vl,0,0,640,360);}catch(e){return;}
+          const b64=cv.toDataURL("image/jpeg",0.4).split(",")[1];
+          if(ws&&ws.readyState===WebSocket.OPEN)
+            ws.send(JSON.stringify({tipo:"call_chunk",to:chamandoPara,chunk:b64,kind:"video"}));
+        },200);
+        screenStream.getVideoTracks()[0].onended=()=>{
+          showToast("Compartilhamento de tela encerrado","info");
+        };
+      }
+    }
+    showToast("Compartilhando tela...","success");
+  }catch(e){
+    if(e.name!=="NotAllowedError")showToast("Erro ao compartilhar tela: "+e.message,"error");
+  }
+}
+
+// Quando vídeo remoto chega, esconde o avatar cam-off
+function onVideoRemotoChegou(){
+  const vr=document.getElementById("video-remoto");
+  const co=document.getElementById("cam-off-remote");
+  if(co)co.style.display="none";
+  if(vr){vr.style.opacity="1";vr.style.display="block";}
+}
+
+// TOAST de erros/avisos
+function showToast(msg, tipo="info"){
+  const colors={info:"#2196F3",success:"#25D366",error:"#f44336",warn:"#ff9800"};
+  const t=document.createElement("div");
+  t.style.cssText="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:"+
+    colors[tipo]+";color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:500;"+
+    "z-index:99999;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:fadeInUp .3s ease;pointer-events:none;max-width:340px;text-align:center;";
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
 }
 
 // =================== EVENTOS GLOBAIS ===================

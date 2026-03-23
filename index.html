@@ -1556,6 +1556,7 @@ function deslogar(){
 // Relay 100% via WebSocket — sem WebRTC, sem NAT, sempre funciona
 
 let chamando=false, emChamada=false;
+let callParticipantes=new Set();
 let chamandoPara="", recebendoChamada=null, tipoCall="audio";
 let localStream=null, remoteStream=null, peerConn=null, iceFila=[];
 
@@ -1624,10 +1625,9 @@ async function aceitarChamada(){
   if(!recebendoChamada)return;
   tocarToque(true);emChamada=true;chamando=false;
   setStatusChamada("Conectando...");
-  document.getElementById("chamada-btns").innerHTML=
-    '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">🎤</button>'+
-    (tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">📹</button>':'')+
-    '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px">📵</button>';
+  // Troca botões receber → botões de chamada
+  const recv2=document.getElementById("ch-btns-receive");if(recv2)recv2.style.display="none";
+  const main2=document.getElementById("ch-btns");if(main2)main2.style.display="flex";
   // Avisa quem chamou que foi aceito
   if(ws)ws.send(JSON.stringify({tipo:"call_answer",to:recebendoChamada.from}));
   // Resume AudioContext (requer gesto do usuário — clique no botão Aceitar)
@@ -1638,21 +1638,16 @@ async function aceitarChamada(){
 }
 
 async function aceitarResposta(m){
-  // Chamada aceita — iniciar captura de áudio/vídeo
   emChamada=true;chamando=false;
-  setStatusChamada("✓ Em chamada");
   tocarToque(true);
-  ["pr1","pr2","pr3"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});
-  document.getElementById("chamada-timer").style.display="block";
-  iniciarTimer();
-  // Resume AudioContext (requer gesto do usuário)
   if(!audioCtxRemoto) audioCtxRemoto=new AudioContext();
   if(audioCtxRemoto.state==="suspended") audioCtxRemoto.resume();
   audioNextTime=0;
-  document.getElementById("chamada-btns").innerHTML=
-    '<button class="cbtn" id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">🎤</button>'+
-    (tipoCall==="video"?'<button class="cbtn" id="btn-cam" onclick="toggleCam()" style="background:rgba(255,255,255,.2);color:#fff;font-size:20px">📹</button>':'')+
-    '<button class="cbtn" id="btn-desligar" onclick="encerrarChamada()" style="background:#f44336;font-size:20px">📵</button>';
+  // Atualiza UI sem sobrescrever botões
+  ["pr1","pr2","pr3"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});
+  const stEl=document.getElementById("chamada-status");if(stEl)stEl.style.display="none";
+  const tm=document.getElementById("chamada-timer");if(tm)tm.style.display="block";
+  iniciarTimer();
   await iniciarCaptura(chamandoPara);
 }
 
@@ -1704,8 +1699,12 @@ async function iniciarCaptura(para){
         int16[i]=Math.max(-32768,Math.min(32767,floats[i]*32767));
       const bytes=new Uint8Array(int16.buffer);
       let bin="";for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
-      if(ws&&ws.readyState===WebSocket.OPEN)
-        ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:btoa(bin),kind:"audio",sr:realSR}));
+      if(ws&&ws.readyState===WebSocket.OPEN){
+        const destinos=new Set([para,...callParticipantes]);
+        destinos.forEach(dest=>{
+          ws.send(JSON.stringify({tipo:"call_chunk",to:dest,chunk:btoa(bin),kind:"audio",sr:realSR}));
+        });
+      }
     };
 
     // Guarda para parar depois
@@ -1828,6 +1827,7 @@ function encerrarChamada(silencioso=false){
   if(!silencioso&&dest&&ws&&ws.readyState===WebSocket.OPEN)
     ws.send(JSON.stringify({tipo:"call_end",to:dest}));
   chamando=false;emChamada=false;
+  callParticipantes.clear();
   clearInterval(callTimerInterval);callTimerInterval=null;
   const timerEl=document.getElementById("chamada-timer");if(timerEl){timerEl.style.display="none";timerEl.textContent="00:00";}
   if(callRecorder){try{callRecorder.stop();}catch(e){}callRecorder=null;}
@@ -1903,7 +1903,32 @@ function toggleCam(){
 }
 
 function flipCam(){showToast("Câmera invertida (funcionalidade de mobile)","info");}
-function adicionarParticipante(){showToast("Adicionar participante em breve!","info");}
+function adicionarParticipante(){
+  if(!emChamada&&!chamando){showToast("Inicie uma chamada primeiro","warn");return;}
+  const jaEmChamada=new Set([chamandoPara,recebendoChamada?.from,meuNome].filter(Boolean));
+  const disponiveis=onlineAtual.filter(n=>!jaEmChamada.has(n));
+  if(!disponiveis.length){showToast("Todos online já estão na chamada","info");return;}
+  abrirModalGenerico("Adicionar à chamada","Escolha quem convidar:",
+    '<div id="add-lista" style="display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto">'+
+    disponiveis.map(n=>`<label style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;border:1px solid #eee;cursor:pointer">
+      <input type="checkbox" value="${esc(n)}" style="width:16px;height:16px"/>
+      <div style="width:32px;height:32px;border-radius:50%;background:${cor(n)};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700">${ini(n)}</div>
+      <span style="font-size:14px">${esc(n)}</span>
+    </label>`).join("")+'</div>',
+    ()=>{
+      const selecionados=[...document.querySelectorAll("#add-lista input:checked")].map(i=>i.value);
+      if(!selecionados.length){showToast("Selecione pelo menos uma pessoa","warn");return;}
+      selecionados.forEach(nome=>{
+        if(ws&&ws.readyState===WebSocket.OPEN){
+          ws.send(JSON.stringify({tipo:"call_offer",to:nome,video:tipoCall==="video",grupo:true}));
+          callParticipantes.add(nome);
+        }
+      });
+      showToast(selecionados.length===1?selecionados[0]+" foi convidado":""+selecionados.length+" pessoas convidadas","success");
+      fecharModal();
+    }
+  );
+}
 function trocarCams(){
   // Troca vídeo local e remoto de posição
   const pip=document.getElementById("ch-local-pip");

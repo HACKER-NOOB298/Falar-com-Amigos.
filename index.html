@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>MeuChat</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='32' fill='%2325D366'/><path d='M32 8C18.7 8 8 18.7 8 32c0 4.4 1.2 8.6 3.2 12.2L8 56l12.2-3.2C23.4 54.8 27.6 56 32 56c13.3 0 24-10.7 24-24S45.3 8 32 8z' fill='%23fff'/><path d='M44 38.6c-.7-.35-4.1-2-4.77-2.28-.67-.24-1.1-.35-1.57.35-.46.7-1.8 2.28-2.2 2.74-.41.46-.82.52-1.52.18-.7-.35-2.95-1.08-5.6-3.43-2.07-1.84-3.46-4.12-3.87-4.82-.4-.7-.04-1.07.3-1.42.31-.31.7-.82 1.04-1.22.35-.41.47-.7.7-1.16.24-.47.12-.87-.05-1.22-.17-.35-1.57-3.77-2.15-5.17-.56-1.36-1.14-1.17-1.57-1.19-.4-.02-.87-.02-1.34-.02s-1.22.18-1.86.87c-.64.64-2.44 2.39-2.44 5.82s2.5 6.76 2.85 7.22c.35.47 4.9 7.48 11.88 10.49 1.66.72 2.96 1.15 3.97 1.47 1.67.54 3.19.46 4.39.28 1.34-.2 4.13-1.69 4.72-3.32.58-1.64.58-3.05.41-3.34-.17-.29-.64-.46-1.34-.82z' fill='%2325D366'/></svg>"/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -25,12 +26,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:fle
 .btn-p:hover{transform:translateY(-1px);}
 
 /* APP */
-#app{display:none;width:980px;height:660px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.16);}
+#app{display:none;width:1040px;height:660px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.16);}
 #app-inner{display:flex;height:100%;}
 
 /* SIDEBAR */
-#sidebar{width:310px;border-right:1px solid #f0f0f0;display:flex;flex-direction:column;flex-shrink:0;position:relative;}
-#sb-hdr{background:var(--gd);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;}
+#sidebar{width:290px;border-right:1px solid #f0f0f0;display:flex;flex-shrink:0;position:relative;background:#fff;}
+#sb-hdr{background:var(--gd);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .hinfo{display:flex;align-items:center;gap:9px;}
 .av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;overflow:hidden;}
 .av img{width:100%;height:100%;object-fit:cover;}
@@ -304,6 +305,7 @@ input[type=file]{display:none;}
   #tela-login{width:100%;min-height:100vh;border-radius:0;padding:32px 20px;box-shadow:none;}
   #app{width:100%!important;height:100vh!important;border-radius:0!important;box-shadow:none!important;display:block!important;}
   #app-inner{flex-direction:column;height:100vh;}
+  #nav-lateral{display:none!important;}
   #sidebar{position:fixed;left:-100%;top:0;width:82%;max-width:300px;height:100%;z-index:500;transition:left .25s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
   #sidebar.aberto{left:0!important;}
   #sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:499;}
@@ -327,6 +329,73 @@ input[type=file]{display:none;}
   .ch-btn{width:44px!important;height:44px!important;}
   .ch-btn-red,.ch-btn-green{width:52px!important;height:52px!important;}
 }
+
+/* ===== NAVBAR LATERAL ESQUERDA (ícones WhatsApp style) ===== */
+#nav-lateral{width:58px;background:var(--gd);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex-shrink:0;border-right:1px solid rgba(255,255,255,.1);}
+.nav-btn{width:44px;height:44px;border-radius:12px;border:none;cursor:pointer;background:none;display:flex;align-items:center;justify-content:center;transition:background .18s;position:relative;flex-shrink:0;}
+.nav-btn:hover{background:rgba(255,255,255,.15);}
+.nav-btn.ativo{background:rgba(255,255,255,.22);}
+.nav-btn svg{display:block;}
+.nav-spacer{flex:1;}
+.nav-badge{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:#f44336;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+/* ===== PAINÉIS DA SIDEBAR ===== */
+#painel-chats,#painel-status,#painel-canais,#painel-comunidades,#painel-configs{
+  display:none;flex-direction:column;height:100%;flex:1;overflow:hidden;
+}
+#painel-chats.ativo,#painel-status.ativo,#painel-canais.ativo,#painel-comunidades.ativo,#painel-configs.ativo{display:flex;}
+
+/* Status */
+.status-meu-add{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background .15s;}
+.status-meu-add:hover{background:#f9f9f9;}
+.status-anel{width:46px;height:46px;border-radius:50%;border:3px solid var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#eee;}
+.status-anel.vazio{border-style:dashed;border-color:#ccc;}
+.status-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;transition:background .15s;}
+.status-item:hover{background:#f9f9f9;}
+.status-nome{font-size:14px;font-weight:600;color:var(--tx);}
+.status-tempo{font-size:12px;color:var(--mu);}
+
+/* Canal / Comunidade */
+.canal-item{display:flex;align-items:center;gap:11px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid #f8f8f8;}
+.canal-item:hover{background:#f5f5f5;}
+.canal-av{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:#f0f0f0;}
+.canal-nome{font-size:14px;font-weight:600;color:var(--tx);}
+.canal-desc{font-size:12px;color:var(--mu);}
+.canal-subs{font-size:11px;color:var(--g);font-weight:600;}
+.secao-titulo{padding:10px 16px 4px;font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;}
+
+/* DMs individuais */
+.dm-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid #f8f8f8;}
+.dm-item:hover{background:#f5f5f5;}
+.dm-item.ativo{background:#e8f5e9;}
+.dm-ultima{font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;}
+.dm-unread{background:var(--g);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;}
+
+/* Configs */
+.config-secao{padding:14px 16px 6px;}
+.config-titulo{font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;margin-bottom:8px;}
+.config-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;transition:background .15s;border-radius:10px;margin:0 8px 2px;}
+.config-item:hover{background:#f5f5f5;}
+.config-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.config-label{font-size:14px;color:var(--tx);}
+.config-sub{font-size:12px;color:var(--mu);}
+.config-toggle{width:44px;height:24px;border-radius:12px;background:#ccc;position:relative;cursor:pointer;transition:background .2s;margin-left:auto;border:none;flex-shrink:0;}
+.config-toggle.on{background:var(--g);}
+.config-toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.config-toggle.on::after{left:22px;}
+
+/* Chat privado / DM overlay */
+#chat-dm-nome{display:none;font-size:13px;color:rgba(255,255,255,.65);margin-top:1px;}
+
+/* Status viewer */
+#status-viewer{position:fixed;inset:0;background:#000;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;}
+#status-viewer.on{display:flex;}
+#sv-barra{position:absolute;top:12px;left:16px;right:16px;display:flex;gap:4px;}
+.sv-seg{height:3px;border-radius:2px;background:rgba(255,255,255,.4);flex:1;overflow:hidden;}
+.sv-seg-fill{height:100%;background:#fff;width:0%;transition:width linear;}
+#sv-fechar{position:absolute;top:12px;right:16px;background:none;border:none;cursor:pointer;color:#fff;font-size:22px;z-index:5;}
+#sv-img{max-width:100%;max-height:80vh;border-radius:12px;}
+#sv-info{position:absolute;bottom:24px;left:16px;display:flex;align-items:center;gap:10px;}
 </style>
 </head>
 <body>
@@ -358,26 +427,188 @@ input[type=file]{display:none;}
 <div id="app">
  <div id="app-inner">
 
-  <!-- SIDEBAR -->
+  <!-- NAV LATERAL ESQUERDA -->
+  <div id="nav-lateral">
+    <!-- Logo -->
+    <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin-bottom:8px;cursor:pointer;flex-shrink:0;" onclick="abrirMeuPerfil()">
+      <svg width="26" height="26" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="32" fill="#25D366"/><path d="M32 8C18.7 8 8 18.7 8 32c0 4.4 1.2 8.6 3.2 12.2L8 56l12.2-3.2C23.4 54.8 27.6 56 32 56c13.3 0 24-10.7 24-24S45.3 8 32 8z" fill="#fff"/><path d="M44 38.6c-.7-.35-4.1-2-4.77-2.28-.67-.24-1.1-.35-1.57.35-.46.7-1.8 2.28-2.2 2.74-.41.46-.82.52-1.52.18-.7-.35-2.95-1.08-5.6-3.43-2.07-1.84-3.46-4.12-3.87-4.82-.4-.7-.04-1.07.3-1.42.31-.31.7-.82 1.04-1.22.35-.41.47-.7.7-1.16.24-.47.12-.87-.05-1.22-.17-.35-1.57-3.77-2.15-5.17-.56-1.36-1.14-1.17-1.57-1.19-.4-.02-.87-.02-1.34-.02s-1.22.18-1.86.87c-.64.64-2.44 2.39-2.44 5.82s2.5 6.76 2.85 7.22c.35.47 4.9 7.48 11.88 10.49 1.66.72 2.96 1.15 3.97 1.47 1.67.54 3.19.46 4.39.28 1.34-.2 4.13-1.69 4.72-3.32.58-1.64.58-3.05.41-3.34-.17-.29-.64-.46-1.34-.82z" fill="#25D366"/></svg>
+    </div>
+    <!-- Chats -->
+    <button class="nav-btn ativo" id="nav-chats" onclick="mudarPainel('chats')" title="Conversas">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <!-- Status -->
+    <button class="nav-btn" id="nav-status" onclick="mudarPainel('status')" title="Status">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="#fff"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2" stroke-dasharray="4 2"/></svg>
+    </button>
+    <!-- Canais -->
+    <button class="nav-btn" id="nav-canais" onclick="mudarPainel('canais')" title="Canais">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 16.74V4a2 2 0 00-2-2H4a2 2 0 00-2 2v13.55a1 1 0 001.56.83l3-1.86a2 2 0 011.1-.32H20a2 2 0 002-1.46z" stroke="#fff" stroke-width="2"/><path d="M8 10h8M8 14h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <!-- Comunidades -->
+    <button class="nav-btn" id="nav-comunidades" onclick="mudarPainel('comunidades')" title="Comunidades">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="#fff" stroke-width="2"/><circle cx="17" cy="8" r="3" stroke="#fff" stroke-width="2"/><path d="M3 20c0-3.31 2.69-6 6-6s6 2.69 6 6M13 14.5c1-.65 2.33-1 3.8-1 3.3 0 5.7 2.69 5.7 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="nav-spacer"></div>
+    <!-- Configs -->
+    <button class="nav-btn" id="nav-configs" onclick="mudarPainel('configs')" title="Configurações" style="margin-bottom:8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" stroke="#fff" stroke-width="2"/></svg>
+    </button>
+  </div>
+
+  <!-- SIDEBAR COM PAINÉIS -->
   <div id="sidebar">
-    <div id="sb-hdr">
-      <div class="hinfo">
-        <div class="av" id="sb-av" style="width:34px;height:34px;background:var(--g);font-size:13px" onclick="abrirMeuPerfil()">?</div>
-        <span id="sb-nome-txt">Você</span>
+
+    <!-- ===== PAINEL CHATS ===== -->
+    <div id="painel-chats" class="ativo">
+      <div id="sb-hdr">
+        <div class="hinfo">
+          <div class="av" id="sb-av" style="width:34px;height:34px;background:var(--g);font-size:13px" onclick="abrirMeuPerfil()">?</div>
+          <span id="sb-nome-txt">Você</span>
+        </div>
+        <div class="hbtns">
+          <button class="ibtn" onclick="abrirModal('sala')" title="Nova sala">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </button>
+          <button class="ibtn" onclick="abrirModal('sair')" title="Sair">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
       </div>
-      <div class="hbtns">
-        <button class="ibtn" onclick="abrirModal('sala')" title="Trocar sala">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h12" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button class="ibtn" onclick="abrirModal('sair')" title="Sair">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
+      <div id="sb-busca-c"><input id="sb-busca" placeholder="🔍  Buscar..." oninput="filtrarLista(this.value)"/></div>
+      <div style="flex:1;overflow-y:auto">
+        <div class="secao-titulo">SALA ATUAL</div>
+        <div id="lista-on"></div>
+        <div class="secao-titulo" style="margin-top:8px">MENSAGENS DIRETAS</div>
+        <div id="lista-dms"></div>
       </div>
     </div>
-    <div id="sb-busca-c"><input id="sb-busca" placeholder="🔍  Buscar na conversa..." oninput="buscar(this.value)"/></div>
-    <div id="online-t">ONLINE AGORA</div>
-    <div id="lista-on"></div>
-  </div>
+
+    <!-- ===== PAINEL STATUS ===== -->
+    <div id="painel-status">
+      <div style="background:var(--gd);padding:14px 16px;color:#fff;font-weight:700;font-size:16px;flex-shrink:0">Status</div>
+      <div style="flex:1;overflow-y:auto;padding-bottom:20px">
+        <div class="status-meu-add" onclick="publicarStatus()">
+          <div class="status-anel vazio" id="meu-status-anel">
+            <div style="font-size:20px" id="meu-status-icon">+</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:600">Meu status</div>
+            <div style="font-size:12px;color:var(--mu)" id="meu-status-sub">Toque para adicionar status</div>
+          </div>
+        </div>
+        <div class="secao-titulo">ATUALIZAÇÕES RECENTES</div>
+        <div id="lista-status"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAINEL CANAIS ===== -->
+    <div id="painel-canais">
+      <div style="background:var(--gd);padding:14px 16px;color:#fff;font-weight:700;font-size:16px;flex-shrink:0">Canais</div>
+      <div style="flex:1;overflow-y:auto">
+        <div style="padding:12px 16px 6px;font-size:13px;color:var(--mu)">Siga canais para receber atualizações</div>
+        <div id="lista-canais">
+          <div class="canal-item" onclick="abrirCanal('Notícias Tech')">
+            <div class="canal-av">📡</div>
+            <div style="flex:1;min-width:0">
+              <div class="canal-nome">Notícias Tech</div>
+              <div class="canal-desc">Últimas do mundo da tecnologia</div>
+              <div class="canal-subs">1.2M seguidores</div>
+            </div>
+          </div>
+          <div class="canal-item" onclick="abrirCanal('Jogos BR')">
+            <div class="canal-av">🎮</div>
+            <div style="flex:1;min-width:0">
+              <div class="canal-nome">Jogos BR</div>
+              <div class="canal-desc">Games, dicas e novidades</div>
+              <div class="canal-subs">890K seguidores</div>
+            </div>
+          </div>
+          <div class="canal-item" onclick="abrirCanal('Música')">
+            <div class="canal-av">🎵</div>
+            <div style="flex:1;min-width:0">
+              <div class="canal-nome">Música</div>
+              <div class="canal-desc">Lançamentos e hits</div>
+              <div class="canal-subs">2.1M seguidores</div>
+            </div>
+          </div>
+          <div class="canal-item" onclick="abrirCanal('Esportes')">
+            <div class="canal-av">⚽</div>
+            <div style="flex:1;min-width:0">
+              <div class="canal-nome">Esportes</div>
+              <div class="canal-desc">Futebol, basquete e mais</div>
+              <div class="canal-subs">3.4M seguidores</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAINEL COMUNIDADES ===== -->
+    <div id="painel-comunidades">
+      <div style="background:var(--gd);padding:14px 16px;color:#fff;font-weight:700;font-size:16px;flex-shrink:0">Comunidades</div>
+      <div style="flex:1;overflow-y:auto">
+        <div style="padding:16px;text-align:center">
+          <div style="font-size:48px;margin-bottom:12px">🏘️</div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:8px">Comunidades</div>
+          <div style="font-size:13px;color:var(--mu);line-height:1.6;margin-bottom:20px">Junte grupos relacionados em uma comunidade. Use anúncios para enviar mensagens para todos de uma vez.</div>
+          <button onclick="criarComunidade()" style="background:var(--g);color:#fff;border:none;border-radius:20px;padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Criar comunidade</button>
+        </div>
+        <div class="secao-titulo">SUAS COMUNIDADES</div>
+        <div id="lista-comunidades"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAINEL CONFIGS ===== -->
+    <div id="painel-configs">
+      <div style="background:var(--gd);padding:14px 16px;color:#fff;font-weight:700;font-size:16px;flex-shrink:0">Configurações</div>
+      <div style="flex:1;overflow-y:auto">
+        <!-- Perfil -->
+        <div style="padding:16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #f0f0f0;cursor:pointer" onclick="abrirMeuPerfil()">
+          <div class="av" id="cfg-av" style="width:56px;height:56px;font-size:20px;background:var(--g)">?</div>
+          <div>
+            <div id="cfg-nome" style="font-size:16px;font-weight:700">Você</div>
+            <div id="cfg-bio" style="font-size:13px;color:var(--mu)">Toque para editar perfil</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-left:auto"><path d="M9 18l6-6-6-6" stroke="#aaa" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <!-- Opções -->
+        <div class="config-secao">
+          <div class="config-titulo">CONTA</div>
+          <div class="config-item" onclick="abrirModal('sala')">
+            <div class="config-icon" style="background:#e3f2fd">🚪</div>
+            <div><div class="config-label">Trocar de sala</div><div class="config-sub">Sala atual: <span id="cfg-sala">geral</span></div></div>
+          </div>
+          <div class="config-item" onclick="toggleNotificacoes()">
+            <div class="config-icon" style="background:#fce4ec">🔔</div>
+            <div style="flex:1"><div class="config-label">Notificações</div><div class="config-sub">Sons e alertas</div></div>
+            <button class="config-toggle on" id="toggle-notif" onclick="event.stopPropagation();toggleNotificacoes()"></button>
+          </div>
+          <div class="config-item" onclick="toggleTema()">
+            <div class="config-icon" style="background:#f3e5f5">🌙</div>
+            <div style="flex:1"><div class="config-label">Tema escuro</div><div class="config-sub">Muda aparência</div></div>
+            <button class="config-toggle" id="toggle-tema" onclick="event.stopPropagation();toggleTema()"></button>
+          </div>
+        </div>
+        <div class="config-secao">
+          <div class="config-titulo">CONVERSA</div>
+          <div class="config-item" onclick="limparConversa()">
+            <div class="config-icon" style="background:#fff3e0">🗑</div>
+            <div><div class="config-label">Limpar histórico</div><div class="config-sub">Apaga todas mensagens da sala</div></div>
+          </div>
+        </div>
+        <div class="config-secao">
+          <div class="config-titulo">CONTA</div>
+          <div class="config-item" onclick="deslogar()">
+            <div class="config-icon" style="background:#ffebee">🚪</div>
+            <div><div class="config-label" style="color:#e53935">Sair da conta</div><div class="config-sub">Desconectar</div></div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:20px;color:var(--mu);font-size:12px">MeuChat v1.0 • Feito com ❤️</div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
 
   <!-- CHAT -->
   <div id="chat">
@@ -627,6 +858,21 @@ input[type=file]{display:none;}
     <button onclick="confirmarCrop()" style="padding:10px 24px;border-radius:10px;border:none;background:var(--g);color:#fff;cursor:pointer;font-size:14px;font-weight:600">✓ Usar foto</button>
   </div>
 </div>
+
+<!-- STATUS VIEWER -->
+<div id="status-viewer">
+  <div id="sv-barra"></div>
+  <button id="sv-fechar" onclick="fecharStatusViewer()">✕</button>
+  <img id="sv-img" src="" alt="" style="display:none"/>
+  <div id="sv-texto" style="color:#fff;font-size:18px;display:none;text-align:center;padding:0 32px;"></div>
+  <div id="sv-info">
+    <div class="av" id="sv-av" style="width:40px;height:40px;font-size:14px;background:var(--g)"></div>
+    <div>
+      <div id="sv-nome" style="color:#fff;font-weight:700;font-size:15px"></div>
+      <div id="sv-hora" style="color:rgba(255,255,255,.7);font-size:12px"></div>
+    </div>
+  </div>
+</div>
 <!-- LIGHTBOX -->
 <div id="lightbox" onclick="this.classList.remove('on')">
   <img id="lightbox-img" src="" alt=""/>
@@ -711,6 +957,9 @@ function atualizarUI(){
   document.getElementById("sb-nome-txt").textContent=meuNome;
   document.getElementById("chat-title").textContent="Sala: "+minhaSala;
   setAv("sb-av",meuNome,meuFoto);
+  const cfgAv=document.getElementById("cfg-av");if(cfgAv&&meuNome)setAvEl(cfgAv,meuNome,meuFoto);
+  const cfgNome=document.getElementById("cfg-nome");if(cfgNome)cfgNome.textContent=meuNome;
+  const cfgSala=document.getElementById("cfg-sala");if(cfgSala)cfgSala.textContent=minhaSala;
 }
 
 window.onload=()=>{
@@ -816,6 +1065,21 @@ function carregarHistorico(msgs){
 }
 
 function receberMsg(m){
+  // Se for DM para mim
+  if(m.dmPara && m.dmPara===meuNome){
+    if(!dmConversas[m.nome])dmConversas[m.nome]=[];
+    dmConversas[m.nome].push({...m,eMinha:false});
+    renderListaDMs();
+    if(dmAtivo===m.nome){
+      const msgs=document.getElementById("msgs");
+      msgs.appendChild(criarBolha(m,false));
+      msgs.scrollTop=99999;
+    } else {
+      notificar(m.nome,"💬 "+m.texto);
+      showToast(m.nome+": "+m.texto,"info");
+    }
+    return;
+  }
   // Verifica duplicata (pode vir do histórico E em tempo real)
   if(document.querySelector(`[data-id="${m.id}"]`)) return;
   const eMinha=(m.nome===meuNome);
@@ -948,6 +1212,19 @@ function enviarTexto(){
   const inp=document.getElementById("input-msg");
   const texto=inp.value.trim();
   if(!texto||!ws||ws.readyState!==WebSocket.OPEN)return;
+  // Se DM ativo, envia como mensagem direta
+  if(dmAtivo){
+    const id=Date.now().toString();
+    const m={id,tipo:"mensagem",nome:meuNome,texto,hora:horaLocal(),replyTo:replyTo||null,reacoes:{},dmPara:dmAtivo};
+    if(!dmConversas[dmAtivo])dmConversas[dmAtivo]=[];
+    dmConversas[dmAtivo].push({...m,eMinha:true});
+    document.getElementById("msgs").appendChild(criarBolha(m,true));
+    document.getElementById("msgs").scrollTop=99999;
+    ws.send(JSON.stringify({tipo:"mensagem",texto,dmPara:dmAtivo,clientId:id}));
+    inp.value="";cancelarReply();
+    renderListaDMs();
+    return;
+  }
   const id=Date.now().toString();
   msgStatus[id]="enviado";
   ws.send(JSON.stringify({tipo:"mensagem",texto,replyTo:replyTo||null,clientId:id}));
@@ -1364,6 +1641,7 @@ function inserirEmoji(e){
 // =================== ONLINE ===================
 let onlineAtual=[];
 function atualizarOnline(lista){
+  renderListaDMs(); // Atualiza lista de DMs
   onlineAtual=lista;
   atualizarOnlineUI();
 }
@@ -1512,19 +1790,20 @@ function abrirMenuTresPontos(btn){
   const jaAberto=menu.style.display==="block";
   fecharTudo();
   if(jaAberto)return;
+  const nomeAtual=dmAtivo||"sala "+minhaSala;
   menu.innerHTML=
-    '<button class="ctx-i" onclick="abrirPerfil(this.dataset.n);fecharTudo()" data-n="'+esc(meuNome)+'">👤 Dados do contato</button>'+
-    '<button class="ctx-i" onclick="fecharTudo()">✅ Selecionar mensagens</button>'+
-    '<button class="ctx-i" onclick="fecharTudo()">🔕 Silenciar notificações</button>'+
-    '<button class="ctx-i" onclick="fecharTudo()">⏱ Mensagens temporárias</button>'+
+    '<button class="ctx-i" onclick="abrirPerfil(meuNome);fecharTudo()">👤 Dados do contato</button>'+
+    '<button class="ctx-i" onclick="toggleBuscarMsgs();fecharTudo()">🔍 Pesquisar mensagens</button>'+
+    '<button class="ctx-i" onclick="abrirConfigs()">⚙️ Configurações</button>'+
+    '<button class="ctx-i" onclick="toggleNotificacoes();fecharTudo()">🔔 Silenciar notificações</button>'+
     '<div class="ctx-sep"></div>'+
     '<button class="ctx-i danger" onclick="limparConversa();fecharTudo()">🗑 Limpar conversa</button>'+
     '<button class="ctx-i danger" onclick="deslogar()">🚪 Sair da conta</button>';
   const r=btn.getBoundingClientRect();
-  menu.style.right="10px";menu.style.left="auto";
+  menu.style.right=(window.innerWidth-r.right+r.width/2)+"px";
+  menu.style.left="auto";
   menu.style.top=(r.bottom+4)+"px";
   menu.onclick=e=>e.stopPropagation();
-  // setTimeout para aparecer DEPOIS do bubbling do click (evita fechar imediatamente)
   setTimeout(()=>{ menu.style.display="block"; }, 0);
 }
 
@@ -2125,6 +2404,235 @@ document.addEventListener("fullscreenchange",function(){
     :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 });
 document.addEventListener("webkitfullscreenchange",function(){document.dispatchEvent(new Event("fullscreenchange"));});
+
+// =================== PAINÉIS NAV =====
+let painelAtual = "chats";
+let dmConversas = {}; // nome -> [msgs]
+let dmAtivo = null; // nome do DM aberto
+let meuStatus = null; // {tipo, conteudo, hora}
+let statusPessoas = {}; // nome -> [{tipo,conteudo,hora}]
+let notifAtivo = true;
+let temaEscuro = false;
+
+function mudarPainel(painel){
+  painelAtual = painel;
+  ["chats","status","canais","comunidades","configs"].forEach(p=>{
+    document.getElementById("painel-"+p).classList.toggle("ativo", p===painel);
+    document.getElementById("nav-"+p).classList.toggle("ativo", p===painel);
+  });
+  if(painel==="status") renderListaStatus();
+  if(painel==="configs"){
+    const cfg=document.getElementById("cfg-nome");if(cfg)cfg.textContent=meuNome||"Você";
+    const cfgb=document.getElementById("cfg-bio");if(cfgb)cfgb.textContent=(fotoPerfis[meuNome]||{}).bio||"Toque para editar perfil";
+    const cfgs=document.getElementById("cfg-sala");if(cfgs)cfgs.textContent=minhaSala||"geral";
+    const cfgAv=document.getElementById("cfg-av");if(cfgAv)setAvEl(cfgAv,meuNome||"?",meuFoto||"");
+  }
+}
+
+// =================== DMs (MENSAGENS DIRETAS) =====
+function abrirDM(nome){
+  dmAtivo = nome;
+  if(!dmConversas[nome]) dmConversas[nome]=[];
+  fecharSidebarMobile();
+  // Atualiza header
+  document.getElementById("chat-title").textContent = nome;
+  document.getElementById("chat-sub").textContent = "conversa privada";
+  const hAv = document.getElementById("chat-hdr-av");
+  if(hAv){ hAv.style.background=cor(nome); hAv.innerHTML=(fotoPerfis[nome]||{}).foto?'<img src="'+(fotoPerfis[nome].foto)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':ini(nome); }
+  // Marca dm ativo na lista
+  document.querySelectorAll(".dm-item").forEach(el=>el.classList.toggle("ativo",el.dataset.nome===nome));
+  // Mostra mensagens do DM
+  const msgs=document.getElementById("msgs");
+  msgs.innerHTML="";
+  (dmConversas[nome]||[]).forEach(m=>{
+    msgs.appendChild(criarBolha(m, m.nome===meuNome));
+  });
+  const el=document.getElementById("msgs");el.scrollTop=el.scrollHeight;
+}
+
+function voltarSala(){
+  dmAtivo=null;
+  document.getElementById("chat-title").textContent="Sala: "+minhaSala;
+  document.getElementById("chat-sub").textContent=(onlineAtual.length)+" online";
+  const hAv=document.getElementById("chat-hdr-av");
+  if(hAv){hAv.style.background=cor("geral");hAv.innerHTML="G";}
+  document.querySelectorAll(".dm-item").forEach(el=>el.classList.remove("ativo"));
+  // Recarrega msgs da sala
+  const msgs=document.getElementById("msgs");msgs.innerHTML="";
+  todasMensagens.forEach(m=>msgs.appendChild(criarBolha(m,m.eMinha)));
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function renderListaDMs(){
+  const cont=document.getElementById("lista-dms");
+  if(!cont)return;
+  cont.innerHTML="";
+  onlineAtual.filter(n=>n!==meuNome).forEach(nome=>{
+    const msgs=dmConversas[nome]||[];
+    const ultima=msgs.length?msgs[msgs.length-1]:null;
+    const p=fotoPerfis[nome]||{};
+    const d=document.createElement("div");
+    d.className="dm-item"+(dmAtivo===nome?" ativo":"");
+    d.dataset.nome=nome;
+    d.innerHTML='<div class="av" style="width:42px;height:42px;font-size:14px;background:'+cor(nome)+';overflow:hidden;flex-shrink:0">'+(p.foto?'<img src="'+p.foto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':ini(nome))+'</div>'+
+      '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;color:var(--tx)">'+esc(nome)+'</div>'+
+      (ultima?'<div class="dm-ultima">'+(ultima.nome===meuNome?"Você: ":"")+esc(ultima.texto||"📷")+'</div>':'<div class="dm-ultima">Iniciar conversa</div>')+'</div>'+
+      '<div class="pontov"></div>';
+    d.onclick=()=>abrirDM(nome);
+    cont.appendChild(d);
+  });
+  if(!onlineAtual.filter(n=>n!==meuNome).length){
+    cont.innerHTML='<div style="padding:12px 16px;font-size:13px;color:var(--mu)">Ninguém online no momento</div>';
+  }
+}
+
+// Intercept envio de mensagens para DMs
+const _enviarTextoOrig = window.enviarTexto; // será redefinida abaixo
+
+// =================== STATUS =====
+let svTimer=null, svIdx=0, svStatus=[];
+
+function publicarStatus(){
+  abrirModalGenerico("Publicar Status","",
+    '<div style="display:flex;flex-direction:column;gap:10px">'+
+    '<div class="mcampo"><label>TEXTO</label><textarea id="st-texto" placeholder="O que está acontecendo?" style="width:100%;padding:10px;border-radius:10px;border:1.5px solid #e0e0e0;font-family:inherit;resize:none;outline:none;font-size:14px" rows="3"></textarea></div>'+
+    '<div class="mcampo"><label>OU FOTO</label><input type="file" id="st-foto" accept="image/*" style="font-size:13px"/></div></div>',
+    async()=>{
+      const texto=document.getElementById("st-texto").value.trim();
+      const foto=document.getElementById("st-foto").files[0];
+      if(!texto&&!foto){showToast("Adicione texto ou foto","warn");return;}
+      const hora=horaLocal();
+      if(foto){
+        comprimir(foto,400,b64=>{
+          meuStatus={tipo:"imagem",conteudo:b64,texto,hora};
+          if(ws)ws.send(JSON.stringify({tipo:"mensagem",texto:"📷 Status publicado: "+texto,sala:minhaSala}));
+          statusPessoas[meuNome]=[{tipo:"imagem",conteudo:b64,texto,hora}];
+          renderListaStatus();
+          atualizarMeuStatusUI();
+          showToast("Status publicado!","success");
+        });
+      } else {
+        meuStatus={tipo:"texto",conteudo:texto,hora};
+        statusPessoas[meuNome]=[{tipo:"texto",conteudo:texto,hora}];
+        renderListaStatus();
+        atualizarMeuStatusUI();
+        showToast("Status publicado!","success");
+      }
+      fecharModal();
+    }
+  );
+}
+
+function atualizarMeuStatusUI(){
+  const icon=document.getElementById("meu-status-icon");
+  const sub=document.getElementById("meu-status-sub");
+  const anel=document.getElementById("meu-status-anel");
+  if(meuStatus){
+    if(icon)icon.textContent="";
+    if(sub)sub.textContent="Hoje às "+meuStatus.hora;
+    if(anel){anel.classList.remove("vazio");anel.style.borderColor=cor(meuNome);}
+    if(meuStatus.tipo==="imagem"&&icon){
+      const im=document.createElement("img");im.src=meuStatus.conteudo;
+      im.style.cssText="width:100%;height:100%;object-fit:cover;border-radius:50%";
+      anel.innerHTML="";anel.appendChild(im);
+    }
+  }
+}
+
+function renderListaStatus(){
+  const cont=document.getElementById("lista-status");if(!cont)return;
+  cont.innerHTML="";
+  Object.entries(statusPessoas).forEach(([nome,lista])=>{
+    if(nome===meuNome)return;
+    if(!lista||!lista.length)return;
+    const p=fotoPerfis[nome]||{};
+    const d=document.createElement("div");
+    d.className="status-item";
+    d.innerHTML='<div class="status-anel" style="border-color:'+cor(nome)+'">'+(p.foto?'<img src="'+p.foto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':'<div style="width:100%;height:100%;background:'+cor(nome)+';border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff">'+ini(nome)+'</div>')+'</div>'+
+      '<div><div class="status-nome">'+esc(nome)+'</div><div class="status-tempo">'+lista[lista.length-1].hora+'</div></div>';
+    d.onclick=()=>verStatus(nome, lista);
+    cont.appendChild(d);
+  });
+  if(!Object.keys(statusPessoas).filter(n=>n!==meuNome).length){
+    cont.innerHTML='<div style="padding:12px 16px;font-size:13px;color:var(--mu)">Nenhum status recente</div>';
+  }
+}
+
+function verStatus(nome, lista){
+  svStatus=lista;svIdx=0;
+  document.getElementById("sv-nome").textContent=nome;
+  const p=fotoPerfis[nome]||{};
+  const av=document.getElementById("sv-av");
+  av.style.background=cor(nome);
+  av.innerHTML=p.foto?'<img src="'+p.foto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':ini(nome);
+  document.getElementById("status-viewer").classList.add("on");
+  mostrarStatusSlide(0);
+}
+
+function mostrarStatusSlide(idx){
+  if(idx>=svStatus.length){fecharStatusViewer();return;}
+  svIdx=idx;
+  const s=svStatus[idx];
+  document.getElementById("sv-hora").textContent=s.hora;
+  const img=document.getElementById("sv-img");
+  const txt=document.getElementById("sv-texto");
+  if(s.tipo==="imagem"){img.src=s.conteudo;img.style.display="block";txt.style.display="none";}
+  else{img.style.display="none";txt.style.display="block";txt.textContent=s.conteudo;}
+  // Barra de progresso
+  const barra=document.getElementById("sv-barra");
+  barra.innerHTML=svStatus.map((_,i)=>'<div class="sv-seg"><div class="sv-seg-fill" id="sv-fill-'+i+'"></div></div>').join("");
+  svStatus.slice(0,idx).forEach((_,i)=>{const f=document.getElementById("sv-fill-"+i);if(f)f.style.width="100%";});
+  clearTimeout(svTimer);
+  const fill=document.getElementById("sv-fill-"+idx);
+  if(fill){fill.style.transition="width 5s linear";fill.style.width="100%";}
+  svTimer=setTimeout(()=>mostrarStatusSlide(idx+1),5000);
+}
+
+function fecharStatusViewer(){
+  clearTimeout(svTimer);
+  document.getElementById("status-viewer").classList.remove("on");
+}
+
+document.getElementById("status-viewer").addEventListener("click",e=>{
+  const x=e.clientX, w=window.innerWidth;
+  if(x < w/2) mostrarStatusSlide(Math.max(0,svIdx-1));
+  else mostrarStatusSlide(svIdx+1);
+});
+
+// Canais
+function abrirCanal(nome){showToast("Canal: "+nome+" (em breve, funcionalidade completa)","info");}
+// Comunidades
+function criarComunidade(){showToast("Criar comunidade em breve!","info");}
+
+// Configs toggles
+function toggleNotificacoes(){
+  notifAtivo=!notifAtivo;
+  const t=document.getElementById("toggle-notif");
+  if(t)t.classList.toggle("on",notifAtivo);
+}
+
+function toggleTema(){
+  temaEscuro=!temaEscuro;
+  const t=document.getElementById("toggle-tema");
+  if(t)t.classList.toggle("on",temaEscuro);
+  document.documentElement.style.setProperty("--bg",temaEscuro?"#111827":"#f0f2f5");
+  document.documentElement.style.setProperty("--w",temaEscuro?"#1f2937":"#ffffff");
+  document.documentElement.style.setProperty("--tx",temaEscuro?"#f9fafb":"#111");
+  document.documentElement.style.setProperty("--mu",temaEscuro?"#9ca3af":"#8696a0");
+  document.body.style.background=temaEscuro?"#0f172a":"#f0f2f5";
+  const app=document.getElementById("app");if(app)app.style.background=temaEscuro?"#111827":"#fff";
+}
+
+// filtrar lista
+function filtrarLista(q){
+  buscar(q);
+  // Também filtra DMs
+  document.querySelectorAll(".dm-item").forEach(el=>{
+    el.style.display=el.dataset.nome.toLowerCase().includes(q.toLowerCase())?"flex":"none";
+  });
+}
+
+function abrirConfigs(){mudarPainel('configs');fecharTudo();}
 </script>
 </body>
 </html>

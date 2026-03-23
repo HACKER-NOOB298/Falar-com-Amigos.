@@ -1532,7 +1532,7 @@ async function aceitarResposta(m){
 async function iniciarCaptura(para){
   try{
     const constraints={
-      audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,sampleRate:16000},
+      audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
       video:tipoCall==="video"?{width:320,height:240,frameRate:8}:false
     };
     localStream=await navigator.mediaDevices.getUserMedia(constraints);
@@ -1542,28 +1542,30 @@ async function iniciarCaptura(para){
     }
     setStatusChamada("✓ Em chamada");
 
-    // Captura PCM raw via AudioContext (independente de MIME type)
-    if(!audioCtxRemoto||audioCtxRemoto.state==="closed")audioCtxRemoto=new AudioContext({sampleRate:16000});
-    if(audioCtxRemoto.state==="suspended")await audioCtxRemoto.resume();
-    const source=audioCtxRemoto.createMediaStreamSource(localStream);
-    const processor=audioCtxRemoto.createScriptProcessor(2048,1,1);
-    source.connect(processor);processor.connect(audioCtxRemoto.destination);
+    // Usa AudioContext com a taxa nativa do navegador (sem forçar sampleRate)
+    const capCtx=new AudioContext();
+    const realSR=capCtx.sampleRate; // 44100 ou 48000 — taxa real do hardware
+    const source=capCtx.createMediaStreamSource(localStream);
+    const processor=capCtx.createScriptProcessor(4096,1,1);
+    source.connect(processor);processor.connect(capCtx.destination);
 
     processor.onaudioprocess=e=>{
       if(!emChamada||mutado)return;
       const floats=e.inputBuffer.getChannelData(0);
-      // Converte Float32 para Int16 PCM
+      // Converte Float32 → Int16 PCM
       const int16=new Int16Array(floats.length);
       for(let i=0;i<floats.length;i++)
         int16[i]=Math.max(-32768,Math.min(32767,floats[i]*32767));
-      // Envia como base64
       const bytes=new Uint8Array(int16.buffer);
-      let bin="";
-      for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
-      const b64=btoa(bin);
+      let bin="";for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
       if(ws&&ws.readyState===WebSocket.OPEN)
-        ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:b64,kind:"audio",sr:16000}));
+        ws.send(JSON.stringify({tipo:"call_chunk",to:para,chunk:btoa(bin),kind:"audio",sr:realSR}));
     };
+
+    // Guarda para parar depois
+    callRecorder={_ctx:capCtx, processor, source, stop:()=>{
+      try{processor.disconnect();source.disconnect();capCtx.close();}catch(e){}
+    }};
 
     // Guarda referência para parar depois
     callRecorder={processor,source,stop:()=>{
@@ -1613,24 +1615,33 @@ async function receberChunk(m){
       if(audioCtxRemoto.state==="suspended")await audioCtxRemoto.resume();
 
       // Decodifica base64 → Int16 PCM → Float32 AudioBuffer
+      const sr=m.sr||44100; // usa taxa do remetente
+      // Recria AudioContext se taxa mudou
+      if(!audioCtxRemoto||audioCtxRemoto.state==="closed"||audioCtxRemoto.sampleRate!==sr){
+        if(audioCtxRemoto&&audioCtxRemoto.state!=="closed")try{audioCtxRemoto.close();}catch(e){}
+        audioCtxRemoto=new AudioContext({sampleRate:sr});
+        audioNextTime=0;
+      }
+      if(audioCtxRemoto.state==="suspended")await audioCtxRemoto.resume();
+
       const bin=atob(m.chunk);
       const bytes=new Uint8Array(bin.length);
       for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
       const int16=new Int16Array(bytes.buffer);
-      const buf=audioCtxRemoto.createBuffer(1,int16.length,m.sr||16000);
+      const buf=audioCtxRemoto.createBuffer(1,int16.length,sr);
       const channel=buf.getChannelData(0);
       for(let i=0;i<int16.length;i++)channel[i]=int16[i]/32767;
 
       const src=audioCtxRemoto.createBufferSource();
       const gain=audioCtxRemoto.createGain();
-      gain.gain.value=1.5;
+      gain.gain.value=1.4;
       src.buffer=buf;
       src.connect(gain);
       gain.connect(audioCtxRemoto.destination);
 
-      // Scheduler sem sobreposição
+      // Scheduler: max 0.5s de latência acumulada
       const now=audioCtxRemoto.currentTime;
-      if(audioNextTime<now+0.05)audioNextTime=now+0.05;
+      if(audioNextTime<now+0.02||audioNextTime>now+0.5) audioNextTime=now+0.05;
       src.start(audioNextTime);
       audioNextTime+=buf.duration;
     }catch(e){console.log("audio err:",e);}

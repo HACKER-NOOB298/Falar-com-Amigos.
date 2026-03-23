@@ -398,7 +398,7 @@ input[type=file]{display:none;}
         <button class="hbtn" onclick="toggleBuscarMsgs()" title="Pesquisar">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
-        <button class="hbtn" onclick="toggleFullscreen()" title="Tela cheia" id="btn-fullscreen"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="hbtn" id="btn-fullscreen" title="Tela cheia" onclick="(function(){try{if(!document.fullscreenElement&&!document.webkitFullscreenElement){var e=document.documentElement;(e.requestFullscreen||e.webkitRequestFullscreen||e.mozRequestFullScreen||function(){}).call(e);}else{(document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||function(){}).call(document);}}catch(ex){}})()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <button class="hbtn" onclick="event.stopPropagation();abrirMenuTresPontos(this)" title="Mais opções">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
         </button>
@@ -651,6 +651,7 @@ const EMOJI_CATS = [
 
 // =================== STATE ===================
 let ws=null, meuNome="", minhaSala="", meuFoto="", meuBio="";
+let deslogando=false; // flag para impedir reconexão ao fazer logout
 let tentativas=0, todasMensagens=[], replyTo=null;
 let ctxMsgId=null, ctxEMinha=false, ctxMsgData=null;
 let digitandoMap={}, estouDigitando=false, digitandoTimer=null;
@@ -788,11 +789,12 @@ function conectar(){
   };
 
   ws.onclose=()=>{
+    if(deslogando)return; // não reconecta se foi logout manual
     tentativas++;
     const t=Math.min(3000*tentativas,15000);
     const sb=document.getElementById("status-bar");
-    sb.className="c";sb.style.display="block";
-    sb.textContent=`⚠️ Reconectando em ${t/1000}s...`;
+    if(sb){sb.className="c";sb.style.display="block";
+    sb.textContent="⚠️ Reconectando em "+(t/1000)+"s...";}
     setTimeout(conectar,t);
   };
   ws.onerror=()=>{const sb=document.getElementById("status-bar");sb.className="e";sb.style.display="block";sb.textContent="❌ Erro de conexão";};
@@ -1579,11 +1581,29 @@ function fecharModal(){document.getElementById("modal-ov").classList.remove("on"
 function confirmarModal(){if(modalCallbackOk)modalCallbackOk();}
 
 function deslogar(){
+  deslogando=true; // impede reconexão automática
   localStorage.removeItem("cn");localStorage.removeItem("cs");
-  if(ws)ws.close();fecharModal();
+  localStorage.removeItem("cb");localStorage.removeItem("cf");
+  // Fecha WebSocket sem triggerar reconexão
+  if(ws){try{ws.close();}catch(e){}ws=null;}
+  fecharModal();fecharPainel();fecharTudo();
+  // Reseta todo o estado
+  meuNome="";minhaSala="";meuFoto="";meuBio="";
+  fotoLoginB64="";tentativas=0;todasMensagens=[];
+  fotoPerfis={};onlineAtual=[];digitandoMap={};
+  // Limpa UI
+  document.getElementById("msgs").innerHTML="";
+  document.getElementById("lista-on").innerHTML="";
+  document.getElementById("inp-nome").value="";
+  document.getElementById("inp-sala").value="geral";
+  document.getElementById("inp-bio").value="";
+  document.getElementById("foto-preview-img").src="";
+  document.getElementById("foto-preview-img").style.display="none";
+  document.getElementById("foto-preview-login").style.fontSize="";
   document.getElementById("app").style.display="none";
   document.getElementById("tela-login").style.display="block";
-  todasMensagens=[];
+  // Permite futuras reconexões quando logar de novo
+  setTimeout(()=>{deslogando=false;},500);
 }
 
 // =================== SISTEMA DE CHAMADA (WebSocket Relay) ===================
@@ -2063,6 +2083,48 @@ document.addEventListener("click",fecharTudo);
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){fecharTudo();fecharModal();document.getElementById("lightbox").classList.remove("on");fecharCamera();}
 });
+
+// =================== FULLSCREEN ===================
+function toggleFullscreen(){
+  try{
+    if(!document.fullscreenElement && !document.webkitFullscreenElement){
+      const el = document.documentElement;
+      if(el.requestFullscreen) el.requestFullscreen();
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if(el.mozRequestFullScreen) el.mozRequestFullScreen();
+      else showToast("Tela cheia não suportada neste navegador","warn");
+    } else {
+      if(document.exitFullscreen) document.exitFullscreen();
+      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+    }
+  } catch(e){ showToast("Erro ao ativar tela cheia","warn"); }
+}
+
+function _atualizarBtnFs(){
+  const full = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  const btn = document.getElementById("btn-fullscreen");
+  const btn2 = document.getElementById("fs-btn");
+  const icExpand = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const icCollapse = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  if(btn){ btn.innerHTML = full ? icCollapse : icExpand; btn.title = full ? "Sair da tela cheia" : "Tela cheia"; }
+  if(btn2){ btn2.innerHTML = full ? icCollapse : icExpand; }
+}
+document.addEventListener("fullscreenchange", _atualizarBtnFs);
+document.addEventListener("webkitfullscreenchange", _atualizarBtnFs);
+document.addEventListener("mozfullscreenchange", _atualizarBtnFs);
+
+
+document.addEventListener("fullscreenchange",function(){
+  var full=!!document.fullscreenElement;
+  var btn=document.getElementById("btn-fullscreen");
+  if(!btn)return;
+  btn.title=full?"Sair da tela cheia":"Tela cheia";
+  btn.innerHTML=full
+    ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+    :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+});
+document.addEventListener("webkitfullscreenchange",function(){document.dispatchEvent(new Event("fullscreenchange"));});
 </script>
 </body>
 </html>

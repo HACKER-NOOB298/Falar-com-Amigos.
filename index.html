@@ -307,7 +307,7 @@ input[type=file]{display:none;}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
         <button class="hbtn" onclick="toggleFullscreen()" title="Tela cheia" id="btn-fullscreen"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-        <button class="hbtn" onclick="abrirMenuTresPontos(this)" title="Mais opções">
+        <button class="hbtn" onclick="event.stopPropagation();abrirMenuTresPontos(this)" title="Mais opções">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
         </button>
       </div>
@@ -366,7 +366,7 @@ input[type=file]{display:none;}
 
 <!-- MENUS -->
 <div id="tres-pontos-menu" style="position:fixed;background:#fff;border-radius:11px;box-shadow:0 4px 22px rgba(0,0,0,.18);padding:4px 0;z-index:9500;display:none;min-width:200px;overflow:hidden;"></div>
-<div id="plus-menu">
+<div id="plus-menu" onclick="event.stopPropagation()">
   <button class="pm-item" onclick="pmAcao('foto')"><div class="pm-ico" style="background:#e8f4ff">🖼️</div>Fotos e Vídeos</button>
   <button class="pm-item" onclick="pmAcao('doc')"><div class="pm-ico" style="background:#e8f0ff">📄</div>Documento</button>
   <button class="pm-item" onclick="pmAcao('camera')"><div class="pm-ico" style="background:#ffe8e8">📷</div>Câmera</button>
@@ -381,7 +381,7 @@ input[type=file]{display:none;}
 <input type="file" id="file-audio" accept="audio/*" onchange="enviarArquivo(this,'audio')"/>
 <input type="file" id="file-midi" accept=".mid,.midi,audio/midi,audio/x-midi" onchange="enviarMidi(this)"/>
 
-<div id="ctx-menu">
+<div id="ctx-menu" onclick="event.stopPropagation()">
   <button class="ctx-i" onclick="ctxAcao('responder')">↩ Responder</button>
   <button class="ctx-i" onclick="ctxAcao('reagir')">😊 Reagir</button>
   <button class="ctx-i" onclick="ctxAcao('copiar')">📋 Copiar</button>
@@ -390,7 +390,7 @@ input[type=file]{display:none;}
   <button class="ctx-i danger" id="ctx-apagar-btn" onclick="ctxAcao('apagar')" style="display:none">🗑 Apagar</button>
 </div>
 
-<div id="react-picker">
+<div id="react-picker" onclick="event.stopPropagation()">
   <button class="rp-btn" onclick="enviarReacao('👍')">👍</button>
   <button class="rp-btn" onclick="enviarReacao('❤️')">❤️</button>
   <button class="rp-btn" onclick="enviarReacao('😂')">😂</button>
@@ -1086,24 +1086,31 @@ function mostrarCtxMenu(e,id,eMinha,m){
 }
 
 function ctxAcao(acao){
-  fecharTudo();
-  if(!ctxMsgId)return;
-  if(acao==="responder")iniciarReply(ctxMsgId,ctxMsgData);
+  if(!ctxMsgId&&acao!=="reagir")return;
+  if(acao==="responder"){fecharTudo();iniciarReply(ctxMsgId,ctxMsgData);}
   else if(acao==="reagir"){
-    const m=document.getElementById("ctx-menu");
+    // Salva posição do ctx-menu ANTES de fechar tudo
+    const ctxEl=document.getElementById("ctx-menu");
+    const posX=parseInt(ctxEl.style.left)||200;
+    const posY=parseInt(ctxEl.style.top)||200;
+    fecharTudo();
+    // Posiciona e mostra react-picker
     const rp=document.getElementById("react-picker");
-    rp.style.display="flex";
-    rp.style.left=(parseInt(m.style.left)||0)+"px";
-    rp.style.top=(parseInt(m.style.top||0)-60)+"px";
-    setTimeout(()=>{},0);
+    rp.style.left=Math.min(posX, window.innerWidth-290)+"px";
+    rp.style.top=Math.max(posY-70, 10)+"px";
+    rp.onclick=e=>e.stopPropagation();
+    setTimeout(()=>{ rp.style.display="flex"; },0);
     return;
   }
   else if(acao==="reagir-mais"){fecharTudo();toggleEmojiPickerReacao();}
-  else if(acao==="copiar"){if(ctxMsgData)navigator.clipboard.writeText(ctxMsgData.texto||"");}
-  else if(acao==="encaminhar")encaminhar(ctxMsgData);
-  else if(acao==="apagar"){
-    if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"apagar",id:ctxMsgId}));
-    removerMsg(ctxMsgId);
+  else{
+    fecharTudo();
+    if(acao==="copiar"&&ctxMsgData)navigator.clipboard.writeText(ctxMsgData.texto||"");
+    else if(acao==="encaminhar")encaminhar(ctxMsgData);
+    else if(acao==="apagar"){
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"apagar",id:ctxMsgId}));
+      removerMsg(ctxMsgId);
+    }
   }
 }
 
@@ -1352,20 +1359,24 @@ function limparConversa(){
 
 // =================== MENU 3 PONTOS ===================
 function abrirMenuTresPontos(btn){
+  const menu=document.getElementById("tres-pontos-menu");
+  const jaAberto=menu.style.display==="block";
   fecharTudo();
-  const m=document.getElementById("tres-pontos-menu");
-  m.innerHTML=`
-    <button class="ctx-i" onclick="abrirPerfil('${meuNome}');fecharTudo()">👤 Dados do contato</button>
-    <button class="ctx-i" onclick="fecharTudo()">✅ Selecionar mensagens</button>
-    <button class="ctx-i" onclick="fecharTudo()">🔕 Silenciar notificações</button>
-    <button class="ctx-i" onclick="fecharTudo()">⏱ Mensagens temporárias</button>
-    <div class="ctx-sep"></div>
-    <button class="ctx-i danger" onclick="limparConversa();fecharTudo()">🗑 Limpar conversa</button>
-    <button class="ctx-i danger" onclick="deslogar()">🚪 Sair da conta</button>`;
+  if(jaAberto)return;
+  menu.innerHTML=
+    '<button class="ctx-i" onclick="abrirPerfil(this.dataset.n);fecharTudo()" data-n="'+esc(meuNome)+'">👤 Dados do contato</button>'+
+    '<button class="ctx-i" onclick="fecharTudo()">✅ Selecionar mensagens</button>'+
+    '<button class="ctx-i" onclick="fecharTudo()">🔕 Silenciar notificações</button>'+
+    '<button class="ctx-i" onclick="fecharTudo()">⏱ Mensagens temporárias</button>'+
+    '<div class="ctx-sep"></div>'+
+    '<button class="ctx-i danger" onclick="limparConversa();fecharTudo()">🗑 Limpar conversa</button>'+
+    '<button class="ctx-i danger" onclick="deslogar()">🚪 Sair da conta</button>';
   const r=btn.getBoundingClientRect();
-  m.style.display="block";
-  m.style.right="10px";m.style.left="auto";
-  m.style.top=(r.bottom+4)+"px";
+  menu.style.right="10px";menu.style.left="auto";
+  menu.style.top=(r.bottom+4)+"px";
+  menu.onclick=e=>e.stopPropagation();
+  // setTimeout para aparecer DEPOIS do bubbling do click (evita fechar imediatamente)
+  setTimeout(()=>{ menu.style.display="block"; }, 0);
 }
 
 // =================== MODAL SALA/SAIR ===================
@@ -1547,7 +1558,12 @@ async function iniciarCaptura(para){
     const realSR=capCtx.sampleRate; // 44100 ou 48000 — taxa real do hardware
     const source=capCtx.createMediaStreamSource(localStream);
     const processor=capCtx.createScriptProcessor(4096,1,1);
-    source.connect(processor);processor.connect(capCtx.destination);
+    // MUTED gain - necessário para o ScriptProcessor disparar mas SEM tocar no speaker (evita eco)
+    const silentGain=capCtx.createGain();
+    silentGain.gain.value=0;
+    source.connect(processor);
+    processor.connect(silentGain);
+    silentGain.connect(capCtx.destination);
 
     processor.onaudioprocess=e=>{
       if(!emChamada||mutado)return;

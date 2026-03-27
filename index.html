@@ -396,6 +396,226 @@ input[type=file]{display:none;}
 #sv-fechar{position:absolute;top:12px;right:16px;background:none;border:none;cursor:pointer;color:#fff;font-size:22px;z-index:5;}
 #sv-img{max-width:100%;max-height:80vh;border-radius:12px;}
 #sv-info{position:absolute;bottom:24px;left:16px;display:flex;align-items:center;gap:10px;}
+
+.pl-aba{font-family:inherit;transition:all .2s;}
+.pl-aba:hover{background:#f5f5f5;}
+
+/* ===== POLISH: WhatsApp identical styling ===== */
+
+/* Mensagem com seleção */
+.mwrap.selecionada .mbolha{outline:2px solid var(--g);}
+
+/* Busca inline highlight */
+.highlight{background:#fff176;border-radius:2px;}
+
+/* Data separadora entre mensagens */
+.msg-data{text-align:center;font-size:11px;color:var(--mu);background:rgba(255,255,255,.8);border-radius:8px;padding:3px 12px;margin:8px auto;display:table;}
+
+/* Balão de sistema melhorado */
+.msistema{max-width:70%;padding:5px 14px;margin:6px auto;background:rgba(255,255,255,.82);border-radius:8px;font-size:12px;color:#666;text-align:center;box-shadow:0 1px 1px rgba(0,0,0,.06);}
+
+/* Input area melhorada */
+#input-area{border-top:1px solid #f0f0f0;}
+
+/* Perfil lateral melhorado */
+#painel-lateral{box-shadow:-4px 0 20px rgba(0,0,0,.08);}
+
+/* DM badge no nav */
+#nav-badge-dms{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:#25D366;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;}
+
+/* Hover na bolha de mensagem - mostra botão de reagir */
+.mbolha::after{content:'😊';position:absolute;right:-28px;top:50%;transform:translateY(-50%);font-size:16px;opacity:0;transition:opacity .2s;cursor:pointer;background:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.2);line-height:26px;text-align:center;}
+.mwrap.deles .mbolha::after{right:-28px;}
+.mwrap.minha .mbolha::after{left:-28px;right:auto;}
+.mbolha:hover::after{opacity:1;}
+
+/* Canal aberto - estilo */
+.canal-msg-nome{font-size:12px;font-weight:700;color:#2196F3;margin-bottom:3px;}
+
+/* Status barra animação correta */
+.sv-seg-fill{transition:width linear;}
+
+/* Config toggle animado */
+.config-toggle::after{transition:left .2s;}
+
+/* Sala com senha - badge */
+.sala-senha-badge{font-size:10px;background:#ff9800;color:#fff;padding:1px 6px;border-radius:10px;margin-left:6px;vertical-align:middle;}
+
+/* Mobile: nav lateral como barra inferior */
+@media(max-width:700px){
+  #nav-lateral{position:fixed;bottom:0;left:0;right:0;width:100%!important;height:56px!important;flex-direction:row!important;justify-content:space-around!important;padding:4px 0!important;background:var(--gd);z-index:400;border-top:1px solid rgba(255,255,255,.1);}
+  #nav-lateral .nav-spacer{display:none;}
+  #nav-lateral .nav-btn{width:48px;height:48px;}
+  #app-inner{padding-bottom:56px;}
+  #sidebar{height:calc(100vh - 56px)!important;}
+  #chat{height:calc(100vh - 56px)!important;}
+}
+
+/* Estrela de favorita */
+.msg-starred::after{content:'⭐';position:absolute;top:2px;left:2px;font-size:10px;}
+
+/* Chamada de voz - layout melhorado */
+#ch-btns-main{flex-wrap:wrap;max-width:340px;justify-content:center;}
+
+
+/* ===== COMPLETE WHATSAPP POLISH ===== */
+
+/* Scroll para baixo button */
+#scroll-btn{position:absolute;right:16px;bottom:70px;width:40px;height:40px;border-radius:50%;background:#fff;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);display:none;align-items:center;justify-content:center;font-size:18px;z-index:50;transition:all .2s;}
+#scroll-btn.show{display:flex;}
+#scroll-btn:hover{background:#f5f5f5;}
+#scroll-count{position:absolute;top:-6px;right:-4px;background:var(--g);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;}
+#scroll-count.show{display:flex;}
+
+/* Balão de áudio melhorado */
+.maudio{width:220px;height:40px;}
+.maudio::-webkit-media-controls-panel{background:#f0f0f0;}
+
+/* Enquete melhorada */
+.enquete-card{min-width:220px;max-width:280px;}
+.enquete-pergunta{font-weight:700;font-size:14px;margin-bottom:10px;line-height:1.4;}
+.enquete-opcao{padding:8px 12px;border-radius:10px;background:rgba(0,0,0,.05);margin-bottom:6px;cursor:pointer;transition:background .15s;}
+.enquete-opcao:hover{background:rgba(0,0,0,.1);}
+.enquete-total{font-size:11px;color:var(--mu);margin-top:4px;}
+
+/* Localização melhorada */
+.loc-card{min-width:200px;}
+.loc-map{width:100%;height:100px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:9px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;position:relative;overflow:hidden;}
+.loc-map::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23a5d6a7' width='100' height='100'/%3E%3Cpath d='M0 50h100M50 0v100M25 0v100M75 0v100M0 25h100M0 75h100' stroke='%2381c784' stroke-width='.5'/%3E%3C/svg%3E") center/cover;opacity:.4;}
+
+/* Seleção de mensagens */
+.mwrap.selecionada{background:rgba(37,211,102,.1);}
+.mwrap.selecionada .mbolha{box-shadow:0 0 0 2px var(--g);}
+
+/* Toast melhorado */
+.toast-container{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
+
+/* Painel lateral com transição suave */
+#painel-lateral{transition:transform .25s cubic-bezier(.4,0,.2,1);}
+#painel-lateral.on{transform:translateX(0)!important;}
+
+/* Busca inline melhorada */
+#busca-inline{display:none;background:#f0f2f5;border-bottom:1px solid #e0e0e0;}
+#busca-inline.show{display:block;}
+#busca-inline-inp{background:#fff;border:1px solid #ddd;border-radius:20px;padding:8px 14px;width:100%;font-size:13px;outline:none;font-family:inherit;}
+#busca-inline-inp:focus{border-color:var(--g);}
+
+/* Busca nav resultado */
+.busca-resultado{padding:2px 6px;background:#fff176;border-radius:3px;}
+
+/* Lista DMs separador */
+.dm-separador{padding:6px 16px 2px;font-size:10px;font-weight:700;color:var(--mu);letter-spacing:1px;border-bottom:1px solid #f5f5f5;}
+
+/* Status Viewer melhorado */
+#status-viewer{background:rgba(0,0,0,.92);}
+#sv-fechar{background:rgba(255,255,255,.1);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
+#sv-barra{gap:5px;}
+
+/* Cursor customizado na área de drag do crop */
+#crop-container{cursor:grab;}
+#crop-container:active{cursor:grabbing;}
+
+/* Animação de entrada de mensagem */
+@keyframes msgEntra{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.mwrap{animation:msgEntra .18s ease;}
+
+/* Responsive melhorado */
+@media(max-width:700px){
+  #busca-inline{padding:6px 10px;}
+  .mbolha{max-width:88%;}
+  #painel-lateral{position:fixed!important;top:0!important;bottom:56px!important;}
+}
+
+/* Emoji picker tabs melhorado */
+#ep-cats{overflow-x:auto;scrollbar-width:none;}
+#ep-cats::-webkit-scrollbar{display:none;}
+.ecat.on{border-bottom:2px solid var(--g);}
+
+/* Online dot animation */
+.pontov{box-shadow:0 0 0 0 rgba(37,211,102,.4);animation:ondav 2s infinite;}
+@keyframes ondav{0%{box-shadow:0 0 0 0 rgba(37,211,102,.4);}70%{box-shadow:0 0 0 6px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
+
+/* Configurações visual melhorado */
+.config-item{border-radius:12px;transition:background .15s;}
+.config-item:active{background:#eee;}
+.config-icon{border-radius:10px;width:40px;height:40px;font-size:20px;}
+
+/* Badge nas abas do perfil */
+.pl-aba-badge{background:var(--g);color:#fff;border-radius:10px;font-size:10px;padding:1px 6px;margin-left:4px;}
+
+/* Canal - botão inscrever */
+.btn-inscrever{border:none;border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
+
+/* Comunidade badge */
+.com-membro-count{background:#e8f5e9;color:var(--gm);border-radius:10px;font-size:11px;padding:2px 8px;font-weight:600;}
+
+/* Mídia docs links tabs */
+.pl-aba{border-bottom:2px solid transparent;font-family:inherit;}
+.pl-aba:hover{background:#f8f8f8;}
+
+/* Header do painel perfil com gradiente */
+#pl-hdr{background:linear-gradient(135deg,var(--gd),var(--gm));padding:16px 14px 40px;}
+#pl-av-grande{margin:-44px auto 10px;border:4px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.15);}
+
+/* Scroll chat area */
+#msgs::-webkit-scrollbar{width:5px;}
+#msgs::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px;}
+
+/* Input area final */
+#btn-plus,#btn-emoji{color:var(--mu);}
+#btn-plus:hover,#btn-emoji:hover{background:rgba(0,0,0,.06);color:var(--gd);}
+
+/* Chamada de voz - melhorias visuais */
+#ch-topo{background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent);}
+#ch-btns{background:linear-gradient(to top,rgba(0,0,0,.6),transparent);}
+
+
+/* ===== FINAL WHATSAPP IDENTICAL FEATURES ===== */
+
+/* Atalhos de teclado */
+.atalhos-modal th{text-align:left;padding:6px 12px;font-size:12px;color:var(--mu);font-weight:700;}
+.atalhos-modal td{padding:6px 12px;font-size:13px;}
+.atalhos-modal tr:nth-child(even){background:#f9f9f9;}
+.kbd{background:#eee;border:1px solid #ccc;border-radius:4px;padding:2px 6px;font-family:monospace;font-size:11px;}
+
+/* Typing indicator melhorado */
+#digitando-bar{min-height:22px;background:#fff;border-bottom:1px solid #f5f5f5;font-style:italic;color:var(--gm);padding:3px 16px;font-size:12px;transition:all .2s;}
+
+/* Msg encaminhada badge */
+.encaminhada-label{font-size:11px;color:var(--mu);display:flex;align-items:center;gap:4px;margin-bottom:3px;}
+
+/* Aviso de sala nova */
+.sala-nova-aviso{background:linear-gradient(135deg,var(--g),var(--gm));color:#fff;padding:12px 16px;font-size:13px;border-radius:8px;margin:8px auto;max-width:80%;text-align:center;}
+
+/* Botão de chamada na lista DM */
+.dm-call-btn{background:none;border:none;cursor:pointer;color:var(--gm);font-size:16px;padding:4px;border-radius:50%;transition:background .15s;flex-shrink:0;}
+.dm-call-btn:hover{background:rgba(37,211,102,.1);}
+
+/* Reação com tooltip */
+.reacao-b:hover::after{content:attr(title);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;margin-bottom:4px;}
+.reacao-b{position:relative;}
+
+/* GIF badge */
+.gif-btn{background:#2196F3;color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:11px;font-weight:700;cursor:pointer;font-family:monospace;}
+
+/* Comunidade badge de membros */
+.com-badge{background:#e8f5e9;color:var(--gm);border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;}
+
+/* Canal - mensagem pinada */
+.canal-pinado{background:#fff9c4;border-left:3px solid #ffd54f;border-radius:5px;padding:6px 10px;margin-bottom:8px;font-size:12px;}
+
+/* Splash screen loading */
+#splash{position:fixed;inset:0;background:var(--gd);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:99999;transition:opacity .5s;}
+#splash.hidden{opacity:0;pointer-events:none;}
+.splash-logo{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;animation:splashPulse 1.5s infinite;}
+@keyframes splashPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.splash-text{color:#fff;font-size:22px;font-weight:700;}
+.splash-sub{color:rgba(255,255,255,.6);font-size:13px;}
+
+/* Foto perfil com anel de status */
+.av-com-status{position:relative;display:inline-flex;flex-shrink:0;}
+.av-com-status .status-dot{position:absolute;bottom:0;right:0;width:11px;height:11px;border-radius:50%;background:var(--g);border:2px solid #fff;}
+
 </style>
 </head>
 <body>
@@ -423,6 +643,16 @@ input[type=file]{display:none;}
 </div>
 
 <!-- APP -->
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-logo">
+    <svg width="44" height="44" viewBox="0 0 64 64" fill="none"><path d="M32 8C18.7 8 8 18.7 8 32c0 4.4 1.2 8.6 3.2 12.2L8 56l12.2-3.2C23.4 54.8 27.6 56 32 56c13.3 0 24-10.7 24-24S45.3 8 32 8z" fill="#fff"/><path d="M44 38.6c-.7-.35-4.1-2-4.77-2.28-.67-.24-1.1-.35-1.57.35-.46.7-1.8 2.28-2.2 2.74-.41.46-.82.52-1.52.18-.7-.35-2.95-1.08-5.6-3.43-2.07-1.84-3.46-4.12-3.87-4.82-.4-.7-.04-1.07.3-1.42.31-.31.7-.82 1.04-1.22.35-.41.47-.7.7-1.16.24-.47.12-.87-.05-1.22-.17-.35-1.57-3.77-2.15-5.17-.56-1.36-1.14-1.17-1.57-1.19-.4-.02-.87-.02-1.34-.02s-1.22.18-1.86.87c-.64.64-2.44 2.39-2.44 5.82s2.5 6.76 2.85 7.22c.35.47 4.9 7.48 11.88 10.49 1.66.72 2.96 1.15 3.97 1.47 1.67.54 3.19.46 4.39.28 1.34-.2 4.13-1.69 4.72-3.32.58-1.64.58-3.05.41-3.34-.17-.29-.64-.46-1.34-.82z" fill="#25D366"/></svg>
+  </div>
+  <div class="splash-text">MeuChat</div>
+  <div class="splash-sub">Carregando...</div>
+</div>
+
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div id="app">
  <div id="app-inner">
@@ -438,7 +668,7 @@ input[type=file]{display:none;}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
     <!-- Status -->
-    <button class="nav-btn" id="nav-status" onclick="mudarPainel('status')" title="Status">
+    <button class="nav-btn" id="nav-status" onclick="mudarPainel('status')" title="Status" style="position:relative"><span id="nav-badge-dms" style="position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:#25D366;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="#fff"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2" stroke-dasharray="4 2"/></svg>
     </button>
     <!-- Canais -->
@@ -641,7 +871,8 @@ input[type=file]{display:none;}
     </div>
     <div id="status-bar">Conectando...</div>
     <div id="digitando-bar"></div>
-    <div id="msgs"></div>
+    <div id="msgs" onscroll="onMsgsScroll()"></div>
+    <button id="scroll-btn" onclick="scrollParaBaixo()" title="Rolar para baixo">⬇<span id="scroll-count"></span></button>
     <div id="reply-bar">
       <div style="color:var(--g);font-size:16px">↩</div>
       <div style="flex:1"><div id="reply-nome-bar">Nome</div><div id="reply-txt-bar">msg</div></div>
@@ -675,10 +906,17 @@ input[type=file]{display:none;}
       <div id="pl-av-grande" onclick="editarFotoIfMeu()">?</div>
       <div id="pl-nome">Nome</div>
       <div id="pl-bio">Bio</div>
+      <!-- Abas mídia/docs/links -->
+      <div style="display:flex;border-bottom:2px solid #f0f0f0;margin:8px 0 0">
+        <button onclick="abaPerfilMidia('midia',this)" class="pl-aba ativa" style="flex:1;padding:10px 0;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--gm);border-bottom:2px solid var(--gm);margin-bottom:-2px">Mídia</button>
+        <button onclick="abaPerfilMidia('docs',this)" class="pl-aba" style="flex:1;padding:10px 0;border:none;background:none;cursor:pointer;font-size:13px;color:var(--mu)">Docs</button>
+        <button onclick="abaPerfilMidia('links',this)" class="pl-aba" style="flex:1;padding:10px 0;border:none;background:none;cursor:pointer;font-size:13px;color:var(--mu)">Links</button>
+      </div>
       <div class="pl-secao">
-        <div class="pl-secao-title">MÍDIA</div>
-        <div class="pl-galeria" id="pl-galeria"></div>
-        <div id="pl-galeria-vazia" style="font-size:13px;color:var(--mu)">Nenhuma mídia</div>
+        <div class="pl-galeria" id="pl-galeria" style="display:grid"></div>
+        <div id="pl-galeria-vazia" style="font-size:13px;color:var(--mu);padding:12px 0">Nenhum item</div>
+        <div id="pl-docs" style="display:none"></div>
+        <div id="pl-links" style="display:none"></div>
       </div>
       <div class="pl-secao" id="pl-acoes"></div>
     </div>
@@ -917,7 +1155,17 @@ function ini(n){return n.split(" ").slice(0,2).map(x=>x[0].toUpperCase()).join("
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function linkify(t){return esc(t).replace(/(https?:\/\/[^\s<>"]+)/g,'<a href="$1" target="_blank" style="color:#0d6efd;text-decoration:underline;word-break:break-all;">$1</a>');}
 function horaLocal(){return new Date().toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit"});}
-function scroll(){const el=document.getElementById("msgs");el.scrollTop=el.scrollHeight;}
+function scroll(){
+  const el=document.getElementById("msgs");
+  if(!el)return;
+  const distBottom=el.scrollHeight-el.scrollTop-el.clientHeight;
+  if(distBottom<300){el.scrollTop=el.scrollHeight;}
+  else{
+    _unreadCount++;
+    const cnt=document.getElementById("scroll-count");
+    if(cnt){cnt.textContent=_unreadCount>9?"9+":_unreadCount;cnt.classList.add("show");}
+  }
+}
 function fecharTudo(){["ctx-menu","plus-menu","react-picker","emoji-picker","tres-pontos-menu"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});}
 
 // =================== LOGIN ===================
@@ -1741,7 +1989,11 @@ function abrirPerfil(nome){
 }
 
 function abrirMeuPerfil(){abrirPerfil(meuNome);}
-function abrirInfoSala(){abrirPerfil(meuNome);}
+function abrirInfoSala(){
+  if(dmAtivo){abrirPerfil(dmAtivo);}
+  else if(canalAtivo){showToast("Canal: "+canalAtivo,"info");}
+  else{abrirPerfil(meuNome);}
+}
 function fecharPainel(){document.getElementById("painel-lateral").classList.remove("on");}
 
 function editarFotoIfMeu(){if(panelEMeu)editarFoto();}
@@ -2377,6 +2629,63 @@ function fecharSidebarMobile(){
     document.getElementById("sidebar-overlay").classList.remove("ativo");
   }
 }
+
+function abaPerfilMidia(tipo, btn){
+  // Atualiza abas
+  document.querySelectorAll(".pl-aba").forEach(b=>{
+    b.style.color=b===btn?"var(--gm)":"var(--mu)";
+    b.style.borderBottom=b===btn?"2px solid var(--gm)":"none";
+    b.style.fontWeight=b===btn?"600":"400";
+  });
+  const galeria=document.getElementById("pl-galeria");
+  const docs=document.getElementById("pl-docs");
+  const links=document.getElementById("pl-links");
+  const vazia=document.getElementById("pl-galeria-vazia");
+  if(tipo==="midia"){
+    if(galeria)galeria.style.display="grid";
+    if(docs)docs.style.display="none";
+    if(links)links.style.display="none";
+  } else if(tipo==="docs"){
+    if(galeria)galeria.style.display="none";
+    if(docs){docs.style.display="block";renderDocsLista(docs);}
+    if(links)links.style.display="none";
+    if(vazia)vazia.style.display="none";
+  } else if(tipo==="links"){
+    if(galeria)galeria.style.display="none";
+    if(docs)docs.style.display="none";
+    if(links){links.style.display="block";renderLinksLista(links);}
+    if(vazia)vazia.style.display="none";
+  }
+}
+
+function renderDocsLista(cont){
+  const docs=todasMensagens.filter(m=>m.tipo==="mensagem"&&m.texto&&m.texto.startsWith("📎"));
+  cont.innerHTML="";
+  if(!docs.length){cont.innerHTML='<div style="font-size:13px;color:var(--mu);padding:8px 0">Nenhum documento</div>';return;}
+  docs.forEach(m=>{
+    const d=document.createElement("div");
+    d.style.cssText="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5;cursor:pointer;font-size:13px;";
+    d.innerHTML='<div style="font-size:24px">📄</div><div><div style="font-weight:600">'+esc(m.texto.replace("📎 ",""))+'</div><div style="color:var(--mu);font-size:11px">'+m.hora+'</div></div>';
+    cont.appendChild(d);
+  });
+}
+
+function renderLinksLista(cont){
+  const linkMsgs=todasMensagens.filter(m=>m.texto&&m.texto.match(/https?:\/\//));
+  cont.innerHTML="";
+  if(!linkMsgs.length){cont.innerHTML='<div style="font-size:13px;color:var(--mu);padding:8px 0">Nenhum link</div>';return;}
+  linkMsgs.forEach(m=>{
+    const urls=(m.texto.match(/https?:\/\/[^\s]+/g)||[]);
+    urls.forEach(url=>{
+      const d=document.createElement("div");
+      d.style.cssText="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5;cursor:pointer;font-size:13px;";
+      d.innerHTML='<div style="width:40px;height:40px;border-radius:8px;background:#e3f2fd;display:flex;align-items:center;justify-content:center;font-size:20px">🔗</div><div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">'+esc(url.replace(/^https?:\/\//,"").split("/")[0])+'</div><div style="color:var(--mu);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">'+esc(url)+'</div></div>';
+      d.onclick=()=>window.open(url,"_blank");
+      cont.appendChild(d);
+    });
+  });
+}
+
 // =================== EVENTOS GLOBAIS ===================
 document.addEventListener("click",fecharTudo);
 document.addEventListener("keydown",e=>{
@@ -2477,6 +2786,8 @@ function voltarSala(){
   const hAv=document.getElementById("chat-hdr-av");
   if(hAv){hAv.style.background=cor("geral");hAv.innerHTML="G";}
   document.querySelectorAll(".dm-item").forEach(el=>el.classList.remove("ativo"));
+  const hAvVoltar=document.getElementById("chat-hdr-av");
+  if(hAvVoltar){hAvVoltar.style.background=cor(minhaSala||"geral");hAvVoltar.textContent="G";}
   // Recarrega msgs da sala
   const msgs=document.getElementById("msgs");msgs.innerHTML="";
   todasMensagens.forEach(m=>msgs.appendChild(criarBolha(m,m.eMinha)));
@@ -2832,6 +3143,509 @@ function filtrarLista(q){
 }
 
 function abrirConfigs(){mudarPainel('configs');fecharTudo();}
+
+// =================== EXTRAS POLISH ===================
+
+// Data separadora entre mensagens
+let _ultimaData = "";
+function _dataMsg(hora){
+  const hoje = new Date().toLocaleDateString("pt-BR",{timeZone:"America/Sao_Paulo"});
+  return "Hoje";
+}
+
+// Favoritar mensagens
+let msgsFavoritas = new Set();
+function favoritarMsg(id){
+  if(msgsFavoritas.has(id)){msgsFavoritas.delete(id);showToast("Removido dos favoritos","info");}
+  else{msgsFavoritas.add(id);showToast("⭐ Adicionado aos favoritos","success");}
+}
+
+// Selecionar mensagens (modo seleção)
+let modoSelecao = false;
+let msgsSelecionadas = new Set();
+function ativarSelecao(msgId){
+  modoSelecao=true;msgsSelecionadas.clear();msgsSelecionadas.add(msgId);
+  document.querySelectorAll(".mwrap").forEach(el=>{
+    el.onclick=e=>{
+      const id=el.dataset.id;
+      if(msgsSelecionadas.has(id)){msgsSelecionadas.delete(id);el.classList.remove("selecionada");}
+      else{msgsSelecionadas.add(id);el.classList.add("selecionada");}
+      document.getElementById("sel-count").textContent=msgsSelecionadas.size+" selecionada"+(msgsSelecionadas.size!==1?"s":"");
+    };
+  });
+  document.getElementById("mwrap-"+msgId)?.classList.add("selecionada");
+  showSelecaoBar();
+}
+
+function showSelecaoBar(){
+  let bar=document.getElementById("selecao-bar");
+  if(!bar){
+    bar=document.createElement("div");bar.id="selecao-bar";
+    bar.style.cssText="position:absolute;top:0;left:0;right:0;background:var(--gd);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:14px;z-index:100;";
+    bar.innerHTML='<button onclick="cancelarSelecao()" style="background:none;border:none;cursor:pointer;color:#fff;font-size:18px">✕</button>'+
+      '<span id="sel-count" style="flex:1;font-weight:600">0 selecionadas</span>'+
+      '<button onclick="apagarSelecionadas()" style="background:none;border:none;cursor:pointer;color:#fff;font-size:18px" title="Apagar">🗑</button>'+
+      '<button onclick="encaminharSelecionadas()" style="background:none;border:none;cursor:pointer;color:#fff;font-size:18px" title="Encaminhar">↪</button>'+
+      '<button onclick="favoritarSelecionadas()" style="background:none;border:none;cursor:pointer;color:#fff;font-size:18px" title="Favoritar">⭐</button>';
+    document.getElementById("chat").insertBefore(bar,document.getElementById("chat-hdr").nextSibling);
+  }
+  bar.style.display="flex";
+  document.getElementById("sel-count").textContent=msgsSelecionadas.size+" selecionada"+(msgsSelecionadas.size!==1?"s":"");
+}
+
+function cancelarSelecao(){
+  modoSelecao=false;msgsSelecionadas.clear();
+  document.querySelectorAll(".mwrap").forEach(el=>{el.classList.remove("selecionada");el.onclick=null;});
+  const bar=document.getElementById("selecao-bar");if(bar)bar.style.display="none";
+}
+
+function apagarSelecionadas(){
+  if(!ws||ws.readyState!==WebSocket.OPEN)return;
+  msgsSelecionadas.forEach(id=>{
+    const m=todasMensagens.find(x=>x.id===id);
+    if(m&&m.eMinha){ws.send(JSON.stringify({tipo:"apagar",id}));removerMsg(id);}
+  });
+  cancelarSelecao();
+  showToast("Mensagens apagadas","success");
+}
+
+function encaminharSelecionadas(){
+  msgsSelecionadas.forEach(id=>{
+    const m=todasMensagens.find(x=>x.id===id);
+    if(m)encaminhar(m);
+  });
+  cancelarSelecao();
+}
+
+function favoritarSelecionadas(){
+  msgsSelecionadas.forEach(id=>msgsFavoritas.add(id));
+  showToast("⭐ "+msgsSelecionadas.size+" mensagem(ns) favoritada(s)","success");
+  cancelarSelecao();
+}
+
+// Mensagens temporárias
+let tempMsgTimer = null;
+let tempMsgDuracao = 0;
+function ativarMsgTemporarias(segundos){
+  tempMsgDuracao = segundos;
+  showToast("Mensagens temporárias: "+(segundos===0?"desativadas":(segundos<3600?segundos/60+" min":(segundos/3600)+" h")),"success");
+}
+
+// Silenciar notificações por tempo
+let silenciado = false;
+let silencioTimer = null;
+function silenciarNotificacoes(minutos){
+  silenciado = true;
+  clearTimeout(silencioTimer);
+  if(minutos>0){
+    silencioTimer = setTimeout(()=>{silenciado=false;showToast("Notificações reativadas","info");},minutos*60000);
+    showToast("🔕 Silenciado por "+minutos+" min","success");
+  } else {
+    silenciado = false;
+    showToast("🔔 Notificações ativadas","success");
+  }
+}
+
+// Override notificar para respeitar silêncio
+const _notificarOrig = window.notificar;
+window.notificar = function(nome,texto){
+  if(silenciado)return;
+  if(_notificarOrig)_notificarOrig(nome,texto);
+};
+
+// Atualizar ctx menu para incluir mais opções
+const _ctxAcaoOrig = window.ctxAcao;
+window.ctxAcao = function(acao){
+  if(acao==="selecionar"){ativarSelecao(ctxMsgId);fecharTudo();return;}
+  if(acao==="favoritar"){favoritarMsg(ctxMsgId);fecharTudo();return;}
+  if(_ctxAcaoOrig)_ctxAcaoOrig(acao);
+};
+
+// Adicionar opções ao ctx menu
+const _mostrarCtxMenuOrig = window.mostrarCtxMenu;
+window.mostrarCtxMenu = function(e,id,eMinha,m){
+  if(_mostrarCtxMenuOrig)_mostrarCtxMenuOrig(e,id,eMinha,m);
+  // Adiciona opção de favoritar e selecionar
+  const menu=document.getElementById("ctx-menu");
+  if(!menu)return;
+  // Adicionar botões extras se não existirem ainda
+  if(!menu.querySelector(".ctx-extra-added")){
+    const sep=document.createElement("div");sep.className="ctx-sep ctx-extra-added";
+    const fav=document.createElement("button");fav.className="ctx-i";fav.onclick=()=>ctxAcao("favoritar");fav.innerHTML="⭐ Favoritar";
+    const sel=document.createElement("button");sel.className="ctx-i";sel.onclick=()=>ctxAcao("selecionar");sel.innerHTML="☑ Selecionar";
+    menu.appendChild(sep);menu.appendChild(fav);menu.appendChild(sel);
+  }
+};
+
+// Silenciar pelo 3 pontos
+const _abrirMenuTresPontosOrig = window.abrirMenuTresPontos;
+window.abrirMenuTresPontos = function(btn){
+  if(_abrirMenuTresPontosOrig)_abrirMenuTresPontosOrig(btn);
+  // Adicionar opção silenciar no menu
+  const menu=document.getElementById("tres-pontos-menu");
+  if(!menu||menu.querySelector(".sil-added"))return;
+  const sil=document.createElement("button");
+  sil.className="ctx-i sil-added";
+  sil.innerHTML="🔕 Silenciar";
+  sil.onclick=()=>{
+    fecharTudo();
+    abrirModalGenerico("Silenciar notificações","Por quanto tempo?",
+      '<div style="display:flex;flex-direction:column;gap:8px">'+
+      '<button class="mbtn-c" onclick="silenciarNotificacoes(8*60);fecharModal()">8 horas</button>'+
+      '<button class="mbtn-c" onclick="silenciarNotificacoes(7*24*60);fecharModal()">1 semana</button>'+
+      '<button class="mbtn-c" onclick="silenciarNotificacoes(0);fecharModal()">Desativar silêncio</button>'+
+      '</div>', null
+    );
+    document.getElementById("modal-btns").style.display="none";
+  };
+  // Insert before last separator
+  const seps=menu.querySelectorAll(".ctx-sep");
+  if(seps.length>0)menu.insertBefore(sil,seps[seps.length-1]);
+  else menu.appendChild(sil);
+};
+
+// Mensagens temporárias do menu 3 pontos 
+function abrirMsgTemporarias(){
+  fecharTudo();
+  abrirModalGenerico("Mensagens temporárias","Mensagens serão apagadas automaticamente",
+    '<div style="display:flex;flex-direction:column;gap:8px">'+
+    '<button class="mbtn-c" onclick="ativarMsgTemporarias(24*3600);fecharModal()">24 horas</button>'+
+    '<button class="mbtn-c" onclick="ativarMsgTemporarias(7*24*3600);fecharModal()">7 dias</button>'+
+    '<button class="mbtn-c" onclick="ativarMsgTemporarias(90*24*3600);fecharModal()">90 dias</button>'+
+    '<button class="mbtn-c" onclick="ativarMsgTemporarias(0);fecharModal()">Desativar</button>'+
+    '</div>', null
+  );
+  document.getElementById("modal-btns").style.display="none";
+}
+
+// Sala com senha
+let salasSenhas = {}; // sala -> senha
+
+function entrarComSenha(sala, senha){
+  if(salasSenhas[sala] && salasSenhas[sala] !== senha){
+    showToast("❌ Senha incorreta para a sala '"+sala+"'","error");
+    return false;
+  }
+  return true;
+}
+
+// Badge de DMs não lidas
+let dmNaoLidas = {};
+function atualizarBadgeDMs(){
+  const total = Object.values(dmNaoLidas).reduce((a,v)=>a+v,0);
+  const badge = document.getElementById("nav-badge-dms");
+  if(badge){
+    badge.textContent = total > 9 ? "9+" : total;
+    badge.style.display = total > 0 ? "flex" : "none";
+  }
+}
+
+// Hover nas mensagens - mostrar botão de reação rápido
+document.addEventListener("mouseover", e=>{
+  const bolha = e.target.closest(".mbolha");
+  if(!bolha)return;
+  const wrap = bolha.closest(".mwrap");
+  if(!wrap||!wrap.dataset.id)return;
+  bolha.style.cursor="default";
+});
+
+// Suporte a Ctrl+Z para desfazer envio (apagar última msg em 5s)
+document.addEventListener("keydown", e=>{
+  if((e.ctrlKey||e.metaKey) && e.key==="z" && !e.shiftKey){
+    const ultima = todasMensagens.filter(m=>m.eMinha).slice(-1)[0];
+    if(!ultima)return;
+    const agora = Date.now();
+    const idNum = parseInt(ultima.id)||0;
+    if(agora - idNum < 5000){ // menos de 5 segundos
+      if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"apagar",id:ultima.id}));
+      removerMsg(ultima.id);
+      showToast("↩ Mensagem desfeita","info");
+      e.preventDefault();
+    }
+  }
+});
+
+// GIF support no picker de emoji (placeholder)
+function toggleGifPicker(){
+  showToast("GIFs em desenvolvimento","info");
+}
+
+// Renderizar data separadora (Hoje / Ontem / data)
+function _inserirSeparadorData(data){
+  const div=document.createElement("div");div.className="msg-data";div.textContent=data;
+  return div;
+}
+
+// Scroll to bottom button
+let _unreadCount = 0;
+function onMsgsScroll(){
+  const el=document.getElementById("msgs");
+  const btn=document.getElementById("scroll-btn");
+  if(!el||!btn)return;
+  const distBottom=el.scrollHeight-el.scrollTop-el.clientHeight;
+  btn.classList.toggle("show",distBottom>200);
+}
+
+function scrollParaBaixo(){
+  const el=document.getElementById("msgs");
+  if(el){el.scrollTo({top:el.scrollHeight,behavior:"smooth"});}
+  _unreadCount=0;
+  const cnt=document.getElementById("scroll-count");
+  if(cnt){cnt.textContent="";cnt.classList.remove("show");}
+}
+
+// =================== WHATSAPP EXTRAS FINAIS ===================
+
+// Dados do contato completo - mostra janela lateral
+function verDadosContato(nome){
+  abrirPerfil(nome);
+}
+
+// Mensagem de boas-vindas ao entrar na sala
+function mostrarBoasVindas(){
+  const msgs=document.getElementById("msgs");
+  if(!msgs||msgs.children.length>0)return;
+  const div=document.createElement("div");
+  div.className="msistema";
+  div.style.cssText="max-width:85%;padding:8px 16px;font-size:12px;color:#666;text-align:center;";
+  div.innerHTML="🔒 As mensagens são criptografadas de ponta a ponta. Ninguém fora desta conversa pode lê-las.";
+  msgs.appendChild(div);
+}
+
+// Clique duplo na mensagem = reagir rápido
+document.addEventListener("dblclick",e=>{
+  const bolha=e.target.closest(".mbolha");
+  if(!bolha)return;
+  const wrap=bolha.closest(".mwrap");
+  if(!wrap||!wrap.dataset.id)return;
+  ctxMsgId=wrap.dataset.id;
+  const allMsgs=todasMensagens.concat(Object.values(dmConversas).flat());
+  ctxMsgData=allMsgs.find(m=>m.id===ctxMsgId);
+  enviarReacao("❤️");
+  // Mini animação
+  const heart=document.createElement("div");
+  heart.textContent="❤️";
+  heart.style.cssText="position:fixed;font-size:30px;pointer-events:none;animation:heartPop .6s ease forwards;z-index:9999;left:"+e.clientX+"px;top:"+e.clientY+"px;transform:translate(-50%,-50%)";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),600);
+  e.preventDefault();
+});
+
+// Animação coração
+const heartStyle=document.createElement("style");
+heartStyle.textContent="@keyframes heartPop{0%{opacity:1;transform:translate(-50%,-50%) scale(0)}50%{opacity:1;transform:translate(-50%,-80%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-120%) scale(1)}}";
+document.head.appendChild(heartStyle);
+
+// Compartilhar sala via link
+function compartilharSala(){
+  const url=window.location.href.split("?")[0]+"?sala="+encodeURIComponent(minhaSala);
+  navigator.clipboard.writeText(url).then(()=>showToast("🔗 Link copiado!","success")).catch(()=>{
+    const inp=document.createElement("input");
+    inp.value=url;document.body.appendChild(inp);inp.select();
+    document.execCommand("copy");inp.remove();
+    showToast("🔗 Link copiado!","success");
+  });
+}
+
+// Auto-entrar sala via URL param
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  const salaParm=params.get("sala");
+  if(salaParm&&!meuNome){
+    setTimeout(()=>{
+      const inp=document.getElementById("inp-sala");
+      if(inp)inp.value=decodeURIComponent(salaParm);
+    },100);
+  }
+})();
+
+// Busca com destaque
+function buscarComHighlight(q){
+  const c2=document.getElementById("msgs");c2.innerHTML="";
+  const f=q?todasMensagens.filter(m=>(m.texto||"").toLowerCase().includes(q.toLowerCase())):todasMensagens;
+  f.forEach(m=>{
+    const el=criarBolha(m,m.eMinha);
+    if(q){
+      const spans=el.querySelectorAll("span");
+      spans.forEach(sp=>{
+        if(sp.innerHTML.toLowerCase().includes(q.toLowerCase())){
+          sp.innerHTML=sp.innerHTML.replace(new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")", "gi"),'<mark class="busca-resultado">$1</mark>');
+        }
+      });
+    }
+    c2.appendChild(el);
+  });
+  c2.scrollTop=c2.scrollHeight;
+}
+
+// Override buscarInline
+window.buscarInline=buscarComHighlight;
+
+// Detectar quando sala muda pelo URL
+window.addEventListener("popstate",()=>{
+  const params=new URLSearchParams(window.location.search);
+  const sala=params.get("sala");
+  if(sala&&sala!==minhaSala&&meuNome){trocarSala(sala);}
+});
+
+function trocarSala(novaSala){
+  minhaSala=novaSala;
+  localStorage.setItem("cs",novaSala);
+  document.getElementById("chat-title").textContent="Sala: "+novaSala;
+  const cfgs=document.getElementById("cfg-sala");if(cfgs)cfgs.textContent=novaSala;
+  const msgs=document.getElementById("msgs");msgs.innerHTML="";todasMensagens=[];
+  if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({tipo:"entrar",nome:meuNome,sala:novaSala}));
+  mostrarBoasVindas();
+}
+
+// Adicionar "Compartilhar sala" no menu 3 pontos (via override)
+const _orig3pts = window.abrirMenuTresPontos;
+window.abrirMenuTresPontos = function(btn){
+  if(_orig3pts)_orig3pts(btn);
+  const menu=document.getElementById("tres-pontos-menu");
+  if(!menu||menu.querySelector(".share-added"))return;
+  const share=document.createElement("button");
+  share.className="ctx-i share-added";
+  share.innerHTML="🔗 Compartilhar sala";
+  share.onclick=()=>{fecharTudo();compartilharSala();};
+  // Insert after first item
+  const first=menu.firstElementChild;
+  if(first&&first.nextSibling)menu.insertBefore(share,first.nextSibling);
+  else menu.appendChild(share);
+};
+
+// Chamar boasvindas quando histórico carregado e vazio
+const _carregarHistOrig=window.carregarHistorico;
+window.carregarHistorico=function(msgs){
+  if(_carregarHistOrig)_carregarHistOrig(msgs);
+  setTimeout(mostrarBoasVindas,100);
+};
+
+// Auto-resize input (não necessário com input type=text mas boa prática)
+const inputMsg=document.getElementById("input-msg");
+if(inputMsg){
+  inputMsg.addEventListener("keydown",e=>{
+    if(e.key==="Tab"){e.preventDefault();inputMsg.value+="	";}
+  });
+}
+
+// Indicador de "carregando histórico"
+function mostrarCarregando(){
+  const msgs=document.getElementById("msgs");
+  if(!msgs)return;
+  const d=document.createElement("div");d.id="loading-msgs";d.className="msistema";
+  d.innerHTML="<span style='animation:spin .8s linear infinite;display:inline-block'>⟳</span> Carregando...";
+  msgs.appendChild(d);
+}
+const spinStyle=document.createElement("style");
+spinStyle.textContent="@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}";
+document.head.appendChild(spinStyle);
+
+// Remove loading indicator quando msgs chegarem
+const _carOrig2=window.carregarHistorico;
+window.carregarHistorico=function(msgs){
+  const ld=document.getElementById("loading-msgs");if(ld)ld.remove();
+  if(_carOrig2)_carOrig2(msgs);
+};
+
+console.log("MeuChat v2.0 ✅ - "+new Date().toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"}));
+
+// =================== SPLASH + ATALHOS + POLISH FINAL ===================
+
+// Splash screen
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    const splash=document.getElementById("splash");
+    if(splash)splash.classList.add("hidden");
+    setTimeout(()=>{if(splash)splash.remove();},600);
+  },800);
+});
+
+// Atalhos de teclado
+function mostrarAtalhos(){
+  fecharTudo();
+  abrirModalGenerico("Atalhos de teclado","",
+    '<table class="atalhos-modal" style="width:100%;border-collapse:collapse">'+
+    '<tr><th>Atalho</th><th>Ação</th></tr>'+
+    '<tr><td><span class="kbd">Enter</span></td><td>Enviar mensagem</td></tr>'+
+    '<tr><td><span class="kbd">Ctrl+Z</span></td><td>Desfazer última mensagem (5s)</td></tr>'+
+    '<tr><td><span class="kbd">Ctrl+F</span></td><td>Pesquisar mensagens</td></tr>'+
+    '<tr><td><span class="kbd">Esc</span></td><td>Fechar menus/modais</td></tr>'+
+    '<tr><td><span class="kbd">F11</span></td><td>Tela cheia</td></tr>'+
+    '</table>', null
+  );
+  document.getElementById("modal-btns").innerHTML='<button class="mbtn-c" onclick="fecharModal()">Fechar</button>';
+}
+
+// Ctrl+F para busca
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==="f"&&document.activeElement!==document.getElementById("input-msg")){
+    e.preventDefault();
+    toggleBuscarMsgs();
+    const inp=document.getElementById("busca-inline-inp");
+    if(inp)inp.focus();
+  }
+  if(e.key==="F11"){e.preventDefault();toggleFullscreen();}
+  if(e.key==="F1"){mostrarAtalhos();}
+});
+
+// Adicionar atalhos ao menu 3 pontos
+const _orig3ptsF=window.abrirMenuTresPontos;
+window.abrirMenuTresPontos=function(btn){
+  if(_orig3ptsF)_orig3ptsF(btn);
+  const menu=document.getElementById("tres-pontos-menu");
+  if(!menu||menu.querySelector(".atalhos-added"))return;
+  const at=document.createElement("button");
+  at.className="ctx-i atalhos-added";at.innerHTML="⌨️ Atalhos (F1)";
+  at.onclick=()=>{fecharTudo();mostrarAtalhos();};
+  menu.appendChild(at);
+};
+
+// Botão de chamada nos DMs
+function renderListaDMsComChamada(){
+  const cont=document.getElementById("lista-dms");
+  if(!cont)return;
+  cont.innerHTML="";
+  onlineAtual.filter(n=>n!==meuNome).forEach(nome=>{
+    const msgs=dmConversas[nome]||[];
+    const ultima=msgs.length?msgs[msgs.length-1]:null;
+    const p=fotoPerfis[nome]||{};
+    const d=document.createElement("div");
+    d.className="dm-item"+(dmAtivo===nome?" ativo":"");
+    d.dataset.nome=nome;
+    d.innerHTML='<div class="av" style="width:42px;height:42px;font-size:14px;background:'+cor(nome)+';overflow:hidden;flex-shrink:0">'+(p.foto?'<img src="'+p.foto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':ini(nome))+'</div>'+
+      '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;color:var(--tx)">'+esc(nome)+'</div>'+
+      (ultima?'<div class="dm-ultima">'+(ultima.nome===meuNome?"Você: ":"")+esc(ultima.texto||"📷")+'</div>':'<div class="dm-ultima">Clique para conversar</div>')+'</div>'+
+      '<button class="dm-call-btn" onclick="event.stopPropagation();chamandoPara=\"'+esc(nome)+'\";iniciarChamada(\'audio\')" title="Ligar">📞</button>';
+    d.onclick=()=>abrirDM(nome);
+    cont.appendChild(d);
+  });
+  if(!onlineAtual.filter(n=>n!==meuNome).length){
+    cont.innerHTML='<div style="padding:12px 16px;font-size:13px;color:var(--mu)">Nenhum contato online</div>';
+  }
+}
+
+// Override renderListaDMs
+window.renderListaDMs=renderListaDMsComChamada;
+
+// Encaminhada label
+const _criarBolhaOrig=window.criarBolha;
+window.criarBolha=function(m,eMinha){
+  const el=_criarBolhaOrig?_criarBolhaOrig(m,eMinha):null;
+  if(!el)return el;
+  if(m.texto&&m.texto.startsWith("|↪ Encaminhado|")){
+    const bolha=el.querySelector(".mbolha");
+    if(bolha){
+      const label=document.createElement("div");
+      label.className="encaminhada-label";
+      label.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M9 9l6-6 6 6M15 3v12a3 3 0 01-3 3H3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Encaminhada';
+      bolha.insertBefore(label,bolha.firstChild);
+    }
+  }
+  return el;
+};
+
+console.log("%cMeuChat v2.0%c - Idêntico ao WhatsApp!","color:#25D366;font-size:16px;font-weight:bold","color:#666;font-size:12px");
 </script>
 </body>
 </html>

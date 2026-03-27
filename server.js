@@ -7,6 +7,7 @@ const ARQUIVO = "./mensagens.json";
 const MAX_MSGS = 150;
 
 let historicoSalas = {};
+const salasSenhas = {}; // sala -> senha
 try {
   if (fs.existsSync(ARQUIVO))
     historicoSalas = JSON.parse(fs.readFileSync(ARQUIVO, "utf-8"));
@@ -52,6 +53,15 @@ wss.on("connection", (ws) => {
       const usuario = usuarios.get(ws);
 
       // ---- ENTRAR ----
+      if (msg.tipo === "definir_senha") {
+        const sala = usuarios.get(ws)?.sala;
+        if(sala){
+          salasSenhas[sala] = msg.senha || null;
+          broadcast({tipo:"sistema",texto:"Sala protegida com senha"+(msg.senha?"":" removida"),hora:hora()},sala,ws);
+        }
+        return;
+      }
+
       if (msg.tipo === "entrar") {
         const sala = msg.sala || "geral";
         // Remove conexões duplicadas do mesmo nome+sala
